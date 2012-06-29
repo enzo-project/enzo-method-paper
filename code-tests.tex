@@ -1,0 +1,86 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Code tests}\label{sec.tests}
+
+\red{
+\begin{enumerate}
+\item Things that need to be addressed:  Can we refine by non-powers of two?  What test problems to do?  Order of test problems?
+\item Some of the test problems are motivated by the FLASH code method paper \citep{flash_method}, and are referred to there.  Others are motivated by the GADGET-2 method paper \citep{gadget_2_method}, and are referred to as such.
+\item In this paper we want to make sure to refer to the Santa Barbara Cluster comparison project \citep{SantaBarbara} and to our ENZO/GADGET-2 comparison project~\citep{2005ApJS..160....1O}.
+\end{enumerate}
+}
+
+\red{
+General structure for each test problem:  Outline how the test problem is constructed (initial and boundary conditions), 
+the analytical solution, why we have in the paper (what does it break, or what flaw does it expose (not in enzo of course)),
+a plot showing how well enzo solves said test problem, and a brief description of the plot and how awesome enzo is.
+}
+
+\red{*** WE NEED SUGGESTIONS FOR CODE TESTS***}
+
+\subsection{Advection problem}\label{sec.tests.advect}
+Problem 7.1 in the flash method paper~\citep{flash_method}.
+
+\subsection{Sod Shock Tube}\label{sec.tests.sodshock}
+Problem type 1.  Both unigrid and AMR.  Tests the hydro.
+This is also problem 7.2 in the FLASH method paper.
+
+\subsection{Wave pool}\label{sec.tests.wavepool}
+Problem type 2, unigrid and fixed AMR 1D mostly.  Tests reflections of waves at boundaries.
+
+\subsection{Shock pool}\label{sec.tests.shockpool}
+Problem type 3, unigrid and AMR 2D.  Tests passage of shock through a refinement boundary.
+
+\subsection{Interacting Blast-Wave problem}\label{sec.tests.interblast}
+Problem 7.5 in the FLASH method paper.
+
+
+\subsection{Double mach reflection}\label{sec.tests.doublemach}
+Problem type 4.  This is one of Alexei's test problems: 
+http://cosmos.ucsd.edu/~akritsuk/renzo/mach/mach.html
+
+This tests the hydro.
+
+\subsection{Sedov Explosion}\label{sec.tests.sedov}
+Problem type 7.  One of Alexei's test problems:
+http://cosmos.ucsd.edu/~akritsuk/renzo/sedov/sedov.html
+Also problem 7.4 in the FLASH method paper.
+This tests the hydro.
+
+\subsection{Noh problem}\label{sec.tests.noh}
+Problem type 9.  One of Alexei's test problems:
+http://cosmos.ucsd.edu/~akritsuk/renzo/noh/noh.html
+This tests the hydro.
+
+\subsection{Radiating shock problem}\label{sec.test.radshock}
+In~\citet{anninos97} -- tests the energy equation.  Followon
+to Noh problem.  Original reference is cited in this paper.
+
+\subsection{Point source gravity test}\label{sec.test.gravitypointsource}
+This is the TestGravity (problem 23) test problem.  It tests gravity around a point source, using fixed AMR.
+
+\subsection{Orbit Test}\label{sec.test.testorbit}
+This is the TestOrbit problem (problem 29 for GB).  This tests gravity and particle integration (no hydro).
+
+\subsection{Pressureless Sphere Collapse}\label{sec.test.pressurelesscollapse}
+This is in the zeus paper and in the kronos test paper -- it tests mostly gravity and advection.  Test problem 21.
+
+\subsection{Collapse of an adiabatic gas sphere}\label{sec.tests.adiasphere}
+I think this is problem type 27, and also is problem 6.2 in the
+GADGET-2 method paper~\citep{gadget_2_method}.
+
+
+
+\subsection{Self-Similar infall test}\label{sec.tests.infall}
+Problem type 24.  This is a test based on Bertschinger's 1985 3D self-similar infall
+solution, and tests gravity + hydro.
+
+\subsection{Zel`Dovich Pancake}\label{sec.tests.pancake}
+Problem type 20, unigrid and AMR both.  Tests gravity + hydro.
+
+\subsection{Santa Barbara Cluster comparison}\label{sec.tests.santabarbara}
+This is the classic test -- we can mostly just point to the enzo results in that paper.  Maybe update them?
+
+\subsection{Dark matter halo mass function and clustering}\label{sec.tests.dm}
+Standard problem, also problem 6.4 in GADGET-2 method paper.  Should this be here, or just a reference to another paper?
+

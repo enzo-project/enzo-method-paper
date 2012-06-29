@@ -1,0 +1,28 @@
+\subsection{Gravity: Solving the Poisson Equations}
+\label{sec.gravity}
+
+
+
+There are multiple methods to compute the gravitational potential (which is an elliptic equation in the Newtonian limit) in a structured AMR framework.  One way would be to model the dark matter (or other collisionless particle-like objects, such as stars) as a second fluid in addition to the baryonic fluid and solve the collisionless Boltzmann equation, which follows the evolution of the fluid density in six-dimensional phase space.  However, this is computationally prohibitive owing to the large dimensionality of the problem, making this approach unappealing for the cosmological AMR code.
+
+The dark matter particles are distributed onto the grids using the cloud-in-cell (CIC) interpolation technique to form a spatially discretized density field (analogous to the baryon densities used to calculate the equations of hydrodynamics).  After sampling dark matter density onto the grid and adding baryon density if it exists (to get the total matter density in each cell), the gravitational potential is calculated on the periodic root grid using a fast Fourier transform.  For periodic boundary conditions, we can use either a simple Greens function kernel of $-k^{-2}$, or the finite-difference equivalent \citep{HockneyEastwoord1980}:
+\begin{equation}
+G(\vec{k}) = - \frac{\Delta x}{2 \left( sin(k_x \Delta x/2)^2 + sin(k_y \Delta y/2)^2 + sin(k_z \Delta z/2)^2 \right) }
+\end{equation}
+where $k^2 = k_x^2 + k_y^2 + k_z^2$ is the wavenumber in Fourier space and the potential is calculated in k-space as usual with $\tilde{\phi}(k) = G(k) \tilde{\rho}(k)$.  
+
+For isolated boundary conditions, we use James method (REF).  In this case, the Greens function is generated in real-space so as to have the correct zero-padding properties and then transformed into the Fourier domain.
+
+In order to calculate more accurate potentials on subgrids, \enzo\ re-samples the dark matter density onto individual subgrids using the same CIC method as on the root grid, but at higher spatial resolution (and again adding baryon densities if applicable). Boundary conditions are then interpolated from the potential values on the parent grid.  We use either tri-linear interpolation or a natural second-order spline: both methods seem to give similar results. The potential equation on each subgrid is then solved with the given Dirichlet boundary conditions.  This solution is done with a multigrid relaxation technique (but only applied to each subgrid).
+
+The region immediately next to the boundary can contain unwanted oscillations (Anninos \etal REF), and so we use an expanded buffer zone around the grid, of size three root grid boundary zones (so typically six refined zones).  The density is computed in this region and the potential solved, but only the region which overlaps with the grid itself is used to calculate accelerations.
+
+It is known (REF) that simply interpolating the potential without feeding it back to higher levels leads to errors in the potential at more refined levels because of the build-up of errors during the interpolation of coarse boundary values.  
+In addition, neighboring subgrids are not guaranteed to generate the same potential values because of the lack of a coherent potential solve across the whole hierarchy. In an attempt to partially alleviate this problem, we allow for an iterative procedure across sibling grids, in which the potential values on the boundary of grids can be updated with the potential in `active' regions of neighboring subgrids.  To prevent overshoot, we average the potential on the boundary and allow for (typically) 4 iterations.  This procedure can help in many cases, but does not produce a coherent solution across all grids and so does not solve the problem; we are working on a slower but more accurate method which does a multi-grid solve across the whole grid (Reynolds \etal, in preparation).
+
+Forces are computed on the mesh by finite-differencing potential values and are then interpolated to the particle positions, where they are used to update the particle's position and velocity information.  Potentials on child grids are computed recursively and particle positions are updated using the same timestep as in the hydrodynamic equations.  
+
+At this point it is useful to emphasize that the effective force resolution of an adaptive particle-mesh calculation is approximately twice as coarse as the grid spacing at a given level of resolution.  
+%The potential is solved in each grid cell; however, the quantity of interest, namely the acceleration, is the gradient of the potential, and hence two potential values are required to calculate this.  In addition, it should be noted that the adaptive particle-mesh technique described here is very memory intensive: in order to ensure reasonably accurate force resolution at grid edges the multigrid relaxation method used in the code requires a layer of ghost zones which is very deep -- typically 6 cells in every direction around the edge of a grid patch.  This greatly adds to the memory requirements of the simulation, particularly because subgrids are typically small (on the order of $12^3 - 16^3$ real cells for a standard cosmological calculation) and ghost zones can dominate the memory and computational 
+requirements of the code.
+

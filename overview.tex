@@ -1,0 +1,428 @@
+
+
+\section{Physical Equations and Overview of Numerical Methodology}
+\label{sec.overview}
+
+We begin by laying out the equations to be solved and then discuss briefly the techniques used to solve each part.
+
+% ====================================================
+
+\subsection{Physical Equations}
+
+%GB: The division of this subsection into subsubsections is somewhat arbitrary.
+%GB: I wanted to do it at first in the same divisions as section 3, but this is not really
+%GB: possible because there is no "AMR" equation.  Maybe somebody can think 
+%GB: of a clever way to fix this.
+
+% ----------------------------------------------------------------------------------------
+
+\subsubsection{Hydrodynamics and Gravity}
+
+The usual Eulerian equations of gas dynamics with gravity are given by
+
+\begin{eqnarray} 
+\left( \frac{\partial \rhop}{\partial t} \right)_r 
+          + \vecvp \cdot \nabla_r \rhop
+    & = & - \rhop \nabla_r \cdot \vecvp,
+        \label{eq:mass_prime} \\
+%
+\left( \frac{\partial \vecvp }{ \partial t} \right)_r 
+          + ( \vecvp \cdot \nabla_r ) \vecvp 
+    & = & - \frac{1}{\rhop} \nabla_r \pp 
+          - \nabla_r \phip,
+        \label{eq:momentum_prime} \\
+%
+\left( \frac{\partial \Ep}{\partial t} \right)_r + \vecvp \cdot \nabla_r \Ep
+    & = & - \frac{1}{\rhop} \nabla_r \cdot (\pp \vecvp) 
+          - \vecvp \cdot \nabla_r \phip
+%\nonumber          \\  & &     % uncomment for 2-column
+     + \Gamma - \Lambda
+        \label{eq:total_energy_prime}
+\end{eqnarray}
+%
+Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the baryonic total specific fluid energy, the baryonic specific thermal energy, the baryonic density, velocity and pressure, respectively.  Here we use primes to indicate variables defined in the absolute frame of reference (to distinguish them from a comoving frame).  The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzman equation. 
+Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy_prime}).
+
+The total fluid specific energy ($\Ep$) is given by:
+\begin{equation}
+\Ep =  e^\prime + \frac{1}{2} \vecvp \cdot \vecvp.
+        \label{eq:total_energy_def_prime}
+\end{equation}
+It is useful to solve the equation of total energy because doing so enforces local energy conservation.
+
+The equations are closed with the equation of state and Poisson's equation (we work in the Newtonian limit):
+%
+\begin{eqnarray}
+%
+e^\prime    & = & \pp / [(\gamma - 1) \rhop ],
+        \label{eq:eq_of_state_prime} \\
+%
+\nabla_r^2 \phip & = & 4 \pi G \rho_{total}^\prime 
+%                   + 3 p_{total}^\prime/c^2) - \Lambda. 
+        \label{eq:potential_prime}
+\end{eqnarray}
+%
+For simplicity, the equation of state is shown here for an ideal gas with a ratio of specific heats $\gamma$.
+Equation (\ref{eq:potential_prime}) includes contributions to the gravitational potential $\phi^\prime$ from all  populations ($\rho_{total}^\prime$).
+% as well as any radiation or massless neutrino background ($p_{total}^\prime$) or cosmological constant ($\Lambda_c$), if we are interested in the cosmological case.
+
+% ----------------------------------------------------------------------------------------
+
+\subsubsection{Comoving Coordinates}
+
+This set of coupled hydrodynamic plus gravity equations is the standard one that \enzo solves.  However, in the cosmological case it is useful to transform these to a coordinate system that is comoving with the expanding universe \citep{Peebles93} (but note that \enzo\ can also operate in a fixed coordinate system). Specifically, we define:
+\begin{eqnarray}
+\vecx & = & \vecr/a, \\
+\vecv & = & a \hspace{0.5mm} d\vecx/dt = 
+              \vecvp - \dot{a}\vecx, \\
+\rho    & = & a^3 \rhop,   \\
+p       & = & a^3 \pp, \\
+E       & = & \Ep - 
+              \dot{a} \vecx \cdot \vecv - 
+              \frac{1}{2} \dot{a}^2 \vecx^2, \\
+\phi    & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2.
+\end{eqnarray}
+
+These definitions result in the following comoving equivalents to eqs. 
+(\ref{eq:mass_prime})-(\ref{eq:potential_prime}).
+%
+
+\begin{eqnarray} 
+\frac{\partial \rhob}{\partial t} 
+          + \frac{1}{a} \vecvb \cdot \nabla \rhob 
+    & = & - \frac{1}{a} \rhob \nabla \cdot \vecvb, 
+        \label{eq:mass} \\
+%
+\frac{\partial \vecvb}{\partial t}  
+          + \frac{1}{a} ( \vecvb \cdot \nabla ) \vecvb 
+    & = & - \frac{\dot{a}}{a} \vecvb 
+          - \frac{1}{a \rhob} \nabla p 
+          - \frac{1}{a} \nabla \phi, 
+        \label{eq:momentum} \\
+%
+\frac{\partial E}{\partial t} 
+         + \frac{1}{a} \vecvb \cdot \nabla E 
+   & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rhob} + \vecvb^2 )
+         - \frac{1}{a \rhob } \nabla \cdot (p \vecvb) 
+%\nonumber   & &   %uncomment for 2-column
+         - \frac{1}{a} \vecvb \cdot \nabla \phi 
+                + \Gamma - \Lambda.
+       \label{eq:total_energy} \\
+%
+E  & = & e + \frac{1}{2} {\vecvb}^2,
+        \label{eq:total_energy_def} \\
+%
+e                  & = & 
+        p/\left[ \left( \gamma - 1 \right) \rhob \right],
+      \label{eq:state} \\ 
+{\nabla}^2 \phi    & = & 
+        \frac{4\pi G}{a} ( \rho_{total} - \rho_0 ).
+      \label{eq:poisson}
+\end{eqnarray}
+%
+%We use the proper peculiar baryonic velocity $\vecv_b \equiv a(t) d\vecx / dt$, proper pressure $p$, and modified gravitational potential $ \phi $ which is related to the potential in proper coordinates $\Phi$ by 
+%$$\phi \equiv \Phi + \frac{1}{2} a \ddot{a} \vecx^2. $$
+%The density, however, is comoving:
+%$$\rho_b \equiv \rho_{b,proper}a(t)^3, $$
+The expansion parameter $a \equiv 1/(1 + z)$ follows the expansion of a smooth, homogeneous background, where $z$, the redshift, is a function only of $t$.  All derivatives are determined with respect to the comoving position $\vecx$, which is defined simply to remove the universal expansion from the coordinate system.
+
+The evolution of $a(t)$ is governed by the formula for the expansion of an isotropic, homogeneous universe:
+%
+\begin{eqnarray}
+\frac{\ddot{a}}{a} & = & 
+      - \frac{4 \pi G }{3 a^3 } (\rho_0 
+      + 3p_0/c^2) 
+      + \Lambda_c /3 .
+      \label{eq:expansion} 
+\end{eqnarray}
+%
+Here, $\rho_0$ is the mean (baryonic and dark) comoving mass density and $p_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
+%$\gamma$ is the ratio of specific heats, and $\Lambda$ is the cosmological constant.
+%We note that if $\gamma$ is not $5/3$ then $E$ in the first term on
+%the right side of eq.~(ref{eq:total_energy}) must be replaced with 
+%eq.~(\ref{eq:state}).
+This system of equations is limited to the non-relativistic regime and assumes that curvature effects are not important --- both assumptions are reasonable as long as the  size of the simulated region is small compared to the radius of curvature and the Hubble length $c/H$ ($c$ is the speed of light and $H$ is the Hubble constant).
+
+It is clear that these equation are equivalent to the absolute coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  In the rest of this paper we will employ only the unprimed variables with the understanding that we are not restricting ourselves to cosmological applications.
+
+\subsubsection{Particles and Chemistry}
+
+Any collisionless component (e.g. dark matter or stars) are modeled by particles which are governed by Newton's equations in comoving coordinates:
+%
+\begin{eqnarray}
+\frac{d \vecx}{dt} 
+    & = & \frac{1}{a} \vecv, 
+          \label{eq:dm_position} \\
+\frac{d \vecv}{dt} 
+    & = & - \frac{\dot{a}}{a} \vecv
+          - \frac{1}{a} \nabla \phi, 
+          \label{eq:dm_velocity} 
+\end{eqnarray}
+%
+The particles also make a contribution to the potential through their contribution to Poisson's equations.
+
+In addition, we solve mass conservation equations for any chemical species.  For any species $i$, these equations have the form:
+
+\begin{eqnarray}
+\frac{\partial \rho_i}{\partial t} 
+          + \frac{1}{a} \vecvb \cdot \nabla \rho_i 
+     & = &  - \frac{1}{a} \rho_i \nabla \cdot \vecvb 
+        + \sum_j \sum_l k_{jl}(T) \rho_j \rho_l 
+% \nonumber \\    & &    %uncomment for 2-column
+      + \sum_j I_j \rho_j 
+        \label{eq:mass_species}
+\end{eqnarray}
+where $k_{ij}$ are the rate coefficients for the two-body reactions and are usually functions of only the gas species (we will specifically note the cases where we either include three-body reactions or have density-dependent rates).  The $I_j$ are destruction/creation rates due to photoionizations and/or photodissociations. 
+
+%\red{
+%There is some debate over whether to put in the hydro equations without cosmology, in addition
+%to the equations that are already here.  Would this
+%be more or less clear?  We're leaning towards saying ``when cosmology is turned off,
+% $\dot{a}$ goes to zero and $a$ goes to 1, and the poisson equation changes to blah blah blah'' 
+%and assuming our readers can figure it out for themselves.
+%We also want to emphasize that the heating and cooling is glossed over in this section, 
+%and it's discussed more thoroughly later.
+%} %end red
+% GB: I agree this would be shorter, and maybe it is a better idea, but I think it's nice to be able
+% GB: to include both equations and at the same time make the transformation to comoving coords
+% GB: very clear -- this has engendered a lot of confusion in the past and one of the goals of writing
+% GB this paper is to answer peoples questions before they ask them.
+
+
+% GB: I commented out the following.  It has now been incorporated into the above discussion
+% GB: (see my comments anove on why I think this is a good way to do it)
+%
+%\enzo\ solves the equations of ideal gas dynamics
+%in a coordinate system that is comoving with the expanding universe:
+
+%\begin{equation}
+%\frac{\partial \rho_b}{\partial t} + \frac{1}{a} \vecv_b \cdot \nabla \rho_b =  \label{enzoconserve}
+% - \frac{1}{a} \rho_b \nabla \cdot \vecv_b 
+%\end{equation}
+
+%\begin{equation}
+%\frac{\partial \vecv_b}{\partial t} + \frac{1}{a} (\vecv_b \cdot \nabla) \vecv_b = \label{enzomomentum} 
+%-\frac{\dot{a}}{a} \vecv_b - \frac{1}{a \rho_b} \nabla p - \frac{1}{a} \nabla \phi
+%\end{equation}
+
+%\begin{eqnarray}
+%\frac{\partial E}{\partial t} + \frac{1}{a} \vecv_b \cdot \nabla E =  
+%- \frac{\dot{a}}{a} \left( 3 \frac{p}{\rho_b} + \vecv_b^2 \right)  \nonumber \\
+%- \frac{1}{a \rho_b} \nabla \cdot (p \vecv_b) \nonumber \\
+%- \frac{1}{a} \vecv_b \cdot \nabla \phi + \Gamma - \Lambda
+%\label{enzoenergy}
+%\end{eqnarray}
+
+%Where $\rho_b$ is the comoving baryon density, $\vecv_b$ is the baryon velocity, $p$ is the pressure, 
+%$\phi$ is the modified gravitational potential (in comoving coordinates, which is related to
+%the potential in proper coordinates $\Phi$ by $\phi \equiv \Phi + 0.5 $a\"{a}$ \vecx^2$) and 
+%$a$ is the ``expansion parameter'' which describes the expansion of a smooth, homogeneous 
+%universe as a function of time.  This expansion parameter is related to the redshift:  
+%$a \equiv 1/(1+z)$.  All derivatives are in comoving coordinates.  $E$ is the specific
+%energy of the gas (total energy per unit mass), and
+%$\Gamma$ and $\Lambda$ represent radiative heating and cooling processes as described below.
+%  Equations~\ref{enzoconserve}, \ref{enzomomentum}
+%and \ref{enzoenergy} represent the conservation of mass, momentum and total (e.g.,
+%kinetic plus thermal) fluid energy.
+
+%The equations above are closed with three more equations:
+
+%\begin{equation}
+%E = p / [(\gamma - 1) \rho_b] + \vecv^2/2   \label{enzoeos}
+%\end{equation}
+
+%\begin{equation}
+%\nabla^2 \phi = \frac{4 \pi G}{a} (\rho_b + \rho_{dm} - \rho_0 )
+%\label{enzopoisson}
+%\end{equation}
+
+%\begin{equation}
+%\frac{\ddot{a}}{a} = - \frac{4 \pi G}{3 a^3} (\rho_0 + 3 p_0 / c^2) + \Lambda/3.
+%\label{enzocomove}
+%\end{equation}
+
+%where $\rho_{dm}$ is the comoving dark matter density, $\rho_0$ is the comoving
+%background density 
+%($\rho_0 \equiv \Omega_{matter} \rho_{crit}$) and $p_0$ is the background pressure, 
+%$\gamma$ is the ratio of specific heats and $\Lambda$ is the cosmological constant.
+%Equations~\ref{enzoeos}, \ref{enzopoisson} and~\ref{enzocomove} are the 
+%equation of state, Poisson's equation in comoving form and an equation that 
+%describes the evolution of the comoving coordinates (i.e. the formula for the 
+%expansion of an isotropic, homogeneous universe). 
+%All particles in the simulation are governed by Newton's equations in comoving 
+%coordinates:
+
+%\begin{equation}
+%\frac{d \vecx_{part}}{dt} = \frac{1}{a} \vecv_{part}
+%\label{enzopartvel}
+%\end{equation}
+
+%\begin{equation}
+%\frac{d \vecv_{part}}{dt} = -\frac{\dot{a}}{a} \vecv_{part} - \frac{1}{a} \nabla \phi
+%\label{enzopartmom}
+%\end{equation}
+
+%Where $\vecx_{part}$ and $\vecv_{part}$ refer to the position and peculiar velocity of any
+%particles in the system.  Note that the system of equations~\ref{enzoconserve}-\ref{enzopartmom} 
+%is valid only in regimes where relativistic effects are not
+%important ($v_b, v_{dm} \ll c$, where c is the speed of light) 
+%and where cosmological curvature effects are 
+%unimportant, meaning that the simulation volume is much smaller than the radius
+%of curvature of the universe, as defined as $r_{hub} \equiv c/H_0$, where $c$ is the
+%speed of light and $H_0$ is the Hubble constant.
+
+%\dcc{Fixed punctuation, added 'no mhd, rhd' caveat to Zeus statements.  This has caused
+%confusion in the past.}
+
+
+% ====================================================
+
+\subsection{Overview of Numerical Methods}
+
+In this section, we briefly describe the numerical methods which are used to solve the equations outline above.  We sweep through in the same order as will be used in section~\ref{sec.methods} so that there is a one-to-one correspondence between each of the following overviews and the complete description provided in section~\ref{sec.methods}.  The goal here is to introduce the reader to the basic idea of the methods without drowning in detail.
+
+\subsubsection{Structured Adaptive Mesh Refinement}
+
+The primary purpose of the \enzo\ code is its Adaptive Mesh Refinement
+capability, which allows it to reach extremely large dynamical ranges
+with limited computational resources, opening doors previously closed
+by finite memory and computational time. Unlike moving mesh methods
+\citep{1995ApJS..100..269P,1995ApJS...97..231G} or  
+methods that subdivide 
+individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred 
+to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid 
+patches at varying levels of resolution.  Each rectangular grid patch 
+(referred to as a ``grid'') covers some region of space in its 
+\emph{parent grid} which requires higher resolution, and can itself 
+become the parent grid to an even more highly resolved \emph{child grid}. 
+
+The grid hierarchy begins with the root grid which covers the entire
+domain of interest with a coarse, uniform, Cartesian grid. Then, as
+the solution evolves and interesting regions form, finer meshes are
+placed below these regions (we use the notation `below' to refer to
+finer grids and `above' for coarser grids).  We restrict the ratio
+between cell sizes to be an integer, typically 2-4, and refer to a
+level as all the grids with the same cell size.  In order to keep
+things as simple as possible, the edges of subgrids must coincide with
+the cell edge of its immediate parent (coarser) grid. Additionally,
+the hierarchy can be initialized with one or more static grids if a
+higher initial resolution is required.
+
+Given the hierarchy at some time $t$, we advance the solution in the
+manner of a W-cycle in a multigrid solver.  First, we determine the
+maximum time step allowed for the coarsest grid based on a variety of
+accuracy and stability criteria and advance the grid by that time
+interval, $\Delta t_0$.  We then move down to the next level and
+advance all the grids on that level by a timestep $\Delta t_1$
+($\Delta t_1 \leq \Delta t_0$) which is the minimum of all the allowed
+timesteps for those grids.  If there are more levels, we repeat this
+procedure until the bottom level of the hierarchy has been reached.
+Once there, we continue advancing the grids on the lowest level until
+they have `caught up' to the next highest level above (i.e. $\sum
+\Delta t_l = \Delta t_{l-1}$).  This procedure repeats itself until
+all grids have been advanced by a total time of $\Delta t_0$.
+
+Since interesting regions on the grid may move, the hierarchy must
+adapt itself.  We do this whenever a level has caught up to the
+coarser level above it and consists of entirely rebuilding the grids
+on that level and below.  This is done by applying the grid refinement
+criterion to the grids on that level, flagging zones which require
+extra grids.  This criterion depends on the physical problem being
+simulated.  We have implemented a number of options, including shock
+and steep gradient detectors, but in the problem described here,
+employ one based on the mass within a cell, imitating the Lagrangian
+nature of the SPH algorithm.  Once a grid has a set of flagged cells,
+we run a machine-vision based algorithm \citep{Berger91} to find edges
+and determine a good placement of subgrids.  These subgrids must not
+overlap one another, must cover all flagged cells and their
+neighbouring cells, and be above a preset efficiency threshold, where
+the efficiency of a cell is defined as the ratio of flagged cells to
+total cells.  Once these new subgrids have been identified, the
+solution from the next coarser grid is interpolated (see below) in
+order to initialize the values on the new grids.  Finally, any overlap
+between these new subgrids and the old ones is identified and the
+solution within the regions of overlap is copied to the new subgrids.
+The entire procedure just outlined is then repeated on the new grids
+and in this way the entire hierarchy (from the original level examined
+and below) is rebuilt.
+
+\subsubsection{Hydrodynamics: PPM method}
+
+Two different hydrodynamic methods are implemented in \enzo: the
+piecewise parabolic method (PPM) developed by~\citet{1984JCoPh..54..174C}
+and extended to cosmology by~\citet{1995CoPhC..89..149B},
+and the hydrodynamics method used in \zeus~\citep{Stone92a,Stone92b}.
+We adopt the direct Eulerian PPM method (as opposed to the Lagrange-Remap varient).
+
+PPM is an explicit, higher order-accurate version of
+Godunov's method for ideal gas dynamics with third order-accurate piecewise parabolic
+monotonic interpolation and a nonlinear Riemann solver for shock
+capturing.  It advances the hydrodynamic equations in the following
+steps:
+\begin{enumerate}
+ \item Construct monotonic parabolic interpolation of cell average
+ data, for each fluid quantity.
+ \item Compute interface states by averaging the parabola for over the domain of dependence for
+ each interface
+ \item Use interface data to solve the Riemann problem.
+ \item Difference the interface fluxes to update the cell average quantities.
+\end{enumerate}
+It does an excellent job of capturing strong shocks in at
+most two cells.  Multidimensional schemes are built up by directional
+splitting and produce a method that is formally second order-accurate
+in space and time which explicitly conserves mass, linear momentum, and energy.
+
+As described in \citet{Bryan95}, we modify the method for use in hypersonic flows when the thermal energy $e$ is extremely small compared to the total energy $E$.  This is a problem because in total energy method, the temperature is computed by subtracting one large number from another (i.e. the kinetic energy from the total energy), a situation which is can generate large numerical inaccuracies.  We address this situation by also solving the thermal energy equation and using $e$ from this equation when we expect the error to be large.
+
+The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
+
+
+
+\subsubsection{Hydrodynamics: ZEUS method}
+
+The second hydrodynamics method implemented is the finite-different algorithm used in the ZEUS, as described in \citet{Stone92a}.  For this reason, we call this the ZEUS method, although the code is entirely independent from the ZEUS code, and only the hydrodynamical algorithm of \zeus\ is implemented in \enzo -- the MHD and RHD codes are not.
+
+The ZEUS method uses a staggered mesh such that the velocities are face-centered, while the density and thermal energy quantities are cell-centered.  It splits the solution up into two steps, the so-called source step, in which the momentum and energy values are updated to reflect the pressure and gravity forces, as well as the effect of an artificial viscosity required for stability.  The transport step accounts for the advection of conserved quantities (mass, momentum and energy) across the grid.
+
+\subsubsection{Gravity}
+
+The current implementation of self-gravity in \enzo uses a Fast Fourier Technique \citep{Hockney88} to solve Poisson's equation on the top (level 0) grid.  The advantage of this is that it naturally allows both periodic and isolated boundary conditions for the gravity, choices which are very common in astrophysics and cosmology.  On subgrids, we interpolate the boundary conditions from that grid's parent (either the level 0 grid or some other subgrid).  Poisson's equation is then solved using a multigrid technique.  In \enzo\, self-gravity is optional.  There are also a number of options for static gravitational fields.
+
+\subsubsection{N-body Dynamics}
+
+The collisionless matter is modelled through particles.  Since the
+particles follow the collapse of structure by definition, they are not
+adaptively refined.  Nor are there duplicate sets of particles for
+each level; instead, each particle is associated with the most refined
+level available at its position in space and moved as the hierarchy is
+rebuilt.  Thus, a particle has the same timestep and feels the same
+gravitational force as the grid at that level.
+
+Although the particles are fixed in mass once initialized, we are free
+to create them with any set of masses and positions.  For example, in
+many cosmological simulations, a static subgrid is included from the
+beginning in order to improve the initial baryonic mass resolution.
+On this subgrid, we also use smaller particles to improve the
+collisionless mass resolution.  One particle per initial grid point
+seems to provide approximately equal sampling between the dark matter
+and gas.
+
+When solving Poisson's equation, we need to compute the contribution of 
+the particles to the density on the grid.  This is done using a second-order
+accurate Cloud-In-Cell technique \citep{Hockney88}.
+
+\subsubsection{Chemistry, radiation and cooling}
+
+Enzo may operate in a number of modes with regard to radiative cooling and chemistry.  In the simplest mode, with the multi-species flag turned off (i.e. set to zero), the cooling rate is computed from a simple temperature-dependent cooling rate, taken from \citet{SW87}.  
+
+In addition to this, \enzo\ includes the capability of following up to 12 chemical species using a non equilibrium-solver.  The species can be turned on in sets, with the simplest model including just H, H$^+$, He, He$^+$, He$^++$, and $e^-$, and more complete models adding first species important for gas-phase molecular hydrogen formation: $H^-$, H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  The cooling and heating due to these species is also included.  The solution of the rate equations is carried out using a time-backwards differencing which insures stability; to maintain accuracy we sub-cycle the rate equations with a shorter timestep such that the electron and neutral fractions do not change by more than 10\%.
+
+\subsubsection{Star Formation and Feedback}
+
+A simple heuristic method is used to model the formation of stars and their feedback of metals and energy into the gas.  This method is based on \citep{CO1992} and involves identify plausible cites of star formation based on a set of criteria (dense gas with a short cooling time, which is both collapsing and unstable), and computing a star formation rate based on the Schmidt-Kennicutt relation \citep{K89}.  The relating gas is converted into a star particle over a few dynamical times, and over this timespan metals and thermal energy are injected into the single, local cell occupied by the star particle.
+
+\subsubsection{Timestep constraints}
+
+All grids on a given level are advanced with the same timestep.  To determine this timestep, we calculate, for each cell and for each physical process (except for the chemistry step, which is sub-cycled), the minimum $\Delta t$ allowed for stability.  Then the minimum of all timesteps is taken and the level is advanced with this step.
+
+

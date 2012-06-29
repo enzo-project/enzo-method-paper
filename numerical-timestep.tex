@@ -1,0 +1,81 @@
+\subsection{Time Stepping}
+\label{sec.timestepping}
+
+%\dcc{Made this its own section (not really part of the AMR, it's more
+%  general than that.)  Added stuff on harmonic average for 3d. See
+%  note below on acceleration timestep criterion being crap. Moved
+%  w-cycle to the previous section}
+
+In \enzo, resolution of the equations being solved is adaptive in time 
+as well as in space.  The timestep in \enzo\ is satisfied on a level-by-level
+ basis by finding the largest timestep such that multiple criteria are
+satisfied on each level.  The timestep criteria used by Enzo are 
+(showing the one-dimensional case for clarity):
+
+\begin{equation}
+\Delta t_{hydro} = min \left( \kappa_{hydro} \frac{a \Delta x}{c_{s} + |v_x|} \right)_L ,
+\label{eqn:dthydro}
+\end{equation}
+
+\begin{equation}
+\Delta t_{dm} = min \left(\kappa_{dm} \frac{a \Delta x}{v_{dm,x}} \right)_L ,
+\label{eqn:dtdarkmatter}
+\end{equation}
+
+\begin{equation}
+\Delta t_{exp} = f_{exp} \left( \frac{a}{\dot{a}} \right) ,
+\label{eqn:dtexpand}
+\end{equation}
+
+\begin{equation}
+\Delta t_{accel} = min \left( \sqrt{\frac{\Delta x}{\vec{g}}} \right)_L 
+\label{eqn:dtaccel}
+\end{equation}
+
+ In equations~\ref{eqn:dthydro}-\ref{eqn:dtaccel}, the $min ( \ldots )_L$
+formalism means that this value is calculated for all cells on a given level
+L and the minimum overall value is taken as the timestep.  
+Equation~\ref{eqn:dthydro} ensures that all cells satisfy the 
+Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of an explicit
+finite difference discretization of the Euler equations.  Effectively this condition
+forces the timestep to be small enough such that any changes in the fluid propagate
+less than a single grid spacing, $\Delta x$.  In this equation, $\kappa_{hydro}$ is 
+a numerical constant with a value of $0 < \kappa_{hydro} \leq 1$ (with a typical
+value of $\kappa_{hydro} \sim 0.3-0.5$) that ensures that the CFL condition is always
+met, and $c_s$ and $v_x$ are the sound speed and peculiar baryon
+velocity in a given cell.
+
+Equation~\ref{eqn:dtdarkmatter} is analogous to Equation~\ref{eqn:dthydro} and ensures
+accuracy in the N-body solver by requiring that no dark matter particle travels more than
+one cell width.  The parameter $\kappa_{dm}$ is analogous to $\kappa_{dthydro}$, with
+an identical range of values.  Equation~\ref{eqn:dtexpand} limits the timestep such 
+that the expansion parameter a can only change by a fractional amount of $f_{exp} = \Delta a/a$, 
+where $f_{exp}$ is a user-defined parameter and has typical values of $f_{exp} = 0.01-0.02$.
+This is required for the stability of the PPM algorithm in comoving coordinates, and
+typically limits the timestep only at high redshifts when densities are relatively
+homogeneous.
+
+Equation~\ref{eqn:dtaccel} is supplementary to equation~\ref{eqn:dthydro} in that it
+takes into account the possibility of large accelerations causing numerical 
+instabilities by violating the Courant condition.  In this equation, $\vec{g}$ is the
+gravitational acceleration in each cell on level L.  \blue{ \emph{It should be
+  noted that the timestep is computed before the acceleration field is computed,
+  and the acceleration field is deleted at the end of each time step.
+  So this condition isn't ever actually enforced.  We should either
+  fix this problem, or not discuss it.
+ -dcollins.} }
+
+Equation ~\ref{eqn:dthydro} is valid for one dimension.  For 2 or 3
+dimensions, it was shown by \cite{Godunov1959}  that using the
+harmonic average of the timestep found along each of the coordinate
+axes yields a maximum $\kappa_{hydro} = 0.8$.  So letting $\Delta
+t_x$, $\Delta t_y$, and $\Delta t_z$ be the analogues of
+eqn. \ref{eqn:dthydro} along the $x,y$ and $z$ axes, 
+\begin{equation}
+\Delta t_{hydro} = min ( \kappa_{hydro} /( \frac{1}{\Delta t_x}
++\frac{1}{\Delta t_y} + \frac{1}{\Delta t_z} ) )_L
+\end{equation}
+
+For all other criteria, multiple dimensions are accounted for by
+repeating the one dimensional criterion along each axis, and taking
+the minimum.

@@ -1,0 +1,26 @@
+\subsection{N-body Dynamics}
+\label{sec.ov.nbody}
+
+The codes needs to be able to model collisionless 
+One way would be to model the dark matter (or other collisionless particle-like objects, such as stars) as a second fluid in addition to the baryonic fluid and solve the collisionless Boltzmann equation, which follows the evolution of the fluid density in six-dimensional phase space.  However, this is computationally prohibitive owing to the large dimensionality of the problem, making this approach  unappealing for the cosmological AMR code.
+%GB: removed the above (good discussion but not really appropriate in this paper I think, or maybe at the beginning)
+
+To solve the, \enzo\ uses a particle-mesh N-body method to calculate 
+the dynamics of collisionless systems \citep{Hockney88}.  This method 
+follows trajectories 
+of a representative sample of individual particles and is much more 
+efficient than a direct solution of the Boltzmann equation in most 
+astrophysical situations. 
+The gravitational potential is computed by solving the elliptic 
+Poisson's equation (Eqtn.~\ref{enzopoisson}).
+
+\begin{eqnarray}
+x^{n+1/2} & = & x^n + (\Delta t/2) v^{n} \nonumber \\
+v^{n+1} & = & v^n + \Delta t a^{n+1/2} \\
+x^{n+1} & = & x^{n+1/2} + (\Delta t/2) v^{n+1} \nonumber
+\end{eqnarray}
+
+
+
+Particles are stored in the most highly refined grid patch at the point in space where they exist, and particles which move out of a subgrid patch are sent to the grid patch covering the adjacent volume with the finest spatial resolution, which may be of the same spatial resolution, coarser, or finer than the grid patch that the particles are moved from.  This takes place in a communication process at the end of each timestep on a level.
+
