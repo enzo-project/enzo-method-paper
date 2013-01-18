@@ -10,28 +10,35 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Paper Outline  (last updated June 15, 2009)
+% Paper Outline  (last updated January 18, 2013)
 %
-% 1.  Introduction [GB,MN]
-% 2.  Overview [GB]
-% - including both equations and a few paragraph overview of how each method works
-% - this might have section 2.1, 2.2, etc. corresponding to very brief overviews of section 3.1, 3.2, etc.
+% 1.  Introduction
+% 2.  Physical equations and overview
+%   2.1 Physical equations
+%   2.2 Overview of numerical methods
 % 3.  Numerical methods
-%  3.1 AMR [GB]
-%  3.2. Hydro: ZEUS [GB]
-%  3.3. Hydro: PPM [GB,AK]
-%  3.4. Gravity [GB]
-%  3.5. Particle Integration [GB]
-%  3.6. Chemistry [BWO]
-%  3.7. Star formation & Feedback [BWO]
-%  3.8. Timestep constraints [BWO,GB]
-% 4. Software Implementation
-% - maybe this could be split up by into sections 4.1, 4.2, 4.3, etc. using the same scheme as section 3 [same responsibilities as 3]
+%   3.1 AMR
+%   3.2. Hydro: Godunov (PPM)
+%   3.3  Hydro: Godunov (MUSCL)
+%   3.4. Hydro: Finite difference (ZEUS)
+%   3.5. MHD: Dedner
+%   3.6. Gravity
+%   3.7. Particle Integration
+%   3.8. Chemistry
+%   3.9. Cooling
+%   3.10. Radiation: Homogeneous
+%   3.11  Radiation: ray-tracing
+ %  3.12  Radiation: FLD
+%   3.13. Star formation & Feedback
+%   3.14. Timestep constraints
+% 4. Code tests
+%   4.1 Verifying and Validating the Enzo code
+%   4.2 Representative test problems
 % 5. Parallelism 
-% 5.1. Parallel strategy [GB, RH]
-% 5.2. Parallel performance [JB, GB, RH]
-% 6. Code Tests [All]
-% 7. Summary and Conclusions
+%   5.1. Parallel strategy 
+%   5.2. Parallel performance 
+% 6. Code development methodology
+% 7. Conclusions
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -40,22 +47,19 @@
 \begin{document}
 
 \title{Enzo: An Adaptive Mesh Refinement Code for Astrophysics}
-\author{Greg Bryan\altaffilmark{1}, Michael L. Norman\altaffilmark{2}, 
-Brian W. O'Shea\altaffilmark{3}, Robert Harkness\altaffilmark{4}, Tom Abel\altaffilmark{5},
-David C. Collins,\altaffilmark{2} 
-Alexei Kritsuk\altaffilmark{2} and James Bordner\altaffilmark{2} }
+\author{Authors}
 
-\altaffiltext{1}{ Department of Astronomy, Columbia University,
-New York, NY, 10027, U.S.A.  Email: gbryan@astro.columbia.edu }
-\altaffiltext{2}{Center for Astrophysics and Space Sciences,
-University of California at San Diego.
-Email: mnorman,dcollins,akritsuk,jbordner@cosmos.ucsd.edu}
-\altaffiltext{3}{Theoretical Astrophysics (T-6), Los Alamos National
-Laboratories.  Email:  bwoshea@lanl.gov}
-\altaffiltext{4}{San Diego Supercomputing Center, University of California
-at San Diego.  Email: harkness@sdsc.edu}
-\altaffiltext{5}{Kavli Institute for Particle Astrophysics and Cosmology,
- Stanford University.  Email:  tabel@stanford.edu}
+%\altaffiltext{1}{ Department of Astronomy, Columbia University,
+%New York, NY, 10027, U.S.A.  Email: gbryan@astro.columbia.edu }
+%\altaffiltext{2}{Center for Astrophysics and Space Sciences,
+%University of California at San Diego.
+%Email: mnorman,dcollins,akritsuk,jbordner@cosmos.ucsd.edu}
+%\altaffiltext{3}{Theoretical Astrophysics (T-6), Los Alamos National
+%Laboratories.  Email:  bwoshea@lanl.gov}
+%\altaffiltext{4}{San Diego Supercomputing Center, University of California
+%at San Diego.  Email: harkness@sdsc.edu}
+%\altaffiltext{5}{Kavli Institute for Particle Astrophysics and Cosmology,
+% Stanford University.  Email:  tabel@stanford.edu}
 
 \begin{abstract}
 We describe the \enzo\ code, which uses a structured adaptive mesh refinement technique to provide high spatial and temporal resolution for modeling astrophysical flows.  The code includes support for the following physics: multi-dimensional hydrodynamics, self-gravity, N-body dynamics, primordial gas chemistry, optically-thin radiative cooling, and cosmological expansion.  Two Eulerian hydrodynamic solvers are provided.  This paper describes the method as well as the code's performance on a wide range of test problems.
@@ -79,16 +83,19 @@ We now describe each of the numerical methods in detail.  The structure of this 
 
 \input{numerical-amr}
 \input{numerical-ppm}
+\input{numerical-muscl} % new
 \input{numerical-zeus}
+\input{numerical-mhd-dedner} % new
 \input{numerical-gravity}
 \input{numerical-particle}
 \input{numerical-chemistry}
+\input{numerical-cooling} % new
+\input{numerical-radiation-homogeneous} % new
+\input{numerical-radiation-raytracing} % new
+\input{numerical-radiation-fld} % new
 \input{numerical-starformation}
 \input{numerical-timestep}
-%\input{numerical-units}
-
-%% Section: software implementation
-% \input{software}
+\input{numerical-analysis} % new
 
 %% Section: code tests
 %%  this should probably be done with one file per test
@@ -97,38 +104,13 @@ We now describe each of the numerical methods in detail.  The structure of this 
 %% Section: parallelism and performance
 \input{parallel}
 
-%% Section: discussion
-\input{discussion}
+%% Section: code development methodology
+\input{development} % new
 
-%% Section: summary
-\input{summary}
-
-\appendix
-
-%% Appendix: interpolation
-%\input{app-interpolation}
-
-%% Appendix:  Data Structures
-\input{app-datastruct}
-
-%% Appendix:  I/O
-\input{app-IO}
-
-%% Appendix:  Zeus hydro
-%\input{app-zeushydro}
-
-%% Appendix:  PPM hydro
-%\input{app-ppmhydro}
-
-%% Appendix:  gravity solver
-%\input{app-gravity}
-
-%% Appendix:  
-\input{app-chemistry}
+%% Section: conclusions
+\input{conclusions}  % new
 
 \bibliographystyle{apj}
 \bibliography{apj-jour,ms}  % looks in ms.bib for bibliography info
 
 \end{document}  
-
-
