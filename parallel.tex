@@ -2,6 +2,10 @@
 
 \subsection{Parallel Strategy}
 
+% GB to work on this
+%  - expand to include better description
+%  - include load balancing options
+
 When \enzo\ is run on a distrubuted platform, some of the data is
 replicated to all processors, while some remains on a single processor.
 A description of the entire hierarchy (the position and size of each grid, as well
@@ -19,10 +23,9 @@ grids is not forced during message passing, for maximum flexibility (though not
 necessarily maximum efficiency).  
 The MPI message passing library\footnote{http://www-unix.mcs.anl.gov/mpi/}
  is used to transfer data between processors.
+ 
+ 
 
-The performance of \enzo\ has been extensively studied using the
-software package LCAPerf.  More on LCAPerf can be found in section
-\ref{sec.performance} 
 
 %old text
 %Every processor 
@@ -50,15 +53,14 @@ needed for the PPM hydro stencil. }
 \subsection{Performance}
 \label{sec.performance}
 
-\red{
-This is really James' section.  Profiling the code is very difficult because
-of the many possible configurations that it can be run under.  In general,
-we want to show both AMR and unigrid calculations scale, for cosmology runs
-and for pure hydro (i.e. turbulence) runs.  The gravity scales far differently
-than the hydro, so perhaps we should do a gravity-only (dark matter?) vs. 
-hydro only (driven isothermal turbulence, non-gravitating) scaling?
-We should also include performance information for some of the very large
-simulations that we've done -- 2048$^3$ unigrid and 512$^3$ AMR runs.
-}
+\subsubsection{Performance model \red{(Greg)}}
 
-\red{It seems like this section will be fiercely debated.  So have fun.}
+% Maybe include Greg's text on general scaling arguments
+
+\subsubsection{Unigrid scaling \red{(Brian)}}
+
+% Brian to work on this, scaling data from Harkness
+
+\subsubsection{AMR scaling \red{(Greg)}}
+
+% Greg to work on this, scaling data from his runs, or maybe from John Wise
