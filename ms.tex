@@ -17,27 +17,29 @@
 %   2.1 Physical equations
 %   2.2 Overview of numerical methods
 % 3.  Numerical methods
-%   3.1 AMR
-%   3.2. Hydro: Godunov (PPM)
-%   3.3  Hydro: Godunov (MUSCL)
-%   3.4. Hydro: Finite difference (ZEUS)
-%   3.5. MHD: Dedner
-%   3.6  MHD: CT
-%   3.7. Gravity
-%   3.8. Particle Integration
-%   3.9. Chemistry
-%   3.10. Cooling
-%   3.11. Radiation: Homogeneous
-%   3.12  Radiation: ray-tracing
- %  3.13  Radiation: FLD
-%   3.14. Star formation & Feedback
-%   3.15. Timestep constraints
+%   3.1   AMR
+%   3.2.  Hydro: Godunov (PPM)
+%   3.3   Hydro: Godunov (MUSCL)
+%   3.4   Hydro: Finite difference (ZEUS)
+%   3.5   MHD: Dedner
+%   3.6   MHD: CT
+%   3.7   Gravity
+%   3.8   Particle Integration
+%   3.9.  Chemistry
+%   3.10 Cooling
+%   3.11 Radiation: Homogeneous
+%   3.12 Radiation: ray-tracing
+%   3.13 Radiation: FLD
+%   3.14 Thermal conduction
+%   3.15 Star formation & Feedback
+%   3.16 Timestep constraints
+%   3.17 Analysis
 % 4. Code tests
 %   4.1 Verifying and Validating the Enzo code
 %   4.2 Representative test problems
 % 5. Parallelism 
-%   5.1. Parallel strategy 
-%   5.2. Parallel performance 
+%   5.1 Parallel strategy 
+%   5.2 Parallel performance 
 % 6. Code development methodology
 % 7. Conclusions
 %
@@ -95,6 +97,7 @@ We now describe each of the numerical methods in detail.  The structure of this 
 \input{numerical-radiation-homogeneous} % new
 \input{numerical-radiation-raytracing} % new
 \input{numerical-radiation-fld} % new
+\input{numerical-conduction} % new
 \input{numerical-starformation}
 \input{numerical-timestep}
 \input{numerical-analysis} % new
