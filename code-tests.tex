@@ -85,10 +85,33 @@ Problem type 20, unigrid and AMR both.  Tests gravity + hydro.
 Talk about cosmology code comparisons, where Enzo is good/weak.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Representative MHD test}
+\subsubsection{MHD: Orszag-Tang Vortex}
 \label{sec.tests.mhd}
-\red{(Dave)}
-One representative MHD test.  What's the best/hardest one?
+Figure \ref{fig.orszag} shows the Orszag-Tang vortex problem, a typical test
+problem for MHD \citep{Orszag79}.  The left panel shows the MHD-CT result, while
+the right panel shows the Dedner result.  This test shows that small scale structure
+can be generated in MHD from large scale initial perturbations.  
+The test begins 
+with uniform density, $\rho_0=25/36 \pi$ and pressure, $P_0=5/12 \pi$.  There is
+a single rotational mode in the velocity, and two in the magnetic field: 
+${\bf v}_0 $ = (-sin(2$\pi$ y) $ \hat{x}$ , sin(2$\pi$ x) $\hat{y}$),
+${\bf B}_0$  =  (-sin(2 $\pi$ y) $ \hat{x},$ sin( 4 $\pi$ x )$\hat{y}$).  The
+simulation is evolved to t=0.48.  One can see that the structures are accurately
+represented as compared to, for instance, \citet{Toth00}, and that the
+resolution of shocks is comparable in both methods.  
+
+{\emph Dave's note:  I'll probably play around with these results in future
+versions.}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{figures/MHDCT_OrszagTang_Density.eps}
+\includegraphics[width=0.4\textwidth]{figures/MHDDedner_OrszagTang_Density.eps}
+\caption{TANG}
+\label{fig.orszag}
+\end{center}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{1-zone free-fall test}
