@@ -1,2 +1,134 @@
 \subsection{Radiation transport: Flux-limited diffusion}
 \label{sec.num.rad-fld}
+
+%% With regards to the numerical method section, we're really looking for
+%% something that's no more than a page long: a few relevant equations,
+%% maybe a finite difference equation or two if you feel that it's
+%% relevant, but primarily a description of the algorithms used for the
+%% FLD solve and a brief explanation of how it's coupled to the
+%% chemistry, as well as references to the relevant method paper(s).
+%% Working in a reference or two to science papers is also great! 
+
+In addition to the ray-tracing approach for radiation transport
+described in Section \ref{sec.num.raytracing}, Enzo currently includes
+a field-based radiation transport solver for problems posed on uniform
+(i.e.~non-SAMR grids).  Detailed explanations of the model and
+solution approach may be found in
+\cite{NBHBROW2007}, \cite{ReynoldsHayesPaschosNorman2009} and
+\cite{NRS2009}, the salient features of which are reproduced here. 
+In addition, comparisons of this solver with other astrophysical
+radiation transport solvers may be found in \cite{IlievEtAl2009}.  
+
+Enzo's field-based radiation solver focuses on
+a flux-limited diffusion approximation for cosmological radiative
+transfer, with couplings to both the gas energy and chemical number
+densities, 
+\begin{eqnarray}
+  \label{eq:fld_radiation}
+  \partial_t E_r + \frac1a \nabla\cdot\left(E_r \vec{v}_b\right) &=& 
+    \nabla\cdot\left(D\nabla E_r\right) -
+    \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
+  \label{eq:fld_heating}
+  \partial_t e_c &=& -\frac{2\dot{a}}{a} e_c + G - \Lambda, \\
+  \label{eq:fld_chemistry}
+  \partial_t {\mathrm n}_i + 
+    \frac1a \nabla\cdot\left({\mathrm n}_i \vec{v}_b\right) &=& 
+    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
+    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
+\end{eqnarray}
+where $E_r$ is a grey radiation energy density, $e_c$ is the
+internal energy correction due to photo-heating and chemical cooling,
+and ${\mathrm n}_i$ correspond to the chemical number densities of
+HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
+number density.  Here, we define the grey radiation energy density
+through first assuming a fixed frequency spectrum, i.e.
+$E_{\nu}(\nu,\vec{x},t) = \tilde{E}_r(\vec{x},t) \chi(\nu)$, and then
+defining the integrated quantity
+\begin{equation}
+\label{eq:grey_radiation_energy}
+   E_r(\vec{x},t) \equiv \int_{\nu_0}^{\infty}
+   E_{\nu}(\nu,\vec{x},t)\,\mathrm d\nu \  = \ 
+   \tilde{E}_r(\vec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
+\end{equation}
+In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
+square-root flux-limiter} (see \cite{Morel2000}), $\kappa$ is the total
+opacity, $\eta$ is the field of radiation sources, $G$ provides the
+radiation induced photo-heating, $\Lambda$ provides the chemical
+cooling, $\alpha_{i,j}$ are the reaction rate coefficients defining
+the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
+and $\Gamma_i^{ph}$ are the radiation induced photo-ionization rates. 
+
+The system of equations
+(\ref{eq:fld_radiation}-\ref{eq:fld_chemistry}) is solved
+independently of Enzo's hydrodynamics, gravity and dark-matter solvers
+(sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
+the advective portions of equations (\ref{eq:fld_radiation}) and
+(\ref{eq:fld_chemistry}) to be taken care of by the fluid solvers.
+Due to the disparate time scales between radiation transport and chemical
+ionization and heating, the remainder of these equations is solved
+using an operator-split algorithm.  Within a given time step to evolve
+$(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1}, {\mathrm
+n}_i^{n+1})$, we first evolve equation (\ref{eq:fld_radiation}):
+$(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n}, {\mathrm
+  n}_i^{n})$.  This uses an implicit Euler time discretization, and a
+second-order centered finite-difference spatial discretization,
+resulting in a large linear system of equations.  These are solved
+using a preconditioned conjugate gradient iteration, where the
+preconditioner consists of a geometric multigrid solver.  Both of
+these linear solvers are provided by the HYPRE linear solver library
+(see \cite{FalgoutYang2002} and \cite{hypre-manual}). 
+
+We then evolve the system (\ref{eq:fld_heating}-\ref{eq:fld_chemistry}):  
+$(E_r^{n+1}, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1},
+{\mathrm n}_i^{n+1})$.  Due to the lack of spatial derivatives (since
+advection is handled elsewhere), this system is a coupled system of
+nonlinear ordinary differential equations.  This utilizes an implicit
+quasi-steady-state approximation, formulated as follows.  We consider
+the modified equations,
+\begin{eqnarray}
+  \label{eq:fld_heating_qss}
+  \partial_t e_c &=& -\frac{2\dot{a}}{a} e_c +
+    G\left(\bar{E}_r,\bar{\mathrm n}_i\right) - 
+    \Lambda\left(\bar{E}_r,\bar{\mathrm n}_i\right), \\
+  \label{eq:fld_chemistry_qss}
+  \partial_t {\mathrm n}_i &=& \alpha_{i,j}\left(\bar{e}_c\right)
+    {\mathrm n}_e \bar{\mathrm n}_j - {\mathrm n}_i 
+    \Gamma_i^{ph}\left(\bar{E}_r\right), \quad i=1,\ldots,N_s,
+\end{eqnarray}
+where we have defined the time-centered ``background'' states
+$\bar{E}_r = \left(E_r^{n}+E_r^{n+1}\right)/2$, 
+$\bar{\mathrm n}_i = \left({\mathrm n}_i^{n}+{\mathrm n}_i^{n+1}\right)/2$
+and $\bar{e}_c = \left(e_c^{n}+e_c^{n+1}\right)/2$.  These equations
+may each be solved {\em analytically} for their solution at the time
+$t$, which we denote by
+\begin{eqnarray}
+  \label{eq:fld_heating_qss_sol}
+  e_c(t) &=& \text{sol}_{e}\left(t,\bar{E}_r,\bar{\mathrm n}_i,e_c^n\right), \\
+  \label{eq:fld_chemistry_qss_sol}
+  {\mathrm n}_i(t) &=& \text{sol}_{\mathrm n_i}
+  \left(t,\bar{E}_r,\bar{e_c},\mathrm n_i^n\right), \quad i=1,\ldots,N_s. 
+\end{eqnarray}
+We then define a nonlinear system of equations to compute the
+time-evolved solutions $\left(E_r^{n+1}, e_c^{n+1}, 
+{\mathrm n}_i^{n+1})\right)$ as
+\begin{eqnarray}
+  \label{eq:fld_heating_qss_fe}
+  f_e(e_c^{n+1},{\mathrm n}_i^{n+1}) &\equiv& e_c^{n+1} -
+    \text{sol}_{e}\left(t^{n+1},\bar{E}_r,\bar{\mathrm n}_i,e_c^n\right)
+    = 0, \\
+  \label{eq:fld_chemistry_qss_fn}
+  f_{\mathrm n_i}(e_c^{n+1},{\mathrm n}_i^{n+1}) &\equiv& 
+    {\mathrm n}_i(t) - \text{sol}_{\mathrm n_i}
+    \left(t,\bar{E}_r,\bar{e_c},\mathrm n_i^n\right)=0, \quad
+    i=1,\ldots,N_s.  
+\end{eqnarray}
+This system of $N_s+1$ nonlinear equations is solved using a damped
+fixed point iteration, 
+\[
+   U_i = U_i - \lambda f_i(U), \quad i=1,\ldots,N_s+1,
+\]
+where $U$ is a vector containing the solutions to equations
+(\ref{eq:fld_heating_qss_fe}-\ref{eq:fld_chemistry_qss_fn}).  In this
+iteration, for the first 50 sweeps we use $\lambda=1$, and for more
+challenging problems if that does not suffice we switch to a damping
+parameter of $\lambda=0.1$.
