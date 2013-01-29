@@ -1,6 +1,5 @@
-Instructions for compiling the paper:  Make sure that you have access to latex and
+Instructions for compiling the paper: Make sure that you have access to latex and
 bibtex.  All of the bibliography stuff is in ms.bib (you can get bibtex info
-off of ADS, I highly recommend it).  The "cleandir.bat" script cleans out all 
-of the random unnecessary files out of the directory, and "makepaper.bat" will 
-compile the paper with all of the bibtex stuff.  Email bwoshea@lanl.gov if you 
-have any questions.
+off of ADS, I highly recommend it).  "make" will compile the paper.  "make clean"
+will clean out all of the random unnecessary files in the directdory.  Email 
+Brian (oshea@msu.edu) if you have any questions.
