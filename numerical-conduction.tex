@@ -4,3 +4,50 @@
 We've got both kinds of conduction: isotropic AND anisotropic.  How
 great is that?
 
+
+
+Enzo implements the equations of isotropic heat conduction in a manner
+similar to that of \citet{2007ApJ...664..135P}, where we model the
+flux of isotropic heat transport:
+
+\begin{equation}
+\mathbb{F} = -\kappa_{sp} \nabla T
+\end{equation}
+
+Where $\kappa_{sp}$ is the Spitzer conduction coefficient, $4.6 \times 10^{-7}$~T$^{5/2}$ erg
+s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}, and using a
+value for the Coulomb logarithm, $\log \Lambda = 37.8$, that is
+appropriate for the intracluster medium \citep{1988xrec.book.....S}.
+It is quite possible that the local heat flux can become unphysical in
+the high-temperature, low-density cluster regime when using this
+formulation; thus, we take into account the saturation of the heat
+flux at a maximum level of
+
+\begin{equation}
+j_{sat} \simeq 0.4 n_e k_b T \left( \frac{2 k_b T}{\pi m_e} \right)^{1/2}
+\end{equation}
+
+\citep{1977ApJ...211..135C}, and to ensure a smooth transition between
+the Spitzer regime and the saturated regime we define an effective
+conductivity using the formalism of \citet{1988xrec.book.....S}
+
+\begin{equation}
+\kappa_{eff} = \frac{\kappa_{sp}}{1 + 4.2 \lambda_e / \ell_T} \; ,
+\end{equation}
+
+where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
+/ |\nabla T|$ is the characteristic length scale of the local
+temperature gradient.
+
+It is important to note that the conductivity can be strongly affected
+by the presence of magnetic fields, which may strongly suppress heat
+flow.  The strength and confuction of magnetic fields in the
+intracluster medium is poorly understood, and it is unclear to what
+extent these magnetic fields will suppress conduction.  For the
+purposes of the work described in this paper, we assume that the
+conductivity of the plasma can be described in terms of an effective
+conductivity, which can be expressed as a fraction f$_{Sp}$ of the
+Spitzer conductivity (where f$_{Sp} \leq 1.0$ are considered physical
+values).
+
+

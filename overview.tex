@@ -288,6 +288,31 @@ where $k_{ij}$ are the rate coefficients for the two-body reactions and are usua
 
 \subsubsection{Thermal conduction}
 
+Enzo implements the equations of isotropic heat conduction in a manner
+similar to that of \citet{2007ApJ...664..135P}, where we model the
+flux of isotropic heat transport:
+
+\begin{equation}
+\mathbb{F} = -\kappa_{sp} \nabla T
+\end{equation}
+
+Where $\kappa_{sp}$ is the Spitzer conduction coefficient
+\citep{1962pfig.book.....S}.  Saturation of the heat flux in
+high-temperature, low-density regimes (such as the intracluster medium
+in galaxy clusters) is taken into account.  Thermal conduction in a
+plasma can be strongly affected by the presence of magnetic field
+lines, which may strongly suppress heat flow perpendicular to the
+magnetic field.  In that case, we allow for heat transport only along
+the magnetic field lines in simulations that include this physics, as follows:
+
+\begin{equation}
+\mathbb{F} = -\kappa_{sp} \^{b} (\^{b} \cdot \nabla T)
+\end{equation}
+
+Where $\^{b}$ is the unit vector denoting the direction of the
+magnetic field.  In both the isotropic and anisotropic limits, we
+assume that conductivity can be suppressed relative to the ideal
+Spitzer conductivity, and express this as a constant multiplier.
 
 
 % ====================================================
