@@ -1,11 +1,6 @@
 \subsection{Thermal conduction}
 \label{sec.num.conductions}
 
-We've got both kinds of conduction: isotropic AND anisotropic.  How
-great is that?
-
-
-
 Enzo implements the equations of isotropic heat conduction in a manner
 similar to that of \citet{2007ApJ...664..135P}, where we model the
 flux of isotropic heat transport:
@@ -37,9 +32,8 @@ conductivity using the formalism of \citet{1988xrec.book.....S}
 
 where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 / |\nabla T|$ is the characteristic length scale of the local
-temperature gradient.
-
-It is important to note that the conductivity can be strongly affected
+temperature gradient.  Furthermore, it is important to note that the
+overall level of thermal conductivity can be strongly affected
 by the presence of magnetic fields, which may strongly suppress heat
 flow.  The strength and confuction of magnetic fields in the
 intracluster medium is poorly understood, and it is unclear to what
@@ -50,4 +44,37 @@ conductivity, which can be expressed as a fraction f$_{Sp}$ of the
 Spitzer conductivity (where f$_{Sp} \leq 1.0$ are considered physical
 values).
 
+Thermal conduction in a
+plasma can be strongly affected by the presence of magnetic field
+lines, which may strongly suppress heat flow perpendicular to the
+magnetic field.  In that case, we allow for heat transport only
+parallel to
+the magnetic field lines in magnetohydrodynamic simulations.
+Mathematically, this is treated as:
 
+\begin{equation}
+\mathbb{F} = -\kappa_{sp} \^{b} (\^{b} \cdot \nabla T)
+\end{equation}
+
+Where $\^{b}$ is the unit vector denoting the direction of the
+magnetic field.  As with the isotropic thermal conduction, we allow a
+multiplicative factor f$_{Sp}$ to take into account the possible
+behavior of magnetic fields below the resolution limit of the
+simulation.
+
+Both isotropic and anisotropic thermal conduction in Enzo are treated
+in an operator-split manner.  Furthermore, within the heat transport
+module, transport along the x, y, and z directions are computed in a
+directionally-split fashion, with heat flux along each direction
+calculated at the + and - faces of the cell using the arithmetic mean
+of the cell-centered temperature in cells $n$ and $n+1$ or $n-1$ and
+$n$, respectively (empirically, this is more stable than taking the
+geometric mean of the cell-centered temperatures).  The addition of
+transport along magnetic field lines requires the calculation of
+cross-terms in the temperature derivatives at cell faces, which can
+result in spurious oscillations in the temperature field in regions
+where the temperature gradient is strong in more than one spatial
+direction.  Controlling these oscillations requires the addition of a
+flux limiter for calculations of the temperature field.  In this case,
+we choose the monotonized central difference flux limiter \citep{1977JCoPh..23..263V}, which serves to maintain numerical stability without
+sacrificing substantial speed or accuracy.
