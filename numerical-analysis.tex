@@ -69,3 +69,43 @@ feasible during the course of a simulation.
 
 \subsubsection{Shock finding}
 
+Identification of shocks and their pre- and post-shock conditions can be
+accomplished through a combination of either temperature or velocity jumps with
+dimensionally split or unsplit search methods.  The primary method used in
+\enzo~is the dimensionally unsplit temperature jump method described in detail
+in \citet{2008ApJ...689.1063S}.  We briefly outline the method below.
+
+For every cell, we first determine whether is satisfies the following conditions
+necessary to be flagged as a shock:
+\begin{eqnarray}
+\nabla \cdot \vec{v} < 0 \\
+\nabla T \cdot \nabla S > 0\\
+T_2 > T_1 \\
+\rho_2 > \rho_1,
+\end{eqnarray}
+where $\vec{v}$ is the velocity field, $T$ is the temperature, $\rho$ is the
+density, and $S=T/\rho^{\gamma-1}$ is the entropy.  An optional temperature floor
+may be chosen, useful for example in cosmological simulations without a radiation
+background.
+
+Once a cell is flagged, the local temperature gradient is calculated, which is 
+then used to traverse cells parallel to the gradient to search for the first
+pre- and post-shock cell that do not satisfy the above conditions.  If during
+the search a cell satisfying the conditions is found to have a more convergent
+flow, that cell is marked as the center, and the search is started again. Using the 
+temperature values from each of these cells, the Mach number is then solved
+using the Rankine-Hugoniot temperature jump conditions:
+\begin{equation}
+\frac{T_2}{T_1} = \frac{(5\Mach^2 - 1)(\Mach^2 + 3)}{16\Mach^2},
+\end{equation}
+where $T_2$ and $T_1$ are the post-shock~(downstream) and pre-shock~(upstream)
+temperatures, respectively. $\Mach$ is the upstream Mach number.  
+
+Shock finding in the context of AMR is applied grid-by-grid.  If a search for
+pre/post-shock cells goes outside the bounds of the grid ghost zones, the
+search is stopped for that particular shocked cell. In most situations this is
+adequate since the hydrodynamic shock is captured in fewer than the number of
+ghost zones.  Shock finding can be run either upon data output, or at each step
+in the evolution of an AMR level if the Mach and pre/post-shock quantities are
+needed for additional physics modules.
+
