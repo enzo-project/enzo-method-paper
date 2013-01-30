@@ -177,7 +177,7 @@ Finally, we turn to the refinement criteria themselves.  Although generalized re
 
 \item{\em Slope.}  If the normalized slope $(q_{i+1} - q_{i-1})/ (2 q_i)$ is larger than a specified value (typically 0.3), then the cell is flagged.
 
-\item{\em Baryon mass.}  This refinement criteria is identified to mimic a Lagrangian method in that it tries to keep a fixed mass resolution.  In this method, a cell is refined if the baryonic mass in the cell ($M_g = \rho \Delta_x^d$) is larger than a specified value:
+\item{\em Baryon mass.}  This refinement criterion is identified to mimic a Lagrangian method in that it tries to keep a fixed mass resolution.  In this method, a cell is refined if the baryonic mass in the cell ($M_g = \rho \Delta_x^d$) is larger than a specified value:
 \begin{equation}
 M_g > \rho_{\rm flag} {\Delta x^d_{\rm root}} r^{\epsilon_l l},
 \end{equation}
@@ -190,9 +190,9 @@ u_{i-1} - u_{i+1} & > & 0 \\
 e_i / E_i & > & 0.1  \nonumber
 \end{eqnarray}
 
-\item{\em Particle (dark matter) mass.}  This refinement criteria is precisely the same as the baryon overdensity criteria except it uses the grided (CIC) particle density.
+\item{\em Particle (dark matter) mass.}  This refinement criterion is precisely the same as the baryon overdensity criterion except it uses the grided (CIC) particle density.
 
-\item{\em Jeans Length.}  Following \cite{Truelove98}, the code can be forced to refine the Jeans length by a fixed number of cells, or, in more specifically, whenever the following criteria is not met:
+\item{\em Jeans Length.}  Following \cite{Truelove98}, the code can be forced to refine the Jeans length by a fixed number of cells, or, in more specifically, whenever the following criterion is not met:
 \begin{equation}
 \Delta x < \left( \frac{\pi k_B T}{J^2 G \rho m_H} \right)^{1/2}
 \end{equation}
@@ -212,18 +212,25 @@ where $J$ is the required number of cells per Jeans length (4 by default).
 \end{equation}
 where $\epsilon_s$ is a dimensionless parameter.
 
-\item{\em Optical depth}
+\item{\em Optical depth.} This refinement criterion ensures that cells on the highest level of refinement have an HI optical depth lower than unity.  The optical depth of a cell is estimated to be:
 
-\item{\em Resistive length}
+\begin{equation}
+\tau = \sigma_{HI} n_{HI} \Delta x 
+\end{equation}
+
+where $\sigma_{HI}$ is the neutral atomic hydrogen absorption cross section, $n_{HI}$ is the proper HI number density, and $\Delta x$ is the cell width.  If $\tau > 1$, the cell is refined further, up to the maximum level of refinement.
+
+\item{\em Resistive length.}  In a way similar to the Jeans length criterion described above, the code can be forced to locally resolve the resistive length scale by a minimum of a fixed number of cells.  This is done by ensuring that the resistive length scale, defined as
 
 \begin{equation}
 L_R = |B| / |\nabla \times B|
 \end{equation}
 
-\item{\em ``Must refine region''}
+is always refined by at least N cells locally (i.e., refine a given cell further if $L_R \leq N \Delta x$).
 
-\item{\em Metallicity}
+\item{\em ``Must refine region''}.  This refinement criterion is used to ensure that all cells in a given subvolume of the simulation are refined to {\it at least} some minimum level of refinement.  The subvolume is user-specified, and may evolve over time (e.g., to follow a structure of interest that is traveling through the simulation volume).
 
+\item{\em Metallicity.}  This refinement criterion ensures that all cells with a metallicity (defined as $Z = \equiv \rho_{Z} / \rho_{b} / 0.022$, where $\rho_{Z}$ is the density of metals in the cell, $\rho_{b}$ is the total baryon density (including metals), and 0.022 is the solar metal fraction) above a user-defined value is refined to {\it at least} some minimum level of refinement. 
 
 \end{enumerate}
 
