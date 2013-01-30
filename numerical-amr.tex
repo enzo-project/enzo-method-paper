@@ -29,11 +29,13 @@ timestep.  Then one timestep is taken on all grids at the next level of refineme
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
+%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
+\includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
 \end{center}
-\caption{\emph{Left:}  Example of a simple, distributed AMR hierarchy showing real and ghost grids.
-\emph{Right:}  Example 2D \enzo\ grid showing real and ghost zones, as 
-needed for the PPM hydro stencil. }
+\caption{\emph{Left:} Example of the timesteps on a 2-level AMR
+  hierarchy.  Enzo does not restrict the timesteps on the finer levels
+  to be a factor of $1/2^n$ smaller.  \emph{Right:} The order in which
+  the AMR grids are evaulated on each level.}
 \label{fig:wcycle}
 \end{figure}
 
