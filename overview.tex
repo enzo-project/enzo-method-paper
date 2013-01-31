@@ -18,29 +18,52 @@ We begin by laying out the equations to be solved and then discuss briefly the t
 
 \subsubsection{Hydrodynamics and Gravity}
 
-The usual Eulerian equations of gas dynamics with gravity are given by
+The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coordinate systems comoving the cosmological expansion are given by
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
-          + \vecv \cdot \nabla \rho
-    & = & - \rho \nabla \cdot \vecv,
+          + \frac{1}{a} \vecv \cdot \nabla \rho
+    & = & - \frac{1}{a} \rho \nabla \cdot \vecv, 
         \label{eq:mass} \\
 %
-\frac{\partial \vecv }{ \partial t} 
-          + ( \vecv \cdot \nabla ) \vecv 
-    & = & - \frac{1}{\rho} \nabla p
-          - \nabla \phi,
+\frac{\partial \vecv}{\partial t}  
+          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
+    & = & - \frac{\dot{a}}{a} \vecv 
+          - \frac{1}{a \rho} \nabla p
+          - \frac{1}{a} \nabla \phi, 
         \label{eq:momentum} \\
 %
- \frac{\partial E}{\partial t} + \vecv \cdot \nabla E
-    & = & - \frac{1}{\rho} \nabla \cdot (p \vecv) 
-          - \vecv \cdot \nabla \phi
-%\nonumber          \\  & &     % uncomment for 2-column
-     + \Gamma - \Lambda
-        \label{eq:total_energy}
+\frac{\partial \Ep}{\partial t} 
+         + \frac{1}{a} \vecv \cdot \nabla E
+   & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
+         - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
+%\nonumber   & &   %uncomment for 2-column
+         - \frac{1}{a} \vecv \cdot \nabla \phi 
+                + \Gamma - \Lambda.
+       \label{eq:total_energy} 
 \end{eqnarray}
+
+%\begin{eqnarray} 
+%\frac{\partial \rho}{\partial t} 
+%          + \vecv \cdot \nabla \rho
+%    & = & - \rho \nabla \cdot \vecv,
+%        \label{eq:mass} \\
+%%
+%\frac{\partial \vecv }{ \partial t} 
+%          + ( \vecv \cdot \nabla ) \vecv 
+%    & = & - \frac{1}{\rho} \nabla p
+%          - \nabla \phi,
+%        \label{eq:momentum} \\
+%%
+% \frac{\partial E}{\partial t} + \vecv \cdot \nabla E
+%    & = & - \frac{1}{\rho} \nabla \cdot (p \vecv) 
+%          - \vecv \cdot \nabla \phi
+%%\nonumber          \\  & &     % uncomment for 2-column
+%     + \Gamma - \Lambda
+%        \label{eq:total_energy}
+%\end{eqnarray}
 %
-Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the baryonic total specific fluid energy, the baryonic specific thermal energy, the baryonic density, velocity and pressure, respectively.  
+Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the comoving total specific fluid energy, specific thermal energy, baryonic density, velocity and pressure, respectively.  
 %Here we use primes to indicate variables defined in the absolute frame of reference (to distinguish them from a comoving frame).  
 The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation. 
 Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy_prime}).
@@ -72,60 +95,62 @@ Equation (\ref{eq:potential}) includes contributions to the gravitational potent
 
 \subsubsection{Comoving Coordinates}
 
+For completeness, we note here that as part of the usual transformation to comoving coordinates, we have defined the following comoving quantities (primes indicate variables defined in the usual, proper, coordinate system).
+
 This set of coupled hydrodynamic plus gravity equations is the standard one that \enzo solves.  However, in the cosmological case it is useful to transform these to a coordinate system that is comoving with the expanding universe \citep{Peebles93} (but note that \enzo\ can also operate in a fixed coordinate system). Specifically, we define:
 \begin{eqnarray}
 \vecx & = & \vecr/a, \\
-\vecvp & = & a \hspace{0.5mm} d\vecx/dt = 
-              \vecv - \dot{a}\vecx, \\
-\rhop    & = & a^3 \rho,   \\
-\pp       & = & a^3 p, \\
-\Ep       & = & E - 
+\vecv & = & a \hspace{0.5mm} d\vecx/dt = 
+              \vecvp - \dot{a}\vecx, \\
+\rho    & = & a^3 \rhop,   \\
+p       & = & a^3 \pp, \\
+E       & = & \Ep - 
               \dot{a} \vecx \cdot \vecvp - 
               \frac{1}{2} \dot{a}^2 \vecx^2, \\
-\phip    & = & \phi + \frac{1}{2} a \ddot{a} \vecx^2.
+\phi    & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2.
 \end{eqnarray}
 
-These definitions result in the following comoving equivalents to eqs. 
-(\ref{eq:mass})-(\ref{eq:potential}).
+%These definitions result in the following comoving equivalents to eqs. 
+%(\ref{eq:mass})-(\ref{eq:potential}).
+%%
 %
-
-\begin{eqnarray} 
-\frac{\partial \rhop}{\partial t} 
-          + \frac{1}{a} \vecvp \cdot \nabla \rhop 
-    & = & - \frac{1}{a} \rhop \nabla \cdot \vecvp, 
-        \label{eq:mass_prime} \\
-%
-\frac{\partial \vecvp}{\partial t}  
-          + \frac{1}{a} ( \vecvp \cdot \nabla ) \vecvp 
-    & = & - \frac{\dot{a}}{a} \vecvp 
-          - \frac{1}{a \rhop} \nabla \pp 
-          - \frac{1}{a} \nabla \phip, 
-        \label{eq:momentum_prime} \\
-%
-\frac{\partial \Ep}{\partial t} 
-         + \frac{1}{a} \vecvp \cdot \nabla \Ep 
-   & = & - \frac{\dot{a}}{a} (3 \frac{\pp}{\rhop} + {\vecvp \cdot \vecvp} )
-         - \frac{1}{a \rhop } \nabla \cdot (p \vecvp) 
-%\nonumber   & &   %uncomment for 2-column
-         - \frac{1}{a} \vecvp \cdot \nabla \phip 
-                + \Gamma - \Lambda.
-       \label{eq:total_energy_prime} \\
-%
-\Ep  & = & \ep + \frac{1}{2} {\vecvp \cdot \vecvp},
-        \label{eq:total_energy_def_prime} \\
-%
-\ep                  & = & 
-        \pp/\left[ \left( \gamma - 1 \right) \rhop \right],
-      \label{eq:state_prime} \\ 
-{\nabla}^2 \phip    & = & 
-        \frac{4\pi G}{a} ( \rhop_{total} - \rhop_0 ).
-      \label{eq:poisson}
-\end{eqnarray}
-%
-%We use the proper peculiar baryonic velocity $\vecv_b \equiv a(t) d\vecx / dt$, proper pressure $p$, and modified gravitational potential $ \phi $ which is related to the potential in proper coordinates $\Phi$ by 
-%$$\phi \equiv \Phi + \frac{1}{2} a \ddot{a} \vecx^2. $$
-%The density, however, is comoving:
-%$$\rho_b \equiv \rho_{b,proper}a(t)^3, $$
+%\begin{eqnarray} 
+%\frac{\partial \rhop}{\partial t} 
+%          + \frac{1}{a} \vecvp \cdot \nabla \rhop 
+%    & = & - \frac{1}{a} \rhop \nabla \cdot \vecvp, 
+%        \label{eq:mass_prime} \\
+%%
+%\frac{\partial \vecvp}{\partial t}  
+%          + \frac{1}{a} ( \vecvp \cdot \nabla ) \vecvp 
+%    & = & - \frac{\dot{a}}{a} \vecvp 
+%          - \frac{1}{a \rhop} \nabla \pp 
+%          - \frac{1}{a} \nabla \phip, 
+%        \label{eq:momentum_prime} \\
+%%
+%\frac{\partial \Ep}{\partial t} 
+%         + \frac{1}{a} \vecvp \cdot \nabla \Ep 
+%   & = & - \frac{\dot{a}}{a} (3 \frac{\pp}{\rhop} + {\vecvp \cdot \vecvp} )
+%         - \frac{1}{a \rhop } \nabla \cdot (p \vecvp) 
+%%\nonumber   & &   %uncomment for 2-column
+%         - \frac{1}{a} \vecvp \cdot \nabla \phip 
+%                + \Gamma - \Lambda.
+%       \label{eq:total_energy_prime} \\
+%%
+%\Ep  & = & \ep + \frac{1}{2} {\vecvp \cdot \vecvp},
+%        \label{eq:total_energy_def_prime} \\
+%%
+%\ep                  & = & 
+%        \pp/\left[ \left( \gamma - 1 \right) \rhop \right],
+%      \label{eq:state_prime} \\ 
+%{\nabla}^2 \phip    & = & 
+%        \frac{4\pi G}{a} ( \rhop_{total} - \rhop_0 ).
+%      \label{eq:poisson}
+%\end{eqnarray}
+%%
+%%We use the proper peculiar baryonic velocity $\vecv_b \equiv a(t) d\vecx / dt$, proper pressure $p$, and modified gravitational potential $ \phi $ which is related to the potential in proper coordinates $\Phi$ by 
+%%$$\phi \equiv \Phi + \frac{1}{2} a \ddot{a} \vecx^2. $$
+%%The density, however, is comoving:
+%%$$\rho_b \equiv \rho_{b,proper}a(t)^3, $$
 The expansion parameter $a \equiv 1/(1 + z)$ follows the expansion of a smooth, homogeneous background, where $z$, the redshift, is a function only of $t$.  All derivatives are determined with respect to the comoving position $\vecx$, which is defined simply to remove the universal expansion from the coordinate system.
 
 The evolution of $a(t)$ is governed by the formula for the expansion of an isotropic, homogeneous universe:
@@ -145,7 +170,7 @@ Here, $\rhop_0$ is the mean (baryonic and dark) comoving mass density and $\pp_0
 %eq.~(\ref{eq:state}).
 This system of equations is limited to the non-relativistic regime and assumes that curvature effects are not important --- both assumptions are reasonable as long as the  size of the simulated region is small compared to the radius of curvature and the Hubble length $c/H$ ($c$ is the speed of light and $H$ is the Hubble constant).
 
-It is clear that these equation are equivalent to the absolute coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  In the rest of this paper we will employ only the unprimed variables with the understanding that we are not restricting ourselves to cosmological applications.
+It is clear that the evolution equation are equivalent to the fixed coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  We include the cosmological terms with the understanding that we are not restricting ourselves to cosmological applications.
 
 \subsubsection{Particles and Chemistry}
 
