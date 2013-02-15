@@ -413,7 +413,7 @@ The entire procedure just outlined is then repeated on the new grids
 and in this way the entire hierarchy (from the original level examined
 and below) is rebuilt.
 
-\subsubsection{Hydrodynamics: PPM method}
+\subsubsection{Godunov PPM method (Hydrodynamics)}
 
 Two different hydrodynamic methods are implemented in \enzo: the
 piecewise parabolic method (PPM) developed by~\citet{1984JCoPh..54..174C}
@@ -443,9 +443,11 @@ As described in \citet{Bryan95}, we modify the method for use in hypersonic flow
 
 The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
 
+\subsubsection{Godonuv MUSCL with Dednet (HD and MHD)}
 
+\subsubsection{MHDCT}
 
-\subsubsection{Hydrodynamics: ZEUS method}
+\subsubsection{Second order finite difference method (HD)}
 
 The second hydrodynamics method implemented is the finite-different algorithm used in the ZEUS, as described in \citet{Stone92a}.  For this reason, we call this the ZEUS method, although the code is entirely independent from the ZEUS code, and only the hydrodynamical algorithm of \zeus\ is implemented in \enzo -- the MHD and RHD codes are not.
 
