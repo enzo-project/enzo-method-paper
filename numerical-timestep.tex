@@ -38,8 +38,8 @@ satisfied on each level.  The timestep criteria used by Enzo are
 \end{equation}
 
 \begin{equation}
-\Delta t_{cond} = min \left(  \kappa_{cond} \frac{\Delta x^2
-    n}{\kappa(T)} \right)_L,
+\Delta t_{cond} = min \left(  \frac{ \kappa_{cond}}{f_{Sp}} \frac{\Delta x^2
+    n_b}{\kappa(T)} \right)_L,
 \label{eqn:dtcond}
 \end{equation}
 
@@ -139,4 +139,30 @@ previous timestep due to \textit{all photon packets} that crossed that
 cell, with $\hat{r_i}$ being a unit vector that accounting for the
 packet direction.
 
-Equation~\ref{}
+Equation~\ref{eqn:dtcond} is the CFL condition for an explicit
+solution to the equation of heat conduction.  In this expression,
+$n_b$ is the baryon number density, defined as $n_b = \rho_b / \mu
+m_p$, where $\mu$ is the mean molecular weight, $\kappa(T)$ is the
+Spitzer thermal conductivity, and f$_{Sp}$ is a user-defined
+conduction suppression factor whose value must be f$_{Sp} \leq 1$.  Both are defined in
+Section~\ref{sec.num.conductions}.  \kappa_{cond} is a prefactor whose
+value must be $0 < \kappa_{cond}  < 0.5$, and is exactly 0.5 for the
+implemention in Enzo.
+From a practical
+perspective, it is useful to note that, unlike other timestep criteria
+discussed above (which effectively scale as $\Delta x / \sqrt{T}$,
+the timestep criterion due to thermal conduction scales as $\Delta x^2
+/ T^{2.5}$, which can result in a rapid decrease in timestep in
+regions of high resolution and/or temperature.
+
+Finally, Equation~\ref{eqn:dtexpand} is a cosmological constraint that
+limits the timestep so that the simulated universe only expands by
+some fractional amount, f$_{exp}$, during a single step.  In this
+equation, $a$ and $\dot{a}$ refer to the scale factor of the universe
+and its rate of change, respectively.  This
+criteria is necessary because the expansion of the universe and its
+first derivative with respect to time both appear in the equations of cosmological (magneto)hydrodynamics and particle motion,
+and some limit is required in order to model the change of energy and
+momentum due to expansion with a reasonable level of accuracy.  In
+reality, this is only a significant limitation at very high redshift;
+at later times, other timestep criteria are much more important.
