@@ -33,7 +33,7 @@ satisfied on each level.  The timestep criteria used by Enzo are
 \end{equation}
 
 \begin{equation}
-\Delta t_{rad} = min \left(  \sqrt{\frac{\Delta x}{\vec{a}_{rad}} \right)_L,
+\Delta t_{rad} = min \left(  \sqrt{\frac{\Delta x}{\vec{a}_{rad}}} \right)_L,
 \label{eqn:dtrad}
 \end{equation}
 
@@ -145,7 +145,7 @@ $n_b$ is the baryon number density, defined as $n_b = \rho_b / \mu
 m_p$, where $\mu$ is the mean molecular weight, $\kappa(T)$ is the
 Spitzer thermal conductivity, and f$_{Sp}$ is a user-defined
 conduction suppression factor whose value must be f$_{Sp} \leq 1$.  Both are defined in
-Section~\ref{sec.num.conductions}.  \kappa_{cond} is a prefactor whose
+Section~\ref{sec.num.conductions}.  $\kappa_{\rm cond}$ is a prefactor whose
 value must be $0 < \kappa_{cond}  < 0.5$, and is exactly 0.5 for the
 implemention in Enzo.
 From a practical
