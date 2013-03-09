@@ -18,8 +18,29 @@ satisfied on each level.  The timestep criteria used by Enzo are
 \end{equation}
 
 \begin{equation}
+\Delta t_{MHD} = min \left( \kappa_{MHD} \frac{a \Delta x}{v_{f} + |v_x|} \right)_L ,
+\label{eqn:dtMHD}
+\end{equation}
+
+\begin{equation}
 \Delta t_{dm} = min \left(\kappa_{dm} \frac{a \Delta x}{v_{dm,x}} \right)_L ,
 \label{eqn:dtdarkmatter}
+\end{equation}
+
+\begin{equation}
+\Delta t_{accel} = min \left( \sqrt{\frac{\Delta x}{\vec{g}}} \right)_L ,
+\label{eqn:dtaccel}
+\end{equation}
+
+\begin{equation}
+\Delta t_{rad} = min \left(  \sqrt{\frac{\Delta x}{\vec{a}_{rad}}} \right)_L,
+\label{eqn:dtrad}
+\end{equation}
+
+\begin{equation}
+\Delta t_{cond} = min \left(  \frac{ \kappa_{cond}}{f_{Sp}} \frac{\Delta x^2
+    n_b}{\kappa(T)} \right)_L,
+\label{eqn:dtcond}
 \end{equation}
 
 \begin{equation}
@@ -27,43 +48,29 @@ satisfied on each level.  The timestep criteria used by Enzo are
 \label{eqn:dtexpand}
 \end{equation}
 
-\begin{equation}
-\Delta t_{accel} = min \left( \sqrt{\frac{\Delta x}{\vec{g}}} \right)_L 
-\label{eqn:dtaccel}
-\end{equation}
+% \begin{equation}
+% \Delta t_{} = 
+% \label{eqn:dt}
+% \end{equation}
 
- In equations~\ref{eqn:dthydro}-\ref{eqn:dtaccel}, the $min ( \ldots )_L$
-formalism means that this value is calculated for all cells on a given level
-L and the minimum overall value is taken as the timestep.  
-Equation~\ref{eqn:dthydro} ensures that all cells satisfy the 
-Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of an explicit
-finite difference discretization of the Euler equations.  Effectively this condition
-forces the timestep to be small enough such that any changes in the fluid propagate
-less than a single grid spacing, $\Delta x$.  In this equation, $\kappa_{hydro}$ is 
-a numerical constant with a value of $0 < \kappa_{hydro} \leq 1$ (with a typical
-value of $\kappa_{hydro} \sim 0.3-0.5$) that ensures that the CFL condition is always
-met, and $c_s$ and $v_x$ are the sound speed and peculiar baryon
-velocity in a given cell.
+% \begin{equation}
+% \Delta t_{} = 
+% \label{eqn:dt}
+% \end{equation}
 
-Equation~\ref{eqn:dtdarkmatter} is analogous to Equation~\ref{eqn:dthydro} and ensures
-accuracy in the N-body solver by requiring that no dark matter particle travels more than
-one cell width.  The parameter $\kappa_{dm}$ is analogous to $\kappa_{dthydro}$, with
-an identical range of values.  Equation~\ref{eqn:dtexpand} limits the timestep such 
-that the expansion parameter a can only change by a fractional amount of $f_{exp} = \Delta a/a$, 
-where $f_{exp}$ is a user-defined parameter and has typical values of $f_{exp} = 0.01-0.02$.
-This is required for the stability of the PPM algorithm in comoving coordinates, and
-typically limits the timestep only at high redshifts when densities are relatively
-homogeneous.
-
-Equation~\ref{eqn:dtaccel} is supplementary to equation~\ref{eqn:dthydro} in that it
-takes into account the possibility of large accelerations causing numerical 
-instabilities by violating the Courant condition.  In this equation, $\vec{g}$ is the
-gravitational acceleration in each cell on level L.  \blue{ \emph{It should be
-  noted that the timestep is computed before the acceleration field is computed,
-  and the acceleration field is deleted at the end of each time step.
-  So this condition isn't ever actually enforced.  We should either
-  fix this problem, or not discuss it.
- -dcollins.} }
+ In equations~\ref{eqn:dthydro}-\ref{eqn:dtcond}, the $min ( \ldots
+)_L$ formalism means that this value is calculated for all cells on a
+given level L and the minimum overall value is taken as the timestep.
+Equation~\ref{eqn:dthydro} ensures that all cells satisfy the
+Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of
+an explicit finite difference discretization of the Euler equations.
+Effectively this condition forces the timestep to be small enough such
+that any changes in the fluid propagate less than a single grid
+spacing, $\Delta x$.  In this equation, $\kappa_{hydro}$ is a
+numerical constant with a value of $0 < \kappa_{hydro} \leq 1$ (with a
+typical value of $\kappa_{hydro} \sim 0.3-0.5$) that ensures that the
+CFL condition is always met, and $c_s$ and $v_x$ are the sound speed
+and peculiar baryon velocity in a given cell.
 
 Equation ~\ref{eqn:dthydro} is valid for one dimension.  For 2 or 3
 dimensions, it was shown by \cite{Godunov1959}  that using the
@@ -79,3 +86,83 @@ eqn. \ref{eqn:dthydro} along the $x,y$ and $z$ axes,
 For all other criteria, multiple dimensions are accounted for by
 repeating the one dimensional criterion along each axis, and taking
 the minimum.
+
+Equation~\ref{eqn:dtMHD} is only enforced when the equations of
+magnetohydrodynamics are being solved, and is directly analogous to
+Equation~\ref{eqn:dthydro} in that it ensures that the CLF condition
+is being enforced at all times.  In this equation, $\kappa_{MHD}$ is a
+numerical constant with a value of $0 < \kappa_{MHD} \leq 1$ (with a
+typical value of $\kappa_{MHD} \sim 0.5$) that ensures that the CFL
+condition is always met, and $v_f$ and $v_x$ are the ``fast wave
+speed'' and peculiar baryon velocity in a given cell.  The fast wave
+speed comes from a stability analysis of the MHD equations, and is
+expressed as:
+
+\begin{equation}
+v_f = \sqrt{ \frac{1}{2} \left(  v_A^2 + c_s^2 + \sqrt{(v_A^2 +
+      c_s^2)^2 - 4 v_A^2 c_s^2}  \right)  },
+\label{eqn:vfastmhd}
+\end{equation}
+
+Where $c_s$ is the sound speed and $v_A$ is the Alfven speed, calculated
+as $v_A = \sqrt{B^2/\rho_B}$ in units where $\mu_0 = 1$.
+
+Equation~\ref{eqn:dtdarkmatter} is analogous to
+Equation~\ref{eqn:dthydro} and ensures accuracy in the N-body solver
+by requiring that no dark matter particle travels more than one cell
+width.  The parameter $\kappa_{dm}$ is analogous to
+$\kappa_{dthydro}$, with an identical range of values.
+Equation~\ref{eqn:dtexpand} limits the timestep such that the
+expansion parameter a can only change by a fractional amount of
+$f_{exp} = \Delta a/a$, where $f_{exp}$ is a user-defined parameter
+and has typical values of $f_{exp} = 0.01-0.02$.  This is required for
+the stability of the PPM algorithm in comoving coordinates, and
+typically limits the timestep only at high redshifts when densities
+are relatively homogeneous.
+
+Equation~\ref{eqn:dtaccel} and~\ref{eqn:dtrad} are supplementary to equation~\ref{eqn:dthydro} in that they
+take into account the possibility of large accelerations due to either
+gravity (Eqn.~\ref{eqn:dtaccel} or radiation pressure
+(Eqn.~\ref{eqn:dtrad}), which may cause numerical 
+instabilities by violating the Courant condition.  In Equation~\ref{eqn:dtaccel}, $\vec{g}$ is the
+gravitational acceleration in each cell on level L.  In
+Equation~\ref{eqn:dtrad}, $\vec{a}_{rad}$ is the estimated
+acceleration due to radiation pressure in each cell on level L,
+defined as
+
+\begin{equation}
+\vec{a}_{rad} = \frac{ \sum_i \frac{\dot{E_i}}{c} \hat{r_i} }{m_b} 
+\end{equation}
+
+Where the sum calculates the energy deposited in a cell during the
+previous timestep due to \textit{all photon packets} that crossed that
+cell, with $\hat{r_i}$ being a unit vector that accounting for the
+packet direction.
+
+Equation~\ref{eqn:dtcond} is the CFL condition for an explicit
+solution to the equation of heat conduction.  In this expression,
+$n_b$ is the baryon number density, defined as $n_b = \rho_b / \mu
+m_p$, where $\mu$ is the mean molecular weight, $\kappa(T)$ is the
+Spitzer thermal conductivity, and f$_{Sp}$ is a user-defined
+conduction suppression factor whose value must be f$_{Sp} \leq 1$.  Both are defined in
+Section~\ref{sec.num.conductions}.  $\kappa_{\rm cond}$ is a prefactor whose
+value must be $0 < \kappa_{cond}  < 0.5$, and is exactly 0.5 for the
+implemention in Enzo.
+From a practical
+perspective, it is useful to note that, unlike other timestep criteria
+discussed above (which effectively scale as $\Delta x / \sqrt{T}$,
+the timestep criterion due to thermal conduction scales as $\Delta x^2
+/ T^{2.5}$, which can result in a rapid decrease in timestep in
+regions of high resolution and/or temperature.
+
+Finally, Equation~\ref{eqn:dtexpand} is a cosmological constraint that
+limits the timestep so that the simulated universe only expands by
+some fractional amount, f$_{exp}$, during a single step.  In this
+equation, $a$ and $\dot{a}$ refer to the scale factor of the universe
+and its rate of change, respectively.  This
+criteria is necessary because the expansion of the universe and its
+first derivative with respect to time both appear in the equations of cosmological (magneto)hydrodynamics and particle motion,
+and some limit is required in order to model the change of energy and
+momentum due to expansion with a reasonable level of accuracy.  In
+reality, this is only a significant limitation at very high redshift;
+at later times, other timestep criteria are much more important.
