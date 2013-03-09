@@ -57,6 +57,34 @@ needed for the PPM hydro stencil. }
 
 % Maybe include Greg's text on general scaling arguments
 
+\subsubsection{Performance Measurement \& Instrumentation \red{(Sam)}}
+
+Because of the wide variety of simulations, methods, and uses of \bb{enzo}, it
+is difficult to define exactly which routines are most costly during a given
+simulation.  As such, we have designed a lightweight registering system that
+has been implemented for the most commonly used routines (such as the
+hydrodynamic and gravity solvers) as well as refinement level timers that
+measure the (exclusive) time spent on each level.  Beyond this minimal set of
+routines, we have designed a simple way for the user to modify the source
+by adding TIMER_START(``Your Routine Name'') and TIMER_END(``Your Routine
+Name'').  These timers are automatically registered in a
+std::map\footnote{http://www.cplusplus.com/reference/map/map/}.  These timers
+are created and managed individually on each processor in an asynchronous
+fashion.  
+
+At each complete EvolveHierarchy (or less often if specified), each timer is
+then communicated to the root processor where it calculates the mean, standard
+deviation, minimum, and maximum for each of the timers across all processors. 
+For level timers, there are also attributes such as the number of cell updates,
+the current number of grids, and the average cells/s/MPI process.  This
+information is then output to a ``performance.out'' logfile.  This provides a 
+simplified interface to the user that can be used to diagnose performance 
+issues as well as estimate a given problem type's scalability.  In addition to 
+the logfile, we have developed a plotting interface for quickly producing 
+figures that process the data from the logfile.  These capabilities are 
+described in the online documentation, along with a further discussion of the 
+performance measurement implementation.
+
 \subsubsection{Unigrid scaling \red{(Brian)}}
 
 % Brian to work on this, scaling data from Harkness
