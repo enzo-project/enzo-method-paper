@@ -66,7 +66,7 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the comoving total specific fluid energy, specific thermal energy, baryonic density, velocity and pressure, respectively.  
 %Here we use primes to indicate variables defined in the absolute frame of reference (to distinguish them from a comoving frame).  
 The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation. 
-Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy_prime}).
+Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}).
 
 The total fluid specific energy ($E$) is given by:
 \begin{equation}
@@ -495,3 +495,8 @@ A simple heuristic method is used to model the formation of stars and their feed
 All grids on a given level are advanced with the same timestep.  To determine this timestep, we calculate, for each cell and for each physical process (except for the chemistry step, which is sub-cycled), the minimum $\Delta t$ allowed for stability.  Then the minimum of all timesteps is taken and the level is advanced with this step.
 
 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End: 

@@ -134,7 +134,24 @@ adequately in our tests.
 \subsubsection{Solving the hydrodynamic equations on a grid}
 \label{sec:solve_hydro}
 
-Given the grid and it's boundary conditions, the process of solving equations~(\ref{eq:mass_prime})--(\ref{eq:total_energy_prime}) can be detached from the rest of the SAMR technique, so that it is possible to experiment with a number of different methods.  The restrictions are that the method should be flux-conservative, or at least produce an accurate estimate of the flux of conserved quantities at cell interfaces.  This is required in the flux-correction step (see \ref{sec:flux_correction}).  There is also the issue of centering, which refers to the position of physical quantities within a cell (the primary types are cell-centered, face-centered, and node-centered). We will employ both the direct Eulerian version of the piecewise parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B} which assumes cell-centering for all quantities (actually they are cell-averages).  However, it is also possible to use other schemes, which employ different centering for different variables \citep[e.g.,][]{Stone92a}.   The interpolation step, described in section~\ref{sec:interpolation}, must correctly interpolate with the selected centering.
+Given the grid and its boundary conditions, the process of solving
+equations~(\ref{eq:mass})--(\ref{eq:total_energy}) can be detached
+from the rest of the SAMR technique, so that it is possible to
+experiment with a number of different methods.  The restrictions are
+that the method should be flux-conservative, or at least produce an
+accurate estimate of the flux of conserved quantities at cell
+interfaces.  This is required in the flux-correction step (see
+\ref{sec:flux_correction}).  There is also the issue of centering,
+which refers to the position of physical quantities within a cell (the
+primary types are cell-centered, face-centered, and node-centered). We
+will employ both the direct Eulerian version of the piecewise
+parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B} which
+assumes cell-centering for all quantities (actually they are
+cell-averages).  However, it is also possible to use other schemes,
+which employ different centering for different variables
+\citep[e.g.,][]{Stone92a}.  The interpolation step, described in
+section~\ref{sec:interpolation}, must correctly interpolate with the
+selected centering.
 
 \subsubsection{Projection}
 \label{sec:projection}
@@ -202,7 +219,7 @@ where $J$ is the required number of cells per Jeans length (4 by default).
 
 \item{\em Must-refine particles}  In order to allow for refinement in moving regions, it is possible to generate ``must-refine" particles which for local refinement over the 8 nearest cells to a specific level.  The particles feel on gravitational forces and their trajectories are followed as for any other collisionless particle.  This feature can be used to ensure that a specific Lagrangian region stays refined to a specified level of resolution. 
 
-\item{\em Shear} As described in \citet{KritsukXX}, turbulence calculations can be successfully modeled with AMR if the shear is used as a refinement parameter; in particular, refinement occurs when the finite difference version of the following inequality holds:
+\item{\em Shear} As described in \citet{Kritsuk06}, turbulence calculations can be successfully modeled with AMR if the shear is used as a refinement parameter; in particular, refinement occurs when the finite difference version of the following inequality holds:
 \begin{equation}
 %\left(\frac{du}{dy}\right)^2 + \left(\frac{du}{dz}\right)^2 + 
 %\left(\frac{dv}{dx}\right)^2 + \left(\frac{dv}{dz}\right)^2 + 
@@ -367,3 +384,8 @@ Finally, it is also possible to specify a specific rectangular region which is s
 
 
 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End: 

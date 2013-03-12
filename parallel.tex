@@ -59,18 +59,20 @@ needed for the PPM hydro stencil. }
 
 \subsubsection{Performance Measurement \& Instrumentation \red{(Sam)}}
 
-Because of the wide variety of simulations, methods, and uses of \bb{enzo}, it
-is difficult to define exactly which routines are most costly during a given
-simulation.  As such, we have designed a lightweight registering system that
-has been implemented for the most commonly used routines (such as the
-hydrodynamic and gravity solvers) as well as refinement level timers that
-measure the (exclusive) time spent on each level.  Beyond this minimal set of
-routines, we have designed a simple way for the user to modify the source
-by adding $TIMER_START(``Your Routine Name'')$ and $TIMER_END(``Your Routine
-Name'')$.  These timers are automatically registered in a
-std::map\footnote{http://www.cplusplus.com/reference/map/map/}.  These timers
-are created and managed individually on each processor in an asynchronous
-fashion.  
+Because of the wide variety of simulations, methods, and uses of Enzo,
+it is difficult to define exactly which routines are most costly
+during a given simulation.  As such, we have designed a lightweight
+registering system that has been implemented for the most commonly
+used routines (such as the hydrodynamic and gravity solvers) as well
+as refinement level timers that measure the (exclusive) time spent on
+each level.  Beyond this minimal set of routines, we have designed a
+simple way for the user to modify the source by adding
+\texttt{TIMER\_START(``Your Routine Name'')} and
+\texttt{TIMER\_END(``Your Routine Name'')}.  These timers are
+automatically registered in a
+std::map\footnote{http://www.cplusplus.com/reference/map/map/}.  These
+timers are created and managed individually on each processor in an
+asynchronous fashion.
 
 At each complete EvolveHierarchy (or less often if specified), each timer is
 then communicated to the root processor where it calculates the mean, standard
@@ -92,3 +94,8 @@ performance measurement implementation.
 \subsubsection{AMR scaling \red{(Greg)}}
 
 % Greg to work on this, scaling data from his runs, or maybe from John Wise
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End: 
