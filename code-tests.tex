@@ -142,10 +142,74 @@ versions.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{1-zone free-fall test}
-\label{sec.tests.freefall}
-\red{(Britton)}
-One zone free fall test.  Tests cooling, chemistry.
+\subsubsection{One-zone collapse test}
+\label{sec.tests.1-zone}
+The one-zone collapse test simulates the collapse of a
+self-gravitating gas cloud using a semi-analytic model for the
+evolution of gas density and adiabatic heat input as a function of
+time.  It is designed to test the chemistry and cooling modules over a
+wide range in densities and over physically motivated timescales.
+Because this test disables the hydrodynamic and gravity solvers and
+uses a simple model for the density evolution, it is far faster than
+running a true collapse simulation.  The density evolution is based on
+the self-similar Larson-Penston \citep{1969MNRAS.145..271L,
+  1969MNRAS.144..425P} solution for isothermal collapse with a
+modification to account for the efficiency with which the heat
+introduced by compression can be radiated away
+\citep{1983ApJ...265.1047Y}.  Our implementation, described briefly
+here, follows the work of \citet{2005ApJ...626..627O}, which one
+should consult for further details.  The density evolution is given by 
+\begin{equation}
+\frac{d\rho}{dt} = \frac{\rho}{t_{col}},
+\end{equation}
+where the collapse timescale, $t_{col}$, is
+\begin{equation} \label{eqn.tcol}
+t_{col} = \frac{t_{dyn}}{\sqrt{1 - f}},
+\end{equation}
+and $t_{dyn}$ is the dynamical time, expressed as
+\begin{equation}
+t_{dyn} = \sqrt{\frac{3 \pi}{32 G \rho}}.
+\end{equation}
+The collapse timescale is altered from the dynamical time by the
+factor, $f$ in Equation \ref{eqn.tcol}, which an approximation of the
+ratio of the pressure to the force of gravity.  The value of $f$
+depends on the effective adiabatic index, $\gamma_{ef} \equiv (\partial
+ln\ p / \partial ln\ \rho)$, which we calculate by linearly extrapolating
+from derivative values for the two previous timesteps.  For the value
+of $f$, we use the piecewise function of \citet{2005ApJ...626..627O},
+given by
+\begin{equation}
+f = \left\{
+  \begin{array}{ll}
+  0, & \gamma_{ef} < 0.83,\\
+  0.6 + 2.5 (\gamma_{ef} - 1) - 6.0 (\gamma_{ef} - 1)^{2}, & 0.83 <
+  \gamma_{ef} < 1,\\
+  1.0 + 0.2 (\gamma_{ef} - 4/3) - 2.9 (\gamma_{ef} - 4/3)^{2}, & \gamma_{ef} > 1.}
+\end{array} \right.
+\end{equation}
+The specific energy evolves as
+\begin{equation}
+\frac{de}{dt} = -p \frac{d}{dt} \frac{1}{\rho} - \Lambda,
+\end{equation}
+where $\Lambda$ is the cooling rate in units of erg s$^{-1}$ g$^{-1}$
+and energy, temperature, density, and pressure are related by the
+ideal gas law.  Figure \ref{fig.onezone} shows an example of the
+one-zone collapse test performed with an initial number density of 1
+cm$^{-3}$ and temperature of 100 K using the 12 species chemistry
+network with H, D, and He species and metal cooling rates calculated
+with Cloudy.
+
+\begin{figure} \label{fig.onezone}
+  \begin{center}
+    \includegraphics[width=1.0\textwidth]{figures/OneZoneCollapseTest.eps}
+    \caption{Evolution of temperature versus number density for a one-zone
+      collapse test for gas at metallicities from 0 to 10$^{-2} Z_{\odot}$
+      using the primordial chemistry network with tabulated metal cooling
+      rates calculated with Cloudy.}
+    \label{fig.1zone}
+  \end{center}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Photo-evaporation of a dense clump}
