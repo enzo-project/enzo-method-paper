@@ -7,7 +7,61 @@
 \subsection{Verifying and validating the \enzo\ code}
 \label{sec.tests.vandv}
 
-\red{(Britton)} Description of test suite and test runner.
+\enzo\ is capable of simulating a large variety of problems types, with
+all but a small few requiring only a parameter file as sole input.
+The notable exception is the cosmology simulation, which takes as
+input initial conditions created by other codes.  These test problems
+span a wide range in complexity.  At one end of this spectrum are
+simple problems that utilize only a single component of \enzo\ and for
+which analytic solutions exist for comparison with the simulation
+results.  At the opposite end are problems that exercise a large
+portion of \enzo's machinery in concert.  Together, the available
+problem types fully cover all of \enzo's functionality.  This enables
+them to serve as a vehicle for verifying that the code's behavior
+remains stable over time.
+
+\enzo\ uses an automated testing framework that allows a user to run,
+with a single command, a set of test problems and compare the results
+against results produced by any other version of the code.  Within the
+\enzo\ source distribution, the test problem parameter files are stored
+in a nested directory structure organized according to the primary
+functionality tested, e.g., hydrodynamics, gravity, cooling, etc.
+Each parameter file is accompanied by a text file containing various
+descriptive keywords, such as the machinery tested, the
+dimensionality, and the approximate run time.  A test runner script is
+responsible for taking as input from the user a series of keywords
+with which to select a subset of all available test problems.  The
+test problems are also grouped into three suites: the quick, push, and
+full suites, each a superset of the ones named before.  The quick
+suite is considered to minimally cover the primary functionality in
+\enzo\ and is designed to be run repeatedly during the development
+process.  The push suite has slightly increased feature coverage and
+is mandated to be run before code changes are accepted into the main
+repository.  The full suite consists of all test problems which can be
+run with no additional input.  Approximate run times for the quick,
+push, and full suite are 15 minutes, 1 hour, and 60 hours,
+respectively.
+
+After the test problems are selected by the test runner script, they
+are run in succession either by with \enzo\ executable contained within
+that distribution or an external executable built from another version
+and specified by the user.  This allows for any version of the code to
+be tested with an identical set of test problems.  After running the
+test problem simulations, the test runner then performs a series of
+basic analysis tasks using the \texttt{yt} analysis toolkit
+\citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  The default
+analysis performed on all test problems includes calculation of
+various statistics, such as extrema; mean; and variance, on the fields
+present in the output data.  Custom analysis provided by scripts that
+accompany the test problem parameter files is run for special cases,
+such as when an analytical solution exists that can be compared
+against the simulation data.  After the analysis is performed, the
+results are compared against a set of gold standard results which are
+maintained on a website and downloaded on the fly by the test runner
+script.  Alternately, results from any version of \enzo\ can be stored
+locally and compared to any other version of the code.  Below, we
+describe some of the key test problems which are used to verify proper 
+behavior.
 
 \red{(Brian)} Refer to all code comparisons that Enzo has been part of.
 
