@@ -18,12 +18,12 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
-          + \frac{1}{a} \nabla \cdot (rho \vecv) = 0
+          + \frac{1}{a} \nabla \cdot (\rho \vecv) & = & 0
         \label{eq:mass} \\
 %
 \frac{\partial \rho \vecv}{\partial t}  
-   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + p^* - \vecB \vecB) =
-    - \frac{\dot{a}}{a} rho \vecB - \frac{1}{a} \rho \nabla \phi
+   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + \myvec{I} p - \vecB \vecB \right) & = &
+    - \frac{\dot{a}}{a} \rho \vecv - \frac{1}{a} \rho \nabla \phi
     %
 %          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
 %    & = & - \frac{\dot{a}}{a} \vecv 
@@ -32,10 +32,10 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 %          - \frac{1}{a} \nabla \phi, 
         \label{eq:momentum} \\
 %
-\frac{\partial E}{\partial t} 
-+ \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv - (\vecB \cdot \vecv) \vecB \right] =
-     - \frac{2\dot{a}}{a} E - \frac{1}{a} \vecv \cdot \nabla \phi + \frac{\dot{a}}{a} \frac{\vecB^2}{2}
-
+\frac{\partial E \rho}{\partial t} 
++ \frac{1}{a} \nabla \cdot \left[ (E + p) \vecv - (\vecB \cdot \vecv) \vecB \right] & = &
+     - \frac{2\dot{a}}{a} E - \frac{1}{a} \vecv \cdot \nabla \phi + \frac{\dot{a}}{a} \frac{\vecB \cdot \vecB}{2}
+%
 %         + \frac{1}{a} \vecv \cdot \nabla E
  %  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
   %       - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
@@ -44,9 +44,7 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
  %               + \Gamma - \Lambda.
        \label{eq:total_energy}  \\
 %
-\frac{\partial \vecB}{\partial t} = \frac{1}{a}  \nabla \times (\vecc \times \vecB) - \frac{dot{a}{2a} \vecB \label{eq:induction}
-
-
+\frac{\partial \vecB}{\partial t} & = & \frac{1}{a}  \nabla \times (\vecv \times \vecB) - \frac{\dot{a}}{2a} \vecB \label{eq:induction}
 \end{eqnarray}
 
 
@@ -70,14 +68,14 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 %        \label{eq:total_energy}
 %\end{eqnarray}
 %
-Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the comoving total specific fluid energy, specific thermal energy, baryonic density, velocity and pressure, respectively.  
+Here $E$, $e$, $\rho$, $\vecv$, $\vecB$, and $p$ are the comoving total fluid energy, specific thermal energy, baryonic density, velocity, magnetic field strength and pressure, respectively.  $I$ is the identify matrix and we use a set of units for the magnetic field such that magnetic xxx is unity.
 %Here we use primes to indicate variables defined in the absolute frame of reference (to distinguish them from a comoving frame).  
 The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation. 
 Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}).
 
 The total fluid specific energy ($E$) is given by:
 \begin{equation}
-E =  e + \frac{1}{2} \vecv \cdot \vecv.
+E =  e + \frac{1}{2} \vecv \cdot \vecv + \vecB \cdot \vecB
         \label{eq:total_energy_def}
 \end{equation}
 It is useful to solve the equation of total energy because doing so enforces local energy conservation.
