@@ -1,134 +1,81 @@
 \subsection{Star formation and feedback}
 \label{sec.ov.star}
 
+\subsubsection{Overview}
+% Overview of methodology
 
-While the physics discussed in other sections of this paper is crucial to the study of
-cosmological structure formation, most cosmological observations in
-the infrared, optical, and ultraviolet wavelengths are of
+While the physics discussed in other sections of this paper is crucial
+to the study of cosmological structure formation, most observations of
+galaxies in the infrared, optical, and ultraviolet wavelengths are of
 stellar populations.  Furthermore, stars eject energy and metal-
-enriched gas throughout their lives, drastically modifying their own 
-environments' cooling properties.  Broadly speaking, the formation of galaxies and clusters cannot be completely
-modeled without including the feedback of energy and metals.  In particular,
-it is thought that feedback is crucial for suppressing the large numbers of
-dwarf-like galaxies that CDM theories predict 
-\citep{1991ApJ...381...14L,1991ApJ...379...52W}.  An early
-burst of star formation could remove a large fraction of cold gas from such systems
-\citep{1978MNRAS.183..341W,1991ApJ...367...45C}.  Also, the unexpectedly 
-low luminosities of small clusters and
-groups (relative to the richest clusters) is commonly explained through feedback
-\citep{1991ApJ...383..104K}.  Energy ejected during the formation of the cluster ellipticals 
-lowers the central density and hence the X-ray luminosity of such clusters 
- \citep{1997ApJ...484L..21C}.  For all of these reasons, it is
- critical to include star formation and the feedback of energy and
- metals into the interstellar and intergalactic media in cosmological simulations.
+enriched gas throughout their lives, drastically modifying their own
+environments' cooling properties.  Broadly speaking, the formation of
+galaxies and galaxy clusters cannot be completely modeled without
+including the feedback of energy and metals from stellar populations.
+In particular, it is thought that feedback is crucial for suppressing
+the large numbers of dwarf-like galaxies that CDM theories predict
+\citep{1991ApJ...381...14L,1991ApJ...379...52W}.  An early burst of
+star formation could remove a large fraction of cold gas from such
+systems \citep{1978MNRAS.183..341W,1991ApJ...367...45C}.  Also, the
+unexpectedly low luminosities of small clusters and groups (relative
+to the richest clusters) is commonly explained through feedback
+\citep{1991ApJ...383..104K}.  Energy ejected during the formation of
+the cluster ellipticals lowers the central density and hence the X-ray
+luminosity of such clusters \citep{1997ApJ...484L..21C}.  For all of
+these reasons, it is critical to include star formation and the
+feedback of energy and metals into the interstellar and intergalactic
+media in cosmological simulations.
 
+Modeling star formation in the context of galaxy formation forces one
+to confront two fundamental problems. The dynamical range required to
+study galaxy formation and evolution is substantial, and attempting to
+directly resolve the formation of individual stars in the context of a
+Milky Way-type galaxy is computationally unfeasible.  Also, a strong
+theoretical understanding of the details of star formation is
+currently lacking.  Due to these challenges, models of star formation
+in cosmological simulations are largely phenomenological, and the
+``stars'' that are formed are in most cases meant to represent an
+ensemble stellar population (although not all; see
+Section~\ref{sec:starform_pop3}).
+% BWO: I use 'phenomenological' right above this, but could probably
+% go for 'parametric' or 'heuristic' if people object to my usage.
 
-We have extended the \enzo\ code to include multiple models for star formation
-and feedback.  It is difficult to directly simulate the formation of individual
-stars in the context of simulations of galaxy formation and evolution due
-to the immense computational cost.  Therefore, we adopt a parametric method which attempts
-to model star forming regions in a plausible but heuristic way.  
-%One model is based on Kravtsov's method  \citep{2003ApJ...590L...1K}, and the other is 
-Our model is based on the method of  \citet{CO1992}, which 
-has been modified for use in an AMR code.  The basic
-ideas behind the methods are straightforward and observationally motivated.
-Similar (though somewhat more advanced) methods have been employed for the 
-smoothed particle hydrodynamics
-(SPH) method, most recently by Springel \& Hernquist 
-\citep{sh03a,sh03b,hs03}. This 
-method assumes a multiphase IGM and has been shown to accurately reproduce the cosmic star
-formation rate, and will be implemented into \enzo\ in the near future.
+The \enzo\ code includes approximately ten models for star formation
+and feedback.  Broadly speaking, these methods all work in similar
+ways: At a specified time interval, all grid cells that are at the
+highest local level of refinement (i.e., have no child cells) are
+examined to see if they meet a set of criteria for star formation.
+This may simply be a baryon density threshold, but may include more
+complex tests, such as an examination of local cooling and dynamical
+time scales, molecular hydrogen fraction, metallicity, and converging
+gas flows.  If the star formation criteria are met, some mass of gas
+is taken away from the cell in question and a ``star particle'' with the
+same mass is placed in the center of that cell, with the same momentum
+vector as the removed gas.  This star particle is then allowed to
+inject mass, momentum, thermal energy, metals, and possibly magnetic
+fields and/or cosmic ray populations into its local environment.  In
+general, the particle is treated as an ensemble of stars, with
+feedback properties occuring over time according to the assumed
+initial mass function of the stellar population.
 
-%In the following sections we will detail both the Kravtsov and Cen \& Ostriker star formation methods separately.  
-Tests of the star formation and
-feedback algorithms will not be shown, since this work is currently in
-progress (and an extension of the AMR/SPH code comparison described in
-\citet{2005ApJS..160....1O}).
-%
-%\subsubsection{The Kravtsov star formation and feedback algorithm}
+In the following sections, we describe some of the more widely-used star formation
+and feedback methods used in \enzo.  We note that similar methods have
+been employed in many other codes used for galaxy formation, with
+comparable implementations for both star formation and feedback in
+other grid-based codes.  With regards to particle-based codes, star
+formation is broadly similar in implementation, though feedback is
+typically implemented in a very different way due to the Lagrangian
+nature of the method \citep[see, e.g.,][]{sh03a,sh03b,hs03}.
 
-% GB: Is this going to be in the code????
-% GB: I assume not, so I am commenting it out.  Text to be used in another paper?
-
-%Kravtsov's method of star formation is designed to reproduce
-%the global Schmidt law of star 
-%formation~\citep{2003ApJ...590L...1K,1959ApJ...129..243S}.
-%This algorithm is deliberately minimal, and is explicitly geared
-%towards modeling star formation in a phenomenological way on kiloparsec
-%scales.  Stars are assume to form with a characteristic gas timescale 
-%$\tau_*$ such that $\dot{\rho}_* = \rho_{gas}/\tau_*$ where $\rho_{gas}$ 
-%and $\rho_*$ are the baryon gas and stellar densities, respectively.  
-%This ``constant efficiency'' model on the scale of star formation 
-%regions is well motivated observationally \citep{1996AJ....112.1903Y,2002ApJ...569..157W}.  
-%Star formation is only allowed to take place in very dense regions
-%with $\rho_{gas} \geq \rho_{SF}$, where $\rho_{SF}$ is a constant
-%proper density threshold above which star formation is allowed to
-%occur.  No other criteria are imposed.  Kravtsov's typical choices
-%for $\tau_*$ and $\rho_{SF}$ are $\tau_* = 4$ Gyr and $\rho_{SF} =
-%1.64~$M$_\odot$~pc$^{-3}$~$(n_H \sim 50$~cm$^{-3})$.  The adopted timescale
-%is derived from the observationally-determined normalization of the
-%Schmidt law, and the density threshold is determined by observations
-%of star forming regions on $\sim 100$ pc scales.  Note that the density
-%threshold is in proper, not comoving, units.
-
-%Algorithmically, the star formation events in Kravtsov's code
-%are assumed to occur once every global time step 
-%$\Delta t_0 \leq 10^7$.  In cells where star formation is
-%determined to occur (i.e. $\rho_{gas} \geq \rho_{SF}$) a
-%collisionless ``star particle'' is assumed to form, with a 
-%mass $m_* = \dot{\rho}_* V_{cell} \Delta t_0$, where
-%$\dot{\rho}_*$ is described above and $V_{cell}$ is the 
-%volume of the mesh cell.  These star particles are
-%formed instantaneously, with all $m_*$ of gas being
-%taken out of the cell and immediately deposited into the
-%star particle.  This particle is then given the velocity
-%of the gas in the cell, and thereafter treated as a 
-%collisionless particle.  The \enzo\ implementation
-%of this algorithm is similar, except that instead of 
-%forming stars only at the root grid time step, we allow 
-%stars to form at the time step of the highest level of
-%resolution at any particular point in space.  As can be seen
-%from the equation for $m_*$ above, this can result in very 
-%small stellar masses.  To avoid memory and processor time
-%issues related to having very large numbers of star particles
-%we impose a threshold mass $M_{*,min}$ such that a star
-%particle only forms if $m_* \geq M_{*,min}$.  An
-%appropriate choice of $M_{*,min}$ does not significantly 
-%change the star overall star formation history of a 
-%simulation, though it may delay the onset of star formation 
-%in a given cell relative to a simulation without a particle mass
-%threshold.
-
-%Each ``star particle'' is assumed to represent an ensemble
-%of stars and is treated as a single-age stellar population.
-%Kravtsov assumes that the IMF is described by a
-%Miller \& Scalo functional form with stellar masses between
-%$0.1$ and $100~M_\odot$ \citep{1979ApJS...41..513M}.  All stars in this
-%IMF with $M_* > 8~M_\odot$ deposit $2 \times 10^{51}$ ergs of
-%thermal energy and a mass $f_z M_*$ of metals into the
-%cell in which they form without delay, with
-%$f_z \equiv min(0.2, 0.01~M_*-0.06)$ (i.e. instantaneous
-%deposition of metals).  The definition of $f_z$ is a rough
-%approximation of the results of 
-%\citet{1995ApJS..101..181W}.
-
-%Kravtsov reports that simulations with this algorithm
-%reliably reproduce the star formation rate-gas surface
-%density relation of the Schmidt law, and are not particularly
-%sensitive to numerical parameters \citep{2003ApJ...590L...1K}.
-%He also notes that this is surprisingly insensitive to
-%the presence or absence of feedback and details of the cooling
-%and heating properties of the gas, which suggests that the
-%global star formation rate is determined by gravitationally-
-%driven supersonic turbulence (on large scales)
-%rather than stellar feedback or thermal instabilities on small 
-%scales.
-
-%\subsubsection{The Cen \& Ostriker star formation algorithm}
+% Specific example: Cen & Ostriker
+\subsubsection{Cen \& Ostriker}
+\label{sec:starform_cen}
 
 The Cen \& Ostriker method is a heuristic model of star formation
 on galactic scales.  This method, first described by
-\citet{CO1992}, is similar in some ways to the Kravtsov algorithm
+\citet{CO1992}, assumes that star particles 
+
+s similar in some ways to the Kravtsov algorithm
 but has more complex criteria for determining where stars should
 be formed.  In this method, cells that form stars must have a 
 baryon overdensity higher than some threshold 
@@ -249,4 +196,103 @@ particles, and thus has no observational or theoretical counterpart.  These
 parameters have to be set by performing parameter studies and comparing to 
 observations.  Unfortunately, the range of parameter space is large, and
 the results may be degenerate for some combinations of these parameters.
+
+
+
+% Specific example: Kravtsov
+\subsubsection{Kravtsov}
+\label{sec:starform_kravtsov}
+
+% GB: Is this going to be in the code????
+% GB: I assume not, so I am commenting it out.  Text to be used in another paper?
+
+%Kravtsov's method of star formation is designed to reproduce
+%the global Schmidt law of star 
+%formation~\citep{2003ApJ...590L...1K,1959ApJ...129..243S}.
+%This algorithm is deliberately minimal, and is explicitly geared
+%towards modeling star formation in a phenomenological way on kiloparsec
+%scales.  Stars are assume to form with a characteristic gas timescale 
+%$\tau_*$ such that $\dot{\rho}_* = \rho_{gas}/\tau_*$ where $\rho_{gas}$ 
+%and $\rho_*$ are the baryon gas and stellar densities, respectively.  
+%This ``constant efficiency'' model on the scale of star formation 
+%regions is well motivated observationally \citep{1996AJ....112.1903Y,2002ApJ...569..157W}.  
+%Star formation is only allowed to take place in very dense regions
+%with $\rho_{gas} \geq \rho_{SF}$, where $\rho_{SF}$ is a constant
+%proper density threshold above which star formation is allowed to
+%occur.  No other criteria are imposed.  Kravtsov's typical choices
+%for $\tau_*$ and $\rho_{SF}$ are $\tau_* = 4$ Gyr and $\rho_{SF} =
+%1.64~$M$_\odot$~pc$^{-3}$~$(n_H \sim 50$~cm$^{-3})$.  The adopted timescale
+%is derived from the observationally-determined normalization of the
+%Schmidt law, and the density threshold is determined by observations
+%of star forming regions on $\sim 100$ pc scales.  Note that the density
+%threshold is in proper, not comoving, units.
+
+%Algorithmically, the star formation events in Kravtsov's code
+%are assumed to occur once every global time step 
+%$\Delta t_0 \leq 10^7$.  In cells where star formation is
+%determined to occur (i.e. $\rho_{gas} \geq \rho_{SF}$) a
+%collisionless ``star particle'' is assumed to form, with a 
+%mass $m_* = \dot{\rho}_* V_{cell} \Delta t_0$, where
+%$\dot{\rho}_*$ is described above and $V_{cell}$ is the 
+%volume of the mesh cell.  These star particles are
+%formed instantaneously, with all $m_*$ of gas being
+%taken out of the cell and immediately deposited into the
+%star particle.  This particle is then given the velocity
+%of the gas in the cell, and thereafter treated as a 
+%collisionless particle.  The \enzo\ implementation
+%of this algorithm is similar, except that instead of 
+%forming stars only at the root grid time step, we allow 
+%stars to form at the time step of the highest level of
+%resolution at any particular point in space.  As can be seen
+%from the equation for $m_*$ above, this can result in very 
+%small stellar masses.  To avoid memory and processor time
+%issues related to having very large numbers of star particles
+%we impose a threshold mass $M_{*,min}$ such that a star
+%particle only forms if $m_* \geq M_{*,min}$.  An
+%appropriate choice of $M_{*,min}$ does not significantly 
+%change the star overall star formation history of a 
+%simulation, though it may delay the onset of star formation 
+%in a given cell relative to a simulation without a particle mass
+%threshold.
+
+%Each ``star particle'' is assumed to represent an ensemble
+%of stars and is treated as a single-age stellar population.
+%Kravtsov assumes that the IMF is described by a
+%Miller \& Scalo functional form with stellar masses between
+%$0.1$ and $100~M_\odot$ \citep{1979ApJS...41..513M}.  All stars in this
+%IMF with $M_* > 8~M_\odot$ deposit $2 \times 10^{51}$ ergs of
+%thermal energy and a mass $f_z M_*$ of metals into the
+%cell in which they form without delay, with
+%$f_z \equiv min(0.2, 0.01~M_*-0.06)$ (i.e. instantaneous
+%deposition of metals).  The definition of $f_z$ is a rough
+%approximation of the results of 
+%\citet{1995ApJS..101..181W}.
+
+%Kravtsov reports that simulations with this algorithm
+%reliably reproduce the star formation rate-gas surface
+%density relation of the Schmidt law, and are not particularly
+%sensitive to numerical parameters \citep{2003ApJ...590L...1K}.
+%He also notes that this is surprisingly insensitive to
+%the presence or absence of feedback and details of the cooling
+%and heating properties of the gas, which suggests that the
+%global star formation rate is determined by gravitationally-
+%driven supersonic turbulence (on large scales)
+%rather than stellar feedback or thermal instabilities on small 
+%scales.
+
+% Specific example: H2-regulated
+\subsubsection{H2-regulated}
+\label{sec:starform_H2reg}
+
+% Specific example: Pop III
+\subsubsection{Population III}
+\label{sec:starform_pop3}
+
+
+
+%\subsubsection{The Kravtsov star formation and feedback algorithm}
+
+
+
+
 
