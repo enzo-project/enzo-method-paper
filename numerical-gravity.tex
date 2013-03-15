@@ -1,17 +1,20 @@
-\subsection{Gravity: Solving the Poisson Equations}
+\subsection{Gravity}
 \label{sec.gravity}
 
+Solving for the accelerations for the cells and particles in a grid due to self-gravity involves three steps: first, computing the total gravitating mass; second, solving for the potential field with the appropriate boundary conditions, and finally, differencing the potential to get the acceleration and, if necessary, interpolating the potential back to the particles. These steps are described in detail below.
 
+First, the dark matter particles are distributed onto the grids using the cloud-in-cell (CIC) interpolation technique \citet{Hockney88} to form a spatially discretized density field $\rho_{\rm DM}$.  When doing the CIC interpolation, particle positions are (temporarily) advanced by $0.5 \Delta t v^n$ so that we generate an estimate of the time-centered density field.  Particles on sub-grids are also added in this way.  In addition, since the gravitating field for a grid is defined beyond the grid edges (see below), dark matter particles from sibling grids and sub grids which lie within the entire gravitating field are used.
 
-There are multiple methods to compute the gravitational potential (which is an elliptic equation in the Newtonian limit) in a structured AMR framework.  One way would be to model the dark matter (or other collisionless particle-like objects, such as stars) as a second fluid in addition to the baryonic fluid and solve the collisionless Boltzmann equation, which follows the evolution of the fluid density in six-dimensional phase space.  However, this is computationally prohibitive owing to the large dimensionality of the problem, making this approach unappealing for the cosmological AMR code.
+Next, we add the baryonic grid densities in a similar fashion.  In particular, we treat baryonic cells as virtual CIC particles which are are placed at the grid center but are advanced by $0.5 \Delta t v^n$ in order to approximately time-center the gravitating mass field.  Cells which are covered by further refined grids are treated in a similar way (i.e. we use the sub grid cells as virtual CIC particles).  This procedure results in a total gravitating mass field $\rho_{\rm total}^{n+1/2}$.
 
-The dark matter particles are distributed onto the grids using the cloud-in-cell (CIC) interpolation technique to form a spatially discretized density field (analogous to the baryon densities used to calculate the equations of hydrodynamics).  After sampling dark matter density onto the grid and adding baryon density if it exists (to get the total matter density in each cell), the gravitational potential is calculated on the periodic root grid using a fast Fourier transform.  For periodic boundary conditions, we can use either a simple Greens function kernel of $-k^{-2}$, or the finite-difference equivalent \citep{Hockney88}:
+To compute the potential field from this gravitating mass field on the root grid, we use a a fast Fourier transform. For periodic boundary conditions, we can use either a simple Greens function kernel of $-k^{-2}$, or the finite-difference equivalent \citep{Hockney88}:
 \begin{equation}
 G(\vec{k}) = - \frac{\Delta x}{2 \left( sin(k_x \Delta x/2)^2 + sin(k_y \Delta y/2)^2 + sin(k_z \Delta z/2)^2 \right) }
 \end{equation}
 where $k^2 = k_x^2 + k_y^2 + k_z^2$ is the wavenumber in Fourier space and the potential is calculated in k-space as usual with $\tilde{\phi}(k) = G(k) \tilde{\rho}(k)$.  
 
-For isolated boundary conditions, we use James method (REF).  In this case, the Greens function is generated in real-space so as to have the correct zero-padding properties and then transformed into the Fourier domain.
+For isolated boundary conditions, we use James method (REF).  In this case, the Greens function is generated in real-space so as to have the correct zero-padding properties and then transformed into the Fourier domain.  In either case, the potential is then transformed back into the real domain to get potential values at the cell centers.  These are differenced with a two-point centered difference to get accelerations at the cell centers (except if we are using the staggered Zeus-like solver, in which case the accelerations are computed at the cell faces to match the velocities).
+
 
 In order to calculate more accurate potentials on subgrids, \enzo\ re-samples the dark matter density onto individual subgrids using the same CIC method as on the root grid, but at higher spatial resolution (and again adding baryon densities if applicable). Boundary conditions are then interpolated from the potential values on the parent grid.  We use either tri-linear interpolation or a natural second-order spline: both methods seem to give similar results. The potential equation on each subgrid is then solved with the given Dirichlet boundary conditions.  This solution is done with a multigrid relaxation technique (but only applied to each subgrid).
 
