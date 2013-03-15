@@ -9,10 +9,6 @@ We begin by laying out the equations to be solved and then discuss briefly the t
 
 \subsection{Physical Equations}
 
-%GB: The division of this subsection into subsubsections is somewhat arbitrary.
-%GB: I wanted to do it at first in the same divisions as section 3, but this is not really
-%GB: possible because there is no "AMR" equation.  Maybe somebody can think 
-%GB: of a clever way to fix this.
 
 % ----------------------------------------------------------------------------------------
 
@@ -22,26 +18,37 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
-          + \frac{1}{a} \vecv \cdot \nabla \rho
-    & = & - \frac{1}{a} \rho \nabla \cdot \vecv, 
+          + \frac{1}{a} \nabla \cdot (rho \vecv) = 0
         \label{eq:mass} \\
 %
-\frac{\partial \vecv}{\partial t}  
-          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
-    & = & - \frac{\dot{a}}{a} \vecv 
-          - \frac{1}{a \rho} \nabla p
-          - \frac{1}{a} \nabla \phi, 
+\frac{\partial \rho \vecv}{\partial t}  
+   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + p^* - \vecB \vecB) =
+    - \frac{\dot{a}}{a} rho \vecB - \frac{1}{a} \rho \nabla \phi
+    %
+%          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
+%    & = & - \frac{\dot{a}}{a} \vecv 
+%          - \frac{1}{a \rho} \nabla p
+%          - \frac{1}{a \rho} (\nalba \times \vecB) \times \vecB
+%          - \frac{1}{a} \nabla \phi, 
         \label{eq:momentum} \\
 %
-\frac{\partial \Ep}{\partial t} 
-         + \frac{1}{a} \vecv \cdot \nabla E
-   & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
-         - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
-%\nonumber   & &   %uncomment for 2-column
-         - \frac{1}{a} \vecv \cdot \nabla \phi 
-                + \Gamma - \Lambda.
-       \label{eq:total_energy} 
+\frac{\partial E}{\partial t} 
++ \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv - (\vecB \cdot \vecv) \vecB \right] =
+     - \frac{2\dot{a}}{a} E - \frac{1}{a} \vecv \cdot \nabla \phi + \frac{\dot{a}}{a} \frac{\vecB^2}{2}
+
+%         + \frac{1}{a} \vecv \cdot \nabla E
+ %  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
+  %       - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
+%%\nonumber   & &   %uncomment for 2-column
+ %        - \frac{1}{a} \vecv \cdot \nabla \phi 
+ %               + \Gamma - \Lambda.
+       \label{eq:total_energy}  \\
+%
+\frac{\partial \vecB}{\partial t} = \frac{1}{a}  \nabla \times (\vecc \times \vecB) - \frac{dot{a}{2a} \vecB \label{eq:induction}
+
+
 \end{eqnarray}
+
 
 %\begin{eqnarray} 
 %\frac{\partial \rho}{\partial t} 
