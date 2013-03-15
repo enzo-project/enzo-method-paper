@@ -2,12 +2,12 @@
 \label{sec.num.chemistry}
 
 While it is often safe to assume that species (both chemical and
-ionization) within a gas can be treated as being in 
-equilibrium, in some regimes that are found in astrophysics this is not true.  For example, the cooling and collapse of primordial gas in Population III
+ionization) within a gas can be treated as being in equilibrium, in
+some regimes that are found in astrophysics this is not true.  For
+example, the cooling and collapse of primordial gas in Population III
 star formation is dominated by molecular hydrogen, which in the
 absence of dust forms via an inefficient pair of collisional processes
-that depend heavily on the local population of free electrons.  
-As a
+that depend heavily on the local population of free electrons.  As a
 result, when modeling primordial star formation, it is critical to
 follow the non-equilibrium evolution of the chemical species of
 hydrogen, including molecular hydrogen and deuterium.
@@ -15,25 +15,25 @@ hydrogen, including molecular hydrogen and deuterium.
 The primordial non-equilibrium chemistry routines used in \enzo\ were
 first described by Abel et al. and Anninos et
 al. \citep{abel97,anninos97}, but have been extended since then with
-updated reaction rates and the inclusion of deuterium species.  These 
-routines follow the non-equilibrium chemistry of a 
-gas of primordial composition with 12 total species:  
-$H$, $H^+$, $He$, $He^+$, $He^{++}$, $H^-$, $H_2^+$, $H_2$, $e^-$,
-$D$, $D^+$, and $HD$.  (A separate, but related, module follows the
-radiative heating and cooling of the gas from atomic and molecular line excitation,
-recombination, collisional excitation, free-free transitions, Compton
-scattering of the cosmic microwave background, as well as several
-models for a metagalactic UV background that heat the gas via
-photoionization and discussion -- see Section~\ref{sec.num.cooling}
-for more details).  Depending on user parameters, one can follow
-simply atomic species ($H$, $H^+$, $He$, $He^+$, $He^{++}$,  and
-$e^-$), include those relevant for molecular hydrogen formation
-($H_2$, $H_2^+$, and $H^-$), and further include deuterium and its
-species ($D$, $D^+$, and $HD$).  
-\red{A total of 9 kinetic equations are solved, including 29 kinetic and radiative 
-processes, for the 9 species mentioned above.  See Table~\ref{table.collisional} 
-for the collisional processes and Table~\ref{table.radiative} for the 
-radiative processes solved.}
+updated reaction rates and the inclusion of deuterium species
+\citep{2009PhDT.........5T}.  These routines follow the
+non-equilibrium chemistry of a gas of primordial composition with 12
+total species: $H$, $H^+$, $He$, $He^+$, $He^{++}$, $H^-$, $H_2^+$,
+$H_2$, $e^-$, $D$, $D^+$, and $HD$.  (A separate, but related, module
+follows the radiative heating and cooling of the gas from atomic and
+molecular line excitation, recombination, collisional excitation,
+free-free transitions, Compton scattering of the cosmic microwave
+background, as well as several models for a metagalactic UV background
+that heat the gas via photoionization and discussion -- see
+Section~\ref{sec.num.cooling} for more details).  Depending on user
+parameters, one can follow simply atomic species ($H$, $H^+$, $He$,
+$He^+$, $He^{++}$, and $e^-$), include those relevant for molecular
+hydrogen formation ($H_2$, $H_2^+$, and $H^-$), and further include
+deuterium and its species ($D$, $D^+$, and $HD$.)  \red{A total of 9
+kinetic equations are solved, including 29 kinetic and radiative
+processes, for the 9 species mentioned above.  See
+Table~\ref{table.collisional} for the collisional processes and
+Table~\ref{table.radiative} for the radiative processes solved.}
 
 The chemical reaction equation network is technically challenging to solve due to 
 the huge range of reaction timescales involved -- the characteristic creation
