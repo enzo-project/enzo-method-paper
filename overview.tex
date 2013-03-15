@@ -16,7 +16,7 @@ We begin by laying out the equations to be solved and then discuss briefly the t
 
 % ----------------------------------------------------------------------------------------
 
-\subsubsection{Hydrodynamics and Gravity}
+\subsubsection{Magnetohydrodynamics and Gravity}
 
 The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coordinate systems comoving the cosmological expansion are given by
 
@@ -443,7 +443,7 @@ As described in \citet{Bryan95}, we modify the method for use in hypersonic flow
 
 The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
 
-\subsubsection{Godonuv MUSCL with Dednet (HD and MHD)}
+\subsubsection{Godonov MUSCL with Dedner (HD and MHD)}
 
 \subsubsection{MHDCT}
 
@@ -455,7 +455,7 @@ The ZEUS method uses a staggered mesh such that the velocities are face-centered
 
 \subsubsection{Gravity}
 
-The current implementation of self-gravity in \enzo uses a Fast Fourier Technique \citep{Hockney88} to solve Poisson's equation on the top (level 0) grid.  The advantage of this is that it naturally allows both periodic and isolated boundary conditions for the gravity, choices which are very common in astrophysics and cosmology.  On subgrids, we interpolate the boundary conditions from that grid's parent (either the level 0 grid or some other subgrid).  Poisson's equation is then solved using a multigrid technique.  In \enzo\, self-gravity is optional.  There are also a number of options for static gravitational fields.
+The current implementation of self-gravity in \enzo uses a Fast Fourier Technique \citep{Hockney88} to solve Poisson's equation on the top (level 0) grid.  The advantage of this is that it naturally allows both periodic and isolated boundary conditions for the gravity, choices which are very common in astrophysics and cosmology.  On subgrids, we interpolate the boundary conditions from that grid's parent (either the level 0 grid or some other subgrid).  The Poisson equation is then solved using a multigrid technique.  In \enzo\, self-gravity is optional.  There are also a number of options for static gravitational fields.
 
 \subsubsection{N-body Dynamics}
 
