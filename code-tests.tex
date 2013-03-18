@@ -3,9 +3,24 @@
 \section{Code tests}
 \label{sec.tests}
 
+Ensuring that a complex piece of software is behaving correctly is a
+non-trivial task.  While there are a range of techniques that one can
+apply to ensure correctness, the \enzo\ code uses two primary methods:
+a suite of test problems that can be compared to previous versions of
+the code, to ensure that \enzo\ is, e.g., running correctly on a new
+computer, with a new compiler, or after substantial changes have been
+made to the code base; and by direct comparisons to other
+astrophysical fluid dynamics codes.  We describe the \enzo\ test
+methodology in Section~\ref{sec.tests.suite}, code comparisons in
+Section~\ref{sec.tests.compare}, and show a small set of
+representative test problems in Section~\ref{sec.tests.problems}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Verifying and validating the \enzo\ code}
 \label{sec.tests.vandv}
+
+\subsubsection{The \enzo\ test suite}
+\label{sec.tests.suite}
 
 \enzo\ is capable of simulating a large variety of problems types, with
 all but a small few requiring only a parameter file as sole input.
@@ -43,12 +58,12 @@ push, and full suite are 15 minutes, 1 hour, and 60 hours,
 respectively.
 
 After the test problems are selected by the test runner script, they
-are run in succession either by with \enzo\ executable contained within
-that distribution or an external executable built from another version
-and specified by the user.  This allows for any version of the code to
-be tested with an identical set of test problems.  After running the
-test problem simulations, the test runner then performs a series of
-basic analysis tasks using the \texttt{yt} analysis toolkit
+are run in succession either by with \enzo\ executable contained
+within that distribution or an external executable built from another
+version and specified by the user.  This allows for any version of the
+code to be tested with an identical set of test problems.  After
+running the test problem simulations, the test runner then performs a
+series of basic analysis tasks using the \texttt{yt} analysis toolkit
 \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  The default
 analysis performed on all test problems includes calculation of
 various statistics, such as extrema; mean; and variance, on the fields
@@ -59,11 +74,37 @@ against the simulation data.  After the analysis is performed, the
 results are compared against a set of gold standard results which are
 maintained on a website and downloaded on the fly by the test runner
 script.  Alternately, results from any version of \enzo\ can be stored
-locally and compared to any other version of the code.  Below, we
-describe some of the key test problems which are used to verify proper 
-behavior.
+locally and compared to any other version of the code.  In
+Section~\ref{sec.tests.problems}, we describe some of the key test
+problems which are used to verify proper behavior.  All of these test
+problems, as well as the scripts to generate the figures from them,
+are available in the \enzo\ test suite.
 
-\red{(Brian)} Refer to all code comparisons that Enzo has been part of.
+\subsubsection{Code comparisons}
+\label{sec.tests.compare}
+
+Over the course of its existence, \enzo\ has been involved in several
+comparisons with other astrophysical codes used for self-gravitating
+fluid dynamics.
+
+Cosmology: 
+Santa Barbara Clusters, \citep{SantaBarbara}.
+Enzo-gadget cosmology comparison, \citep{2005ApJS..160....1O}.
+Regan et al. Enzo/Gadget Lyman Alpha Forest comparison,
+\citep{2007MNRAS.374..196R}.
+Heitmann n-body comparison, \citep{2008CS&D....1a5003H}
+
+Hydro:
+Agertz hydro comparison, \citep{2007MNRAS.380..963A}.
+Tasker test suite, \citep{Tasker2008}.
+
+Turbulence:
+Kritsuk supersonic MHD turbulence comparison,
+\citep{2011ApJ...737...13K}.  Compares MHD-CT version.
+
+Radiation transport:
+Iliev et al. radiation transport comparison, paper II,
+\citep{IlievEtAl2009}.  Compares enzo-FLD.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Representative test problems}
