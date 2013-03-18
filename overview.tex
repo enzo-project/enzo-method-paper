@@ -18,12 +18,12 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
-          + \frac{1}{a} \nabla \cdot (rho \vecv) = 0
+          + \frac{1}{a} \nabla \cdot (\rho \vecv) & = & 0
         \label{eq:mass} \\
 %
 \frac{\partial \rho \vecv}{\partial t}  
-   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + p^* - \vecB \vecB) =
-    - \frac{\dot{a}}{a} rho \vecB - \frac{1}{a} \rho \nabla \phi
+   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + \myvec{I}p^* - \frac{\vecB \vecB}{a} \right) & = &
+    - \frac{\dot{a}}{a} \rho \vecv - \frac{1}{a} \rho \nabla \phi
     %
 %          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
 %    & = & - \frac{\dot{a}}{a} \vecv 
@@ -33,9 +33,9 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
         \label{eq:momentum} \\
 %
 \frac{\partial E}{\partial t} 
-+ \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv - (\vecB \cdot \vecv) \vecB \right] =
-     - \frac{2\dot{a}}{a} E - \frac{1}{a} \vecv \cdot \nabla \phi + \frac{\dot{a}}{a} \frac{\vecB^2}{2}
-
++ \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv -  \frac{1}{a} \vecB (\vecB \cdot \vecv) \right] & = &
+     - \frac{\dot{a}}{a} \left( 2E - \frac{B^2}{2a} \right)  - \frac{1}{a} \vecv \cdot \nabla \phi 
+     %
 %         + \frac{1}{a} \vecv \cdot \nabla E
  %  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
   %       - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
@@ -44,11 +44,8 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
  %               + \Gamma - \Lambda.
        \label{eq:total_energy}  \\
 %
-\frac{\partial \vecB}{\partial t} = \frac{1}{a}  \nabla \times (\vecc \times \vecB) - \frac{dot{a}{2a} \vecB \label{eq:induction}
-
-
+\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times \vecB) & = & 0 \label{eq:induction}
 \end{eqnarray}
-
 
 %\begin{eqnarray} 
 %\frac{\partial \rho}{\partial t} 
@@ -70,18 +67,18 @@ The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coo
 %        \label{eq:total_energy}
 %\end{eqnarray}
 %
-Here $E$, $e$, $\rho$, $\vecv$ and $p$ are the comoving total specific fluid energy, specific thermal energy, baryonic density, velocity and pressure, respectively.  
-%Here we use primes to indicate variables defined in the absolute frame of reference (to distinguish them from a comoving frame).  
-The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation. 
-Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}).
+Here $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving total fluid energy, comoving baryonic density, peculiar velocity, and comoving magnetic field strength, respectively.  $\myvec{I}$ is the identity matrix.
+The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation.  The fourth equation is the magnetic induction equation.   Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}).
 
-The total fluid specific energy ($E$) is given by:
+The total fluid energy $E$ is given by:
 \begin{equation}
-E =  e + \frac{1}{2} \vecv \cdot \vecv.
-        \label{eq:total_energy_def}
+E =  \rho e + \frac{\rho v^2}{2}  + \frac{B^2}{2a}
+        \label{eq:total_energy_def}.
 \end{equation}
-It is useful to solve the equation of total energy because doing so enforces local energy conservation.
-
+where $e$ is the comoving specific thermal energy, and the total isotropic pressure $p^*$ is given by
+\begin{equation}
+p^* = p + \frac{B^2}{2a}
+\end{equation}
 The equations are closed with the equation of state and Poisson's equation (we work in the Newtonian limit):
 %
 \begin{eqnarray}
@@ -95,27 +92,26 @@ e   & = & p / [(\gamma - 1) \rho ],
 \end{eqnarray}
 %
 The equation of state is shown here for an ideal gas with a ratio of specific heats $\gamma$.
-Equation (\ref{eq:potential}) includes contributions to the gravitational potential $\phi$ from the total mass density $\rho_{\rm total}$).
-% as well as any radiation or massless neutrino background ($p_{total}^\prime$) or cosmological constant ($\Lambda_c$), if we are interested in the cosmological case.
+Equation (\ref{eq:potential}) includes contributions to the gravitational potential $\phi$ from the total mass density $\rho_{\rm total}$.  Although we write the equations including both MHD and comoving coordinates, the code can operate both in the pure hydrodynamic limit, and without cosmological expansion.
 
 % ----------------------------------------------------------------------------------------
 
 \subsubsection{Comoving Coordinates}
 
-For completeness, we note here that as part of the usual transformation to comoving coordinates, we have defined the following comoving quantities (primes indicate variables defined in the usual, proper, coordinate system).
-
-This set of coupled hydrodynamic plus gravity equations is the standard one that \enzo solves.  However, in the cosmological case it is useful to transform these to a coordinate system that is comoving with the expanding universe \citep{Peebles93} (but note that \enzo\ can also operate in a fixed coordinate system). Specifically, we define:
+For completeness, we note here that as part of the usual transformation to comoving coordinates, we have defined a set of comoving quantities.  See, for example, \citet{Peebles93} for more details.  Specifically, we define:
 \begin{eqnarray}
 \vecx & = & \vecr/a, \\
 \vecv & = & a \hspace{0.5mm} d\vecx/dt = 
               \vecvp - \dot{a}\vecx, \\
 \rho    & = & a^3 \rhop,   \\
 p       & = & a^3 \pp, \\
-E       & = & \Ep - 
+E       & = & a^3 (\Ep - 
               \dot{a} \vecx \cdot \vecvp - 
-              \frac{1}{2} \dot{a}^2 \vecx^2, \\
-\phi    & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2.
+              \frac{1}{2} \dot{a}^2 \vecx^2), \\
+\phi    & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2. \\
+\vecB & = & a^2 \vecB^\prime
 \end{eqnarray}
+where primes indicate the usual quantities defined in a fixed frame frame, $\vecr$ is the proper distance and $\vecx$ is the comoving distance.
 
 %These definitions result in the following comoving equivalents to eqs. 
 %(\ref{eq:mass})-(\ref{eq:potential}).
@@ -164,13 +160,13 @@ The evolution of $a(t)$ is governed by the formula for the expansion of an isotr
 %
 \begin{eqnarray}
 \frac{\ddot{a}}{a} & = & 
-      - \frac{4 \pi G }{3 a^3 } (\rhop_0 
-      + 3\pp_0/c^2) 
+      - \frac{4 \pi G }{3 a^3 } (\rho_0 
+      + 3p_0/c^2) 
       + \Lambda_c /3 .
       \label{eq:expansion} 
 \end{eqnarray}
 %
-Here, $\rhop_0$ is the mean (baryonic and dark) comoving mass density and $\pp_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
+Here, $\rho_0$ is the mean (baryonic and dark) comoving mass density and $p_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
 %$\gamma$ is the ratio of specific heats, and $\Lambda$ is the cosmological constant.
 %We note that if $\gamma$ is not $5/3$ then $E$ in the first term on
 %the right side of eq.~(ref{eq:total_energy}) must be replaced with 
@@ -308,11 +304,11 @@ where $k_{ij}$ are the rate coefficients for the two-body reactions and are usua
 %\dcc{Fixed punctuation, added 'no mhd, rhd' caveat to Zeus statements.  This has caused
 %confusion in the past.}
 
-\subsubsection{Magnetohydrodynamics}
+%\subsubsection{Magnetohydrodynamics}
 
 
 
-\subsubsection{Radiation transport: ray-casting}
+\subsubsection{Radiation transport: ray-tracing}
 
 
 
