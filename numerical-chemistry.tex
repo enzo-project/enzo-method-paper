@@ -35,72 +35,64 @@ processes, for the 9 species mentioned above.  See
 Table~\ref{table.collisional} for the collisional processes and
 Table~\ref{table.radiative} for the radiative processes solved.}
 
-The chemical reaction equation network is technically challenging to solve due to 
-the huge range of reaction timescales involved -- the characteristic creation
-and destruction timescales of the various species and reactions can differ by 
-many orders of magnitude.  As a result, the set of rate equations is extremely 
-stiff, and an explicit scheme for integration of the rate equations can be 
-exceptionally costly if small enough timesteps are taken to keep the network
-stable.  This makes an implicit scheme much more preferable for such a set of 
-equations.  However, an implicit scheme typically require an iterative 
-procedure to converge, and for large networks (such as this one) an implicit
-method can be very time-consuming, making it undesirable for a large, three-dimensional
-simulation.
+The chemical reaction equation network is technically challenging to
+solve due to the huge range of reaction timescales involved -- the
+characteristic creation and destruction timescales of the various
+species and reactions can differ by many orders of magnitude.  As a
+result, the set of rate equations is extremely stiff, and an explicit
+scheme for integration of the rate equations can be exceptionally
+costly if small enough timesteps are taken to keep the network stable.
+This makes an implicit scheme much more preferable for such a set of
+equations.  However, an implicit scheme typically require an iterative
+procedure to converge, and for large networks (such as this one) an
+implicit method can be very time-consuming, making it undesirable for
+a large, three-dimensional simulation.
 
-\enzo\ solves the rate equations using a method based on a backwards differencing 
-formula (BDF) in order to provide a stable and accurate solution.  This technique is
-optimized by taking the chemical intermediaries $H^-$ and $H_2^+$, which have 
-large rate coefficients and low concentrations, and grouping them into a separate
-category of equations.  Due to their fast reactions these species are very sensitive
-to small changes in the more abundant species.  However, due to their low overall
-concentrations, they do not significantly influence the abundance of species with
-higher concentrations.  Therefore, reactions involving these two species can be
-decoupled from the rest of the network and treated independently.  In fact, $H^-$ 
-and $H_2^+$ are treated as being in equilibrium at all times, independent of 
-the other species and the hydrodynamic variables.  This allows a large speedup
-in solution as the BDF scheme is then applied only to the slower 7- or
-10-species network (depending on whether deuterium is included or not)
-on timescales closer to those required by the hydrodynamics of the simulation.
-Even so, the accuracy and stability of the scheme is maintained by subcycling the 
-rate solver over a single hydrodynamic timestep.  These subcycle timesteps are 
-determined so that the maximum fractional change in the electron concentration is
-limited to no more than $10\%$ per timestep.
+\enzo\ solves the rate equations using a method based on a backwards
+differencing formula (BDF) in order to provide a stable and accurate
+solution. This technique is optimized by taking the chemical
+intermediaries $H^-$ and $H_2^+$, which have large rate coefficients
+and low concentrations, and grouping them into a separate category of
+equations.  Due to their fast reactions these species are very
+sensitive to small changes in the more abundant species.  However, due
+to their low overall concentrations, they do not significantly
+influence the abundance of species with higher concentrations.
+Therefore, reactions involving these two species can be decoupled from
+the rest of the network and treated independently.  In fact, $H^-$ and
+$H_2^+$ are treated as being in equilibrium at all times, independent
+of the other species and the hydrodynamic variables.  This allows a
+large speedup in solution as the BDF scheme is then applied only to
+the slower 7- or 10-species network (depending on whether deuterium is
+included or not) on timescales closer to those required by the
+hydrodynamics of the simulation.  Even so, the accuracy and stability
+of the scheme is maintained by subcycling the rate solver over a
+single hydrodynamic timestep.  These subcycle timesteps are determined
+so that the maximum fractional change in the electron concentration is
+limited to no more than $10\%$ per timestep.  Given this subcycling,
+the method is not truly implicit over an entire hydrodynamical
+timestep, and thus not truly a BDF method -- however, it uses the
+formalism and is implicit over subcycle timesteps.
 
-It is important to note the regime in which this model is valid.  According to Abel et al. and
-Anninos et al. \citep{abel97,anninos97}, the reaction network is valid for temperatures
-between $10^0 - 10^8$ K.  The original model discussed in these two references is only
-valid up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the 3-body $H_2$ formation
-process (equation 20 in Table~\ref{table.collisional}) allows 
-correct modeling of the chemistry of the gas up
-until the point where collisionally-induced emission from molecular hydrogen becomes an important
-cooling process, which occurs at $n_H \sim 10^{14}$~cm$^{-3}$.  A further concern is that
-the optically thin approximation for radiative cooling breaks down, which
-occurs before $n_H \sim 10^{16} - 10^{17}$~cm$^{-3}$.  Beyond this point, 
-modifications the cooling function that take into account the non-negligible
-opacity in the gas must be made, as discussed by \citet{2004MNRAS.348.1019R}. 
-Even with these modifications, a completely correct description of the cooling of
-this gas will require some form of radiation transport, which will greatly 
+
+It is important to note the regime in which this model is valid.
+According to Abel et al. and Anninos et al. \citep{abel97,anninos97},
+the reaction network is valid for temperatures between $10^0 - 10^8$
+K.  The original model discussed in these two references is only valid
+up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the 3-body
+$H_2$ formation process (equation 20 in Table~\ref{table.collisional})
+allows correct modeling of the chemistry of the gas up until the point
+where collisionally-induced emission from molecular hydrogen becomes
+an important cooling process, which occurs at $n_H \sim
+10^{14}$~cm$^{-3}$.  A further concern is that the optically thin
+approximation for radiative cooling breaks down, which occurs before
+$n_H \sim 10^{16} - 10^{17}$~cm$^{-3}$.  Beyond this point,
+modifications the cooling function that take into account the
+non-negligible opacity in the gas must be made, as discussed by
+\citet{2004MNRAS.348.1019R}, and was put into \enzo\ for the work
+published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  Even with these
+modifications, a completely correct description of the cooling of this
+gas will require some form of radiation transport, which will greatly
 increase the cost of the simulations.
-
-\red{Several processes are neglected.  The deuterium atom and its processes are 
-completely ignored, which may have some effect.  Recent work shows that HD is
-a more effective coolant than previously thought~\citep{2005MNRAS.361..850L}.  However,
-the fractional abundance of HD is so low that under circumstances relevant to
-the formation of a Population III star in an un-ionized region it should be
-sub-dominant.  However, the enhanced electron fraction in fossil 
-HII regions (as discussed later in this thesis) could result in the HD molecule
-becoming a dominant cooling mechanism at relatively low ($\sim$ few hundred K)
-temperatures, and could potentially cool the gas down to below $100$~K, which can
-enhance fragmentation and could have important consequences for the IMF of 
-primordial stars forming in a relic HII region~\citep{2005MNRAS.364.1378N}.}
-
-Aside from deuterium, the chemical reactions involving lithium 
-are also neglected.  According to \citet{1998A&A...335..403G}, these are 
-not important for the density and temperature regimes explored 
-by the simulations discussed in this thesis.  However, at higher densities it 
-is possible that there are regimes where lithium can be an important coolant.
-
-
 
 %---------------- table of collisional processes
 
@@ -114,6 +106,7 @@ is possible that there are regimes where lithium can be an important coolant.
 (4) & He$^+$ &+& e$^-$ & $\rightarrow$ & He &+ &$\gamma$  \\
 (5) & He$^{+}$ &+& e$^-$ & $\rightarrow$ & He$^{++}$ &+& 2$e^-$  \\
 (6) & He$^{++}$ &+& e$^-$ & $\rightarrow$ & He$^+$ &+& $\gamma$ \\
+\hline
 (7) & H &+& e$^-$ &$\rightarrow$& H$^-$ &+& $\gamma$  \\
 (8) & H$^-$ &+& H &$\rightarrow$ & H$_2$ & +& e$^-$ \\
 (9) & H &+ &H$^+$ &$\rightarrow$ &H$_2^+$ &+ &$\gamma$ \\
@@ -127,10 +120,24 @@ is possible that there are regimes where lithium can be an important coolant.
 (17) & H$^-$ & + & H$^+$ & $\rightarrow$ & H$_2^+$ & + & e$^-$ \\
 (18) & H$_2^+$ & + & e$^-$ & $\rightarrow$ & 2H & & \\
 (19) & H$_2^+$ & + & H$^-$ & $\rightarrow$ & H$_2$ & + & H  \\
-(20) & 3H & & & $\rightarrow$ & H$_2$ & + & H
+(20) & 2H & + & H$_2$ & $\rightarrow$ & 2H$_2$ &  &   \\
+(21) & 2H & + & H & $\rightarrow$ & H$_2$ & + & H  \\
+(22) & H$_2$ & + & H$_2$ & $\rightarrow$ & H$_2$ & + & 2H  \\
+(23) & 3H & & & $\rightarrow$ & H$_2$ & + & H \\
+\hline
+(24) & D & + & e$^-$ & $\rightarrow$ & D$^+$ &+& 2e$^-$ \\
+(25) & D$^+$ &+ &e$^-$ & $\rightarrow$ & D &+ &$\gamma$ \\
+(26) & H$^+$ &+ &D & $\rightarrow$ & H &+ &D$^+$ \\
+(27) & H &+ &D$^+$ & $\rightarrow$ & H$^+$ &+ &D \\
+(28) & H$_2$ &+ &D$^+$ & $\rightarrow$ & HD &+ &D$^+$ \\
+(29) & HD &+ &H$^+$ & $\rightarrow$ & H$_2$ &+ &D$^+$ \\
+(30) & H$_2$ &+ &D & $\rightarrow$ & HD &+ &H \\
+(31) & HD &+ &H & $\rightarrow$ & H$_2$ &+ &D \\
+
+
 \end{tabular}
 \caption[]{Collisional processes solved in the Enzo nonequilibrium
-primordial chemistry routines.}
+primordial chemistry routines. \red{Missing 3-body rate for D$_2$?}}
 \label{table.collisional}
 \end{center}
 \end{table}
@@ -152,7 +159,7 @@ primordial chemistry routines.}
 (29) & H$_2$ & + & $\gamma$ & $\rightarrow$ & 2H &  & 
 \end{tabular}
 \caption[]{Radiative processes solved in the Enzo nonequilibrium
-primordial chemistry routines.}
+primordial chemistry routines. \red{Missing rates for D$_2$?}}
 \label{table.radiative}
 \end{center}
 \end{table}
