@@ -333,7 +333,7 @@ ease the comparison, but in this test to demonstrate a higher
 resolution AMR solution, we employ a $128^3$ grid with two additional
 levels of refinement with cells with a baryon mass (method 2 in
 \S\ref{sec:refinement_criteria}) greater than 1.5 being flagged for
-refinement.
+refinement.  This test is run for 15 Myr.
 
 This cloud is subject to radiation from a point source at the center
 of the $y=0$ boundary with an ionizing photon luminosity
@@ -346,7 +346,21 @@ $E_i = (17.98, 31.15, 49.09, 76.98) \unit{eV}, L_i/L = (0.23, 0.36,
 0.24, 0.06)$ that are optimized to reduce errors in the solutions with
 a full spectrum and energy discretization \citep{Mirocha12}.  Note
 that this choice of energy groups is different from
-\citet{Wise11_Moray}.
+\citet{Wise11_Moray}.  We use a minimum angular resolution of 10 rays
+per cell and a constant radiative transfer timestep of 25 kyr.  Figure
+\ref{fig:shadowing} depicts the clump after at $t = 15$ Myr with the
+outer layers expanding after being photo-heated.  It also shows the
+sharp shadowing effects of the dense clump in the neutral fraction
+plot that is representative of ray tracing techniques.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\textwidth]{figures/code-test-shadowing.eps}
+  \caption{Photo-evaporation of a dense clump.  Clockwise from the
+    upper left-hand side: slices through the clump center of the
+    density, temperature, neutral fraction, and pressure.}
+  \label{fig:shadowing}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{code-tests-fld}
