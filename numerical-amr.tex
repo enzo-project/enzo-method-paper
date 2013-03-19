@@ -96,16 +96,16 @@ We focus first on conserved, cell-centered quantities.  The interpolation functi
 
 In one dimension, such functions are well known; examples include
 donor cell, Van-Leer and piecewise parabolic interpolation, which are
-first, second and third-order accurate respectively \citep[e.g.,][]{Stone92a}.
-However, we require fully multi-dimensional interpolation functions, and so
-focus on second-order schemes since they are tractable and
-relatively accurate. 
-\footnote{We could, in principle, build a multi-dimensional interpolator out
-of a one-dimensional interpolation function; however, at higher order, this would not necessarily
-satisfy our constraints on not introducing new extrema.}
-In Appendix~\ref{app:interpolation} we explicitely write down
-functions in one, two and three dimensions, but here we discuss the
-general design considerations.
+first, second and third-order accurate respectively
+\citep[e.g.,][]{Stone92a}.  However, we require fully
+multi-dimensional interpolation functions, and so focus on
+second-order schemes since they are tractable and relatively accurate.
+\footnote{We could, in principle, build a multi-dimensional
+  interpolator out of a one-dimensional interpolation function;
+  however, at higher order, this would not necessarily satisfy our
+  constraints on not introducing new extrema.}  In the Appendix, we
+explicitely write down functions in one, two and three dimensions, but
+here we discuss the general design considerations.
 
 In two dimensions, it is relatively easy to build a linear, monotonic,
 conservative function by requiring, first, that the function at the

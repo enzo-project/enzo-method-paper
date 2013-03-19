@@ -86,7 +86,7 @@ The equations are closed with the equation of state and Poisson's equation (we w
 e   & = & p / [(\gamma - 1) \rho ],
         \label{eq:eq_of_state} \\
 %
-\nabla^2 \phi & = & 4 \pi G \rho_{total}
+\nabla^2 \phi & = & 4 \pi G \rho_{\rm total}
 %                   + 3 p_{total}/c^2) - \Lambda. 
         \label{eq:potential}
 \end{eqnarray}
@@ -484,6 +484,7 @@ the particles to the density on the grid.  This is done using a second-order
 accurate Cloud-In-Cell technique \citep{Hockney88}.
 
 \subsubsection{Chemistry, radiation and cooling}
+\label{sec.ov.chem}
 
 Enzo may operate in a number of modes with regard to radiative cooling
 and chemistry.  In the simplest mode, with the multi-species flag
