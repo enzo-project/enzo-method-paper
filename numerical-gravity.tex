@@ -9,7 +9,7 @@ Next, we add the baryonic grid densities in a similar fashion.  In particular, w
 
 To compute the potential field from this gravitating mass field on the root grid, we use a a fast Fourier transform. For periodic boundary conditions, we can use either a simple Greens function kernel of $-k^{-2}$, or the finite-difference equivalent \citep{Hockney88}:
 \begin{equation}
-G(\vec{k}) = - \frac{\Delta x}{2 \left( sin(k_x \Delta x/2)^2 + sin(k_y \Delta y/2)^2 + sin(k_z \Delta z/2)^2 \right) }
+G(\vec{k}) = - \frac{\Delta x}{2 \left( \sin(k_x \Delta x/2)^2 + \sin(k_y \Delta y/2)^2 + \sin(k_z \Delta z/2)^2 \right) }
 \end{equation}
 where $k^2 = k_x^2 + k_y^2 + k_z^2$ is the wavenumber in Fourier space and the potential is calculated in k-space as usual with $\tilde{\phi}(k) = G(k) \tilde{\rho}(k)$.  
 

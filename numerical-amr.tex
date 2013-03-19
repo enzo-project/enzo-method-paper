@@ -170,7 +170,8 @@ where $r$ is the refinement factor, $d$ the dimensionality, and the sum is over 
 One of the big advantages a flux-conservative methods is, of course, their ability to maintain conserved-quantities to machine precision.  Unfortunately, the projection step upsets this flux conservation since, at the boundary of a refined region, the coarse and fine cells on either side of the border are updated with different estimates of the flux across the boundary.  In one case this comes from the coarse grid computation, and in the other from the fine grid solution.  Conservation can be restored by correcting all coarse cells which lie at the boundary of a fine region
 with the difference between the coarse and fine estimates of the flux across the boundary:
 \begin{equation}
-q^{\rm coarse} = \tilde{q}^{\rm coarse} - \Delta t \left( F^{\rm coarse} - \sum_{j,k} F^{fine}_{j,k} \right)
+  q^{\rm coarse} = \tilde{q}^{\rm coarse} - \Delta t \left( F^{\rm
+      coarse} - \sum_{j,k} F^{\rm fine}_{j,k} \right)
 \end{equation}
 where $F$ is the flux of quantity $q_i$ in the $i$-direction through the cell interface.   We use $\tilde{q}$ to indicate the uncorrected quantity on the coarse grid and the sum is over the $r^{d-1}$ fine cell interfaces in the perpendicular dimensions which share a face with the coarse cell being corrected.  This corrected is carried out for all coarse cells which share a face with a refined cell (and are not themselves covered with more refined cells).
 
@@ -211,11 +212,11 @@ e_i / E_i & > & 0.1  \nonumber
 
 \item{\em Jeans Length.}  Following \cite{Truelove98}, the code can be forced to refine the Jeans length by a fixed number of cells, or, in more specifically, whenever the following criterion is not met:
 \begin{equation}
-\Delta x < \left( \frac{\pi k_B T}{J^2 G \rho m_H} \right)^{1/2}
+\Delta x < \left( \frac{\pi k_B T}{J^2 G \rho \mh} \right)^{1/2}
 \end{equation}
 where $J$ is the required number of cells per Jeans length (4 by default).
 
-\item{\em Cooling time.}  Often in cosmological simulations, cooling is a rapid process and we do not necessarily want to be limited by the cooling time.  However, in some cases it is desirable to resolve the cooling process, in which case we flag on cells which have a cooling time shorter than their sound crossing time.  The cooling time is given by $t_{\rm cool} = 1.5 kT / (n \Lambda(T)$ and the sound crossing time is $t_{\rm cross} = \Delta x / c_s$, where $c_s$ is the sound speed.
+\item{\em Cooling time.}  Often in cosmological simulations, cooling is a rapid process and we do not necessarily want to be limited by the cooling time.  However, in some cases it is desirable to resolve the cooling process, in which case we flag on cells which have a cooling time shorter than their sound crossing time.  The cooling time is given by $t_{\rm cool} = 1.5 kT / n \Lambda(T)$ and the sound crossing time is $t_{\rm cross} = \Delta x / c_s$, where $c_s$ is the sound speed.
 
 \item{\em Must-refine particles}  In order to allow for refinement in moving regions, it is possible to generate ``must-refine" particles which for local refinement over the 8 nearest cells to a specific level.  The particles feel on gravitational forces and their trajectories are followed as for any other collisionless particle.  This feature can be used to ensure that a specific Lagrangian region stays refined to a specified level of resolution. 
 
@@ -229,13 +230,16 @@ where $J$ is the required number of cells per Jeans length (4 by default).
 \end{equation}
 where $\epsilon_s$ is a dimensionless parameter.
 
-\item{\em Optical depth.} This refinement criterion ensures that cells on the highest level of refinement have an HI optical depth lower than unity.  The optical depth of a cell is estimated to be:
+\item{\em Optical depth.} This refinement criterion ensures that cells on the highest level of refinement have an \ion{H}{1} optical depth lower than unity.  The optical depth of a cell is estimated to be:
 
 \begin{equation}
-\tau = \sigma_{HI} n_{HI} \Delta x 
+\tau = \sigma_{\rm HI} n_{\rm HI} \Delta x 
 \end{equation}
 
-where $\sigma_{HI}$ is the neutral atomic hydrogen absorption cross section, $n_{HI}$ is the proper HI number density, and $\Delta x$ is the cell width.  If $\tau > 1$, the cell is refined further, up to the maximum level of refinement.
+where $\sigma_{\rm HI}$ is the neutral atomic hydrogen absorption
+cross section, $n_{\rm HI}$ is the proper \ion{H}{1} number density,
+and $\Delta x$ is the cell width.  If $\tau > 1$, the cell is refined
+further, up to the maximum level of refinement.
 
 \item{\em Resistive length.}  In a way similar to the Jeans length criterion described above, the code can be forced to locally resolve the resistive length scale by a minimum of a fixed number of cells.  This is done by ensuring that the resistive length scale, defined as
 

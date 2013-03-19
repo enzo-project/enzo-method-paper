@@ -79,8 +79,8 @@ course of a single timestep $\Delta t$ as follows:
 
 \begin{eqnarray}
 \label{eqn.drifttrace}
-x^{n+1/2} & = & x^n + (\Delta t/2) v^{interp,n} \nonumber \\
-v^{n+1} & = & v^{interp,n+1} \\
+x^{n+1/2} & = & x^n + (\Delta t/2) v^{\rm interp,n} \nonumber \\
+v^{n+1} & = & v^{\rm interp,n+1} \\
 x^{n+1} & = & x^{n+1/2} + (\Delta t/2) v^{n+1} \nonumber
 \end{eqnarray}
 
@@ -90,7 +90,7 @@ half-timestep $t^n + \Delta t/2$ (as is done for massive particles --
 see Equation~\ref{eqn.driftkick}), the particle's velocity is updated
 both at the beginning of each timestep and at the half-timestep
 by linearly interpolating the cell-centered baryon velocity to the
-position of the particle ($v^{interp}$), and assigning it to that value.
+position of the particle ($v^{\rm interp}$), and assigning it to that value.
 
 At user-specified intervals, the tracer particles output their data
 in a streaming format into a binary file.  The data written out
