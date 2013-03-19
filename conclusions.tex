@@ -2,9 +2,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 
-\begin{enumerate}
-\item near-future development plans (OpenMP, ...)
-\item far-future development plans (enzo 3.0 and beyond)
-\item clear areas of improvement
-\end{enumerate}
+In this paper, we have presented the algorithms underlying \enzo, an
+open-source adaptive mesh refinement code designed for
+self-gravitating compressible fluid dynamics, including the effects of
+magnetic fields, radiation transport, and a variety of microphysical
+and subgrid processes.  In addition, we have described the \enzo\ code
+development process, have shown the outputs of some representative
+test problems, and have provided information about its performance and
+scaling on current-generation (circa 2013) supercomputing platforms.
+The \enzo\ code, its test suite, and all of the scripts used to
+generate plots and figures for this paper are open-source and are
+available at the \enzo\ website, http://enzo-project.org.
+Furthermore, the yt toolkit, which is designed to analyze \enzo\ data
+(as well as data from a wide variety of other simulation tools), can
+be found at its website, http://yt-project.org.  Both of these codes
+have active user and developer communities, extensive documentation
+and user suppport, and strong mechanisms for
+users to contribute their changes and fixes to the codebase.
+
+The developers of the \enzo\ code are currently working on several
+projects that will extend the functionality, scalability, or overall
+performance of the code in the near future.  Work is
+underway to create a hybrid-parallel version of \enzo, combining MPI
+for communication between nodes of a supercomputer and OpenMP for
+thread-based parallelism within a node.  This will reduce on-node
+memory usage and will in principle help with scaling.  \red{other stuff here!}.
+This work is currently underway, and will be released in the stable
+branch of \enzo\ in the near
+future.
+
+In the longer term, we plan to restructure \enzo's treatment of
+particles to accommodate a wider range of ``active'' particles that
+can easily interact with each other and with grids.  We also plan to
+use the HYPRE library to create a new gravity solver for the code,
+which will improve its scalability and correctness.  \red{other stuff
+  here!}
+
+\red{Do we want a separate paragraph for areas of improvement outside
+  of short-term and longer-term?}
+
  
