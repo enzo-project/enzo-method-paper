@@ -6,7 +6,7 @@ associated ionization chemistry solvers on a cosmological I-front
 test.  This corresponds to the test problem 4.6
 from \cite{ReynoldsHayesPaschosNorman2009}, run using the cosmological
 deceleration parameter $q_0 = 0.05$ and initial redshift $z_i=10$.
-Here, the physics of interest is the expansion of a HII region in a
+Here, the physics of interest is the expansion of a \ion{H}{2} region in a
 uniform gas around a single monochromatic ionizing source (with
 frequency $h\nu = 13.6$ eV).  In this problem the I-front propagates
 rapidly at first, approaching 90\% of the Str{\" o}mgren radius by a
@@ -15,17 +15,17 @@ before cosmological expansion overtakes ionization, pushing the Str{\"
 o}mgren radius outward faster than the I-front can propagate.  Here,
 the Str{\" o}mgren radius is analytically given by
 \[
-   r_S(t) = \left[\frac{3\dot{N}_{\gamma}}{4\pi \alpha_B
-   n_H(t)^2}\right]^{1/3}, 
+   r_S(t) = \left[\frac{3\dot{N}_{\gamma}}{4\pi \alpha_{\rm B}
+   n_{\rm H}(t)^2}\right]^{1/3}, 
 \]
 where $\dot{N}_{\gamma} = 5\cdot10^{48}$ photon sec$^{-1}$ is the
-stength of the ionizing source, $\alpha_B = 2.52\cdot10^{-13}$
-s$^{-1}$ is the HII recombination rate, and $n_H(t)$ is the proper
-number density of hydrogen.  We then define $\lambda = \alpha_B\,
-n_{H,i}\, /\, H_0\, / (1+z_i)$, where the subscript $i$ indicates the
-quantity at the initial redshift.  The analytical solution for the
-I-front position as a function of time (or actually of the
-time/redshift-dependent expansion coefficient $a(t)$) is then
+stength of the ionizing source, $\alpha_{\rm B} = 2.52\cdot10^{-13}$
+s$^{-1}$ is the \ion{H}{2} recombination rate, and $n_H(t)$ is the
+proper number density of hydrogen.  We then define $\lambda =
+\alpha_{\rm B}\, n_{H,i}\, /\, H_0\, / (1+z_i)$, where the subscript $i$
+indicates the quantity at the initial redshift.  The analytical
+solution for the I-front position as a function of time (or actually
+of the time/redshift-dependent expansion coefficient $a(t)$) is then
 \begin{eqnarray*}
    r_I(t) &=& r_{S,i} \left[\lambda e^{-\tau(a)} \int_1^{a(t)}
      e^{\tau(\tilde a)} \left(1 - 2q_0
@@ -42,16 +42,16 @@ $\Omega_A=0$ and $\Omega_b = 0.1$.  The initial values for the
 simulation are a radiation energy density $E_{r,i} = 10^{-35}$ erg
 cm$^{-3}$, temperature $T_i = 10^4$ K, density $\rho_{b,i} =
 2.35\cdot10^{-28}$ g cm$^{-3}$, and an ionized hydrogen fraction
-${\mathrm n}_{HII}/{\mathrm n}_H = 0$.
+$n_{\rm HII}/n_{\rm H} = 0$.
 
-In the Figure \ref{fig.fld}, we plot profiles of the HI and HII
-fractions at the redshifts $z=\{6.24,\, 2.29,\, 1.02\}$, as well as the
-ratio of the I-front and Str{\" o}mgren radii throughout the
-simulation.  As seen in the profile figure, the I-front width starts
-out quite sharp but slowly spreads as the simulation proceeds due to
-the diffusion approximation to the radiative transfer.  However, as
-seen in the I-front propagation history plot, the computed I-front
-location very accurately captures the exact value.
+In the Figure \ref{fig.fld}, we plot profiles of the \ion{H}{1} and
+\ion{H}{2} fractions at the redshifts $z=\{6.24,\, 2.29,\, 1.02\}$, as
+well as the ratio of the I-front and Str{\" o}mgren radii throughout
+the simulation.  As seen in the profile figure, the I-front width
+starts out quite sharp but slowly spreads as the simulation proceeds
+due to the diffusion approximation to the radiative transfer.
+However, as seen in the I-front propagation history plot, the computed
+I-front location very accurately captures the exact value.
 
 \begin{figure}
 \begin{center}
@@ -63,3 +63,8 @@ Section \ref{sec.tests.fld}.}
 \label{fig.fld}
 \end{center}
 \end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End: 

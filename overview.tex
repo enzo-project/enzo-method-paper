@@ -86,7 +86,7 @@ The equations are closed with the equation of state and Poisson's equation (we w
 e   & = & p / [(\gamma - 1) \rho ],
         \label{eq:eq_of_state} \\
 %
-\nabla^2 \phi & = & 4 \pi G \rho_{total}
+\nabla^2 \phi & = & 4 \pi G \rho_{\rm total}
 %                   + 3 p_{total}/c^2) - \Lambda. 
         \label{eq:potential}
 \end{eqnarray}
@@ -323,10 +323,10 @@ similar to that of \citet{2007ApJ...664..135P}, where we model the
 flux of isotropic heat transport:
 
 \begin{equation}
-\mathbb{F} = -\kappa_{sp} \nabla T
+\mathbb{F} = -\kappa_{\rm sp} \nabla T
 \end{equation}
 
-Where $\kappa_{sp}$ is the Spitzer conduction coefficient
+Where $\kappa_{\rm sp}$ is the Spitzer conduction coefficient
 \citep{1962pfig.book.....S}.  Saturation of the heat flux in
 high-temperature, low-density regimes (such as the intracluster medium
 in galaxy clusters) is taken into account.  Thermal conduction in a
@@ -336,7 +336,7 @@ magnetic field.  In that case, we allow for heat transport only along
 the magnetic field lines in simulations that include this physics, as follows:
 
 \begin{equation}
-\mathbb{F} = -\kappa_{sp} \hat{b} (\hat{b} \cdot \nabla T)
+\mathbb{F} = -\kappa_{\rm sp} \hat{b} (\hat{b} \cdot \nabla T)
 \end{equation}
 
 Where $\hat{b}$ is the unit vector denoting the direction of the
@@ -484,10 +484,24 @@ the particles to the density on the grid.  This is done using a second-order
 accurate Cloud-In-Cell technique \citep{Hockney88}.
 
 \subsubsection{Chemistry, radiation and cooling}
+\label{sec.ov.chem}
 
-Enzo may operate in a number of modes with regard to radiative cooling and chemistry.  In the simplest mode, with the multi-species flag turned off (i.e. set to zero), the cooling rate is computed from a simple temperature-dependent cooling rate, taken from \citet{SW87}.  
+Enzo may operate in a number of modes with regard to radiative cooling
+and chemistry.  In the simplest mode, with the multi-species flag
+turned off (i.e. set to zero), the cooling rate is computed from a
+simple temperature-dependent cooling rate, taken from \citet{SW87}.
 
-In addition to this, \enzo\ includes the capability of following up to 12 chemical species using a non equilibrium-solver.  The species can be turned on in sets, with the simplest model including just H, H$^+$, He, He$^+$, He$^++$, and $e^-$, and more complete models adding first species important for gas-phase molecular hydrogen formation: $H^-$, H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  The cooling and heating due to these species is also included.  The solution of the rate equations is carried out using a time-backwards differencing which insures stability; to maintain accuracy we sub-cycle the rate equations with a shorter timestep such that the electron and neutral fractions do not change by more than 10\%.
+In addition to this, \enzo\ includes the capability of following up to
+12 chemical species using a non equilibrium-solver.  The species can
+be turned on in sets, with the simplest model including just H, \Hp,
+He, \Hep, \Hepp, e$^-$, and more complete models adding first species
+important for gas-phase molecular hydrogen formation: \Hm, \HH~and
+\HHp, and then HD formation: HD, D, \Dp.  The cooling and heating due
+to these species is also included.  The solution of the rate equations
+is carried out using a time-backwards differencing which insures
+stability; to maintain accuracy we sub-cycle the rate equations with a
+shorter timestep such that the electron and neutral fractions do not
+change by more than 10\%.
 
 \subsubsection{Star Formation and Feedback}
 

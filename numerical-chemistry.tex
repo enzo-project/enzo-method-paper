@@ -18,22 +18,22 @@ al. \citep{abel97,anninos97}, but have been extended since then with
 updated reaction rates and the inclusion of deuterium species
 \citep{2009PhDT.........5T}.  These routines follow the
 non-equilibrium chemistry of a gas of primordial composition with 12
-total species: $H$, $H^+$, $He$, $He^+$, $He^{++}$, $H^-$, $H_2^+$,
-$H_2$, $e^-$, $D$, $D^+$, and $HD$.  (A separate, but related, module
-follows the radiative heating and cooling of the gas from atomic and
-molecular line excitation, recombination, collisional excitation,
-free-free transitions, Compton scattering of the cosmic microwave
-background, as well as several models for a metagalactic UV background
-that heat the gas via photoionization and discussion -- see
+total species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp,
+and HD.  (A separate, but related, module follows the radiative
+heating and cooling of the gas from atomic and molecular line
+excitation, recombination, collisional excitation, free-free
+transitions, Compton scattering of the cosmic microwave background, as
+well as several models for a metagalactic UV background that heat the
+gas via photoionization and discussion -- see
 Section~\ref{sec.num.cooling} for more details).  Depending on user
-parameters, one can follow simply atomic species ($H$, $H^+$, $He$,
-$He^+$, $He^{++}$, and $e^-$), include those relevant for molecular
-hydrogen formation ($H_2$, $H_2^+$, and $H^-$), and further include
-deuterium and its species ($D$, $D^+$, and $HD$.)  \red{A total of 9
-kinetic equations are solved, including 29 kinetic and radiative
-processes, for the 9 species mentioned above.  See
-Table~\ref{table.collisional} for the collisional processes and
-Table~\ref{table.radiative} for the radiative processes solved.}
+parameters, one can follow simply atomic species (H, \Hp, He, \Hep,
+\Hepp, and e$^-$), include those relevant for molecular hydrogen
+formation (\HH, \HHp, and \Hm), and further include deuterium and its
+species (D, \Dp, and HD).  \red{A total of 9 kinetic equations are
+  solved, including 29 kinetic and radiative processes, for the 9
+  species mentioned above.  See Table~\ref{table.collisional} for the
+  collisional processes and Table~\ref{table.radiative} for the
+  radiative processes solved.}
 
 The chemical reaction equation network is technically challenging to
 solve due to the huge range of reaction timescales involved -- the
@@ -51,15 +51,15 @@ a large, three-dimensional simulation.
 \enzo\ solves the rate equations using a method based on a backwards
 differencing formula (BDF) in order to provide a stable and accurate
 solution. This technique is optimized by taking the chemical
-intermediaries $H^-$ and $H_2^+$, which have large rate coefficients
+intermediaries \Hm and \HHp, which have large rate coefficients
 and low concentrations, and grouping them into a separate category of
 equations.  Due to their fast reactions these species are very
 sensitive to small changes in the more abundant species.  However, due
 to their low overall concentrations, they do not significantly
 influence the abundance of species with higher concentrations.
 Therefore, reactions involving these two species can be decoupled from
-the rest of the network and treated independently.  In fact, $H^-$ and
-$H_2^+$ are treated as being in equilibrium at all times, independent
+the rest of the network and treated independently.  In fact, \Hm~and
+\HHp~are treated as being in equilibrium at all times, independent
 of the other species and the hydrodynamic variables.  This allows a
 large speedup in solution as the BDF scheme is then applied only to
 the slower 7- or 10-species network (depending on whether deuterium is
@@ -75,24 +75,24 @@ formalism and is implicit over subcycle timesteps.
 
 
 It is important to note the regime in which this model is valid.
-According to Abel et al. and Anninos et al. \citep{abel97,anninos97},
+According to \citet{abel97} and \citet{anninos97},
 the reaction network is valid for temperatures between $10^0 - 10^8$
 K.  The original model discussed in these two references is only valid
 up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the 3-body
-$H_2$ formation process (equation 20 in Table~\ref{table.collisional})
+\HH~formation process (equation 20 in Table~\ref{table.collisional})
 allows correct modeling of the chemistry of the gas up until the point
 where collisionally-induced emission from molecular hydrogen becomes
-an important cooling process, which occurs at $n_H \sim
+an important cooling process, which occurs at $n_{\rm H} \sim
 10^{14}$~cm$^{-3}$.  A further concern is that the optically thin
 approximation for radiative cooling breaks down, which occurs before
-$n_H \sim 10^{16} - 10^{17}$~cm$^{-3}$.  Beyond this point,
+$n_{\rm H} \sim 10^{16} - 10^{17}$~cm$^{-3}$.  Beyond this point,
 modifications the cooling function that take into account the
 non-negligible opacity in the gas must be made, as discussed by
 \citet{2004MNRAS.348.1019R}, and was put into \enzo\ for the work
-published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  Even with these
-modifications, a completely correct description of the cooling of this
-gas will require some form of radiation transport, which will greatly
-increase the cost of the simulations.
+published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  Even
+with these modifications, a completely correct description of the
+cooling of this gas will require some form of radiation transport,
+which will greatly increase the cost of the simulations.
 
 %---------------- table of collisional processes
 
@@ -163,3 +163,8 @@ primordial chemistry routines. \red{Missing rates for HD destruction/ionization?
 \label{table.radiative}
 \end{center}
 \end{table}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End: 
