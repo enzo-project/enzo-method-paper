@@ -3,7 +3,7 @@
 \section{Physical Equations and Overview of Numerical Methodology}
 \label{sec.overview}
 
-We begin by laying out the equations to be solved and then discuss briefly the techniques used to solve each part.
+We begin this section by first writing down the entire set of physical equations which \enzo\ can solve, and then briefly describe the numerical algorithms that we use to solve them.  This section is intended both to place all of the equations in a single place as well as to provide a brief introduction to the numerics of the code.  Detailed descriptions of the individual components are then provided in the following section.
 
 % ====================================================
 
@@ -14,7 +14,7 @@ We begin by laying out the equations to be solved and then discuss briefly the t
 
 %\subsubsection{Magnetohydrodynamics and Gravity}
 
-The usual Eulerian equations of ideal magnetohydrodynamics with gravity in a coordinate systems comoving the cosmological expansion are given by
+The Eulerian equations of ideal magnetohydrodynamics including gravity in a coordinate systems comoving with the cosmological expansion are given by
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
@@ -194,7 +194,7 @@ The particles also make a contribution to the potential through their contributi
 
 %\subsubsection{Chemistry}
 
-In addition, we solve mass conservation equations for any chemical species, including a variety of chemical networks.  For any species $i$ with comoving number density $n_i$, these equations have the form:
+In addition, we can solve the mass conservation equations for a set of chemical species and reactions.  For any species $i$ with comoving number density $n_i$, these equations have the form:
 \begin{equation}
 \frac{\partial n_i}{\partial t} 
           + \frac{1}{a} \nabla \cdot (n_i \vecv) = 
@@ -202,7 +202,7 @@ In addition, we solve mass conservation equations for any chemical species, incl
       + \Gamma^{ph}_j n_j 
         \label{eq:species_evolution}
 \end{equation}
-where $k_{ij}$ are the rate coefficients for the two-body reactions and are usually functions of only the gas species (we will specifically note the cases where we either include three-body reactions or have density-dependent rates).  The $\Gamma^{ph}_j$ are destruction/creation rates due to photoionizations and/or photodissociations.
+where $k_{ij}$ are the rate coefficients for the two-body reactions and are usually functions of only the gas species (we will specifically note the cases where we either include three-body reactions or have density-dependent rates).  The $\Gamma^{ph}_j$ are destruction/creation rates due to photoionizations and/or photodissociations.  Currently the species we can follow include H, H$^+$, He, He$^+$, He$^++$, and $e^-$, as well as additional options that add H$^-$, H$_2$ H$_2^+$ and  HD, D, D$^+$.
 
 %\red{
 %There is some debate over whether to put in the hydro equations without cosmology, in addition
@@ -413,7 +413,7 @@ Spitzer conductivity, and express this as a constant multiplier.
 
 \subsection{Overview of Numerical Methods}
 
-In this section, we briefly describe the numerical methods which are used to solve the equations outlined above.  We sweep through in the same order as will be used in section~\ref{sec.methods} so that there is a one-to-one correspondence between each of the following overviews and the complete description provided in section~\ref{sec.methods}.  The goal here is to introduce the reader to the basic idea of the methods without drowning in detail.
+In this section, we briefly describe the numerical methods which are used to solve the equations outlined above.  We sweep through in the same order as will be used in section~\ref{sec.methods} so that there is a one-to-one correspondence between each of the following overviews and the complete description provided in that section.  The goal here is to introduce the reader to the basic idea of the methods without drowning in detail.
 
 \subsubsection{Structured Adaptive Mesh Refinement}
 
@@ -482,13 +482,18 @@ and below) is rebuilt.
 
 \subsubsection{Godunov PPM method (HD only)}
 
-Two different hydrodynamic methods are implemented in \enzo: the
-piecewise parabolic method (PPM) developed by~\citet{1984JCoPh..54..174C}
-and extended to cosmology by~\citet{1995CoPhC..89..149B},
-and the hydrodynamics method used in \zeus~\citep{Stone92a,Stone92b}.
-We adopt the direct Eulerian PPM method (as opposed to the Lagrange-Remap varient).
+Four different (magneto)-hydrodynamic methods are implemented in \enzo: (i) the
+HD-only piecewise parabolic method (PPM) developed by~\citet{1984JCoPh..54..174C}
+and extended to cosmology by~\citet{1995CoPhC..89..149B};
+(ii) the MUSCL-like Gudonov scheme \citep{MUSCL} with or without magnetic fields
+and Dedner-based divergence cleansing and described in more detail in 
+\citet{WangAbelZhang08} and \citet{WangAbel09};
+(iii) a constrained transport staggered MHD scheme \citet{Collins10}, and
+(iv) the second-order finite-difference hydrodynamics method described 
+in \zeus~\citep{Stone92a,Stone92b}. 
 
-PPM is an explicit, higher order-accurate version of
+We begin with the direct-Eulerian PPM implementation.  
+This is an explicit, higher order-accurate version of
 Godunov's method for ideal gas dynamics with third order-accurate piecewise parabolic
 monotonic interpolation and a nonlinear Riemann solver for shock
 capturing.  It advances the hydrodynamic equations in the following
@@ -504,14 +509,14 @@ steps:
  (iv) Difference the interface fluxes to update the cell average quantities.
 %\end{enumerate}
 
-It does an excellent job of capturing strong shocks in at
-most two cells.  Multidimensional schemes are built up by directional
+It does an excellent job of capturing strong shocks in a few cells; Multidimensional schemes are built up by directional
 splitting and produce a method that is formally second order-accurate
-in space and time which explicitly conserves mass, linear momentum, and energy.
+in space and time which explicitly conserves mass, linear momentum, and energy.  A variety of
+reconstruction methods and Riemann solvers have been implemented.
 
 As described in \citet{Bryan95}, we modify the method for use in hypersonic flows when the thermal energy $e$ is extremely small compared to the total energy $E$.  This is a problem because in total energy method, the temperature is computed by subtracting one large number from another (i.e. the kinetic energy from the total energy), a situation which is can generate large numerical inaccuracies.  We address this situation by also solving the thermal energy equation and using $e$ from this equation when we expect the error to be large.
 
-The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
+%The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
 
 \subsubsection{Godunov MUSCL (HD) with Dender divergence cleaning (MHD)}
 
@@ -519,7 +524,7 @@ The advantage of the PPM method is that it conserves energy better and is higher
 
 \subsubsection{Second order finite difference method (HD only)}
 
-The second hydrodynamics method implemented is the finite-different algorithm used in the ZEUS, as described in \citet{Stone92a}.  For this reason, we call this the ZEUS method, although the code is entirely independent from the ZEUS code, and only the hydrodynamical algorithm of \zeus\ is implemented in \enzo -- the MHD and RHD codes are not.
+The last hydrodynamics method we briefly describe is the finite-different algorithm used in the ZEUS, as given in more detai in \citet{Stone92a}.  For this reason, we call this the ZEUS method, although the code is entirely independent of the ZEUS code, and only the hydrodynamical algorithm of \zeus\ is implemented in \enzo -- the MHD and RHD schemes are not.
 
 The ZEUS method uses a staggered mesh such that the velocities are face-centered, while the density and thermal energy quantities are cell-centered.  It splits the solution up into two steps, the so-called source step, in which the momentum and energy values are updated to reflect the pressure and gravity forces, as well as the effect of an artificial viscosity required for stability.  The transport step accounts for the advection of conserved quantities (mass, momentum and energy) across the grid.
 
@@ -529,16 +534,11 @@ The current implementation of self-gravity in \enzo uses a Fast Fourier Techniqu
 
 \subsubsection{N-body Dynamics}
 
-The collisionless matter is modelled through particles.  Since the
-particles follow the collapse of structure by definition, they are not
-adaptively refined.  Nor are there duplicate sets of particles for
-each level; instead, each particle is associated with the most refined
-level available at its position in space and moved as the hierarchy is
-rebuilt.  Thus, a particle has the same timestep and feels the same
-gravitational force as the grid at that level.
+Collisionless matter (dark matter, stars, etc.) is modeled with particles which interact with the baryons only via gravity.  These particles are advanced in a single time step using a drift-kick-drift algorithm to provide second-order accuracy even in the presence of changing timesteps.  Since the particles follow the collapse of structure, they are not adaptively refined.  Nor are there duplicate sets of particles for each level; instead, each particle is associated with the highest refined
+level available at its position in space, and moved as the hierarchy is rebuilt.  Thus, a particle has the same timestep and feels the same gravitational force as the grid at that level.
 
-Although the particles are fixed in mass once initialized, we are free
-to create them with any set of masses and positions.  For example, in
+Although the particles are fixed in mass once initialized, we can
+create them with any initial set of masses and positions.  For example, in
 many cosmological simulations, a static subgrid is included from the
 beginning in order to improve the initial baryonic mass resolution.
 On this subgrid, we also use smaller particles to improve the
@@ -546,26 +546,30 @@ collisionless mass resolution.  One particle per initial grid point
 seems to provide approximately equal sampling between the dark matter
 and gas.
 
-When solving Poisson's equation, we need to compute the contribution of 
-the particles to the density on the grid.  This is done using a second-order
-accurate Cloud-In-Cell technique \citep{Hockney88}.
-
 \subsubsection{Chemistry}
 \label{sec.ov.chem}
 
-In addition to this, \enzo\ includes the capability of following up to 12 chemical species using a non equilibrium-solver.  The species can be turned on in sets, with the simplest model including just H, H$^+$, He, He$^+$, He$^++$, and $e^-$, and more complete models adding first species important for gas-phase molecular hydrogen formation: $H^-$, H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  The cooling and heating due to these species is also included.  The solution of the rate equations is carried out using a time-backwards differencing which insures stability; to maintain accuracy we sub-cycle the rate equations with a shorter timestep such that the electron and neutral fractions do not change by more than 10\%.
+In addition to this, \enzo\ includes the capability of following up to 12 chemical species using a non equilibrium-solver.  The species can be turned on in sets, with the simplest model including just H, H$^+$, He, He$^+$, He$^++$, and $e^-$, and more complete models adding first species important for gas-phase molecular hydrogen formation: $H^-$, H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  The cooling and heating due to these species is also included (see the next section).  The solution of the rate equations is carried out using a time-backwards differencing which insures stability; to maintain accuracy we sub-cycle the rate equations with a shorter timestep such that the electron and neutral fractions do not change by more than 10\%.
 
 \subsubsection{Radiative Cooling and Heating}
 
-Enzo may operate in a number of modes with regard to radiative cooling and chemistry.  In the simplest mode, with the multi-species flag turned off (i.e. set to zero), the cooling rate is computed from a simple temperature-dependent cooling rate, taken from \citet{SW87}.  
+Enzo may operate in a number of modes with regard to radiative cooling and heating.  In the simplest mode, with the multi-species flag turned off (i.e. set to zero), the cooling rate is computed from a simple temperature-dependent cooling rate, taken from \citet{SW87}.  If chemistry is turned on, then the code can include cooling from all species of H and He (including H$_2$) -- this primordial cooling is also treated using a backwards-time differencing scheme with sub-cycling to maintain accuracy.  Finally, we have also recently added metal cooling based on a set of multi-dimensional lookup tables computed with the \texttt{Cloudy} code \citep{1998PASP..110..761F} as described in \citet{2008MNRAS.385.1443S} and \citet{2011ApJ...731....6S}.  Finally, we note that the cooling and heating is (almost always) treated in the optically-thin limit, although the code can also follow radiative transfer in a limited set of energy bins (see below).
 
 \subsubsection{Homogeneous radiation backgrounds}
 
+The chemical networks and heating rates can be affected by external radiation fields, and the code includes a number of pre-set radiation backgrounds that are uniform in space but can very in time.  These are generally based on the redshift-dependent rates given in \citet{1996ApJ...461...20H} and \citet{2012ApJ...746..125H}, but can also include a uniform H$_2$ photo-dissociating background, either constant in time or varying as in \citet{WiseAbel05}.
+
 \subsubsection{Radiation transport: ray tracing}
+
+The code includes a photon-conserving radiative transfer algorithm that is based on an adaptive ray-tracing method that utilizes the HEALPix pixilation of the sphere \citep{AbelWandelt02}.  Photons are integrated outwards from sources using an adaptive time-stepping scheme that preserves accuracy in ionization fronts even in the optically-thin limit.  This has been integrated with the chemistry and cooling network to provide ionization and heating rates on a cell-by-cell basis.  The method is described in more detail in our main methodology section but is fully detailed and tested in \citet{Wise11_Moray}.
 
 \subsubsection{Radiation transport: Flux-limited diffusion}
 
-\subsubsection{Thermal Heat Conduction}
+The other option for radiative transfer is a moment-based method which adds an addition field describing the energy-density of radiation.  This field is evolved using the flux-limited diffusion method which transitions smoothly between streaming (optically thin) and opaque limits and is coupled to the hydrogen ionization network.  The resulting set of linear equations is solved using the parallel HYPRE framework.  Full details for the enzo implementation can be found in \citet{ReynoldsHayesPaschosNorman2009}.
+
+\subsubsection{Heat Conduction}
+
+Heat conduction, both isotropic and anisotropic, can be included using an sub-cycled, operator-split method.  The heat fluxes are computed with simple second-order accurate finite differences and stability is ensured by restricting the time step, and using flux-limiters.  This is described in more detail below.
 
 \subsubsection{Star Formation and Feedback}
 
