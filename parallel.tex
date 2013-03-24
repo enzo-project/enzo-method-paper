@@ -90,6 +90,27 @@ performance measurement implementation.
 \subsubsection{Unigrid scaling \red{(Brian)}}
 
 % Brian to work on this, scaling data from Harkness
+Figure~\ref{fig.uniscale} shows \enzo\ weak scaling for a sequence of
+scaled non-AMR Lyman alpha forest calculations on NICS Kraken XT4 and
+ORNL Jaguar XT4 using decomposition with $128^3$ root grid tiles.  The
+grid resolution is of constant physical size.  Scaling up to 98,304
+cores has been achieved on the NICS Kraken XT5 using a hybrid-parallel
+version of \enzo\.  Excellent scaling in unigrid mode is seen as long
+as each core is given enough work -- somewhere around $128^3$
+cells/core seems to be about right.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{figures/enzo_unigrid_weak_scaling.eps}
+\caption{Unigrid scaling.  ENZO weak scaling performance for a set of
+  Lyman Alpha Forest cosmology sim- ulations with constant physical
+  resolution per mesh point, showing cell updates per second per
+  computational core plotted as a function of the number of root grid
+  tiles of dimension $128^3$ (R) in each dimension. The number of MPI
+  tasks is N$ = R^3$, so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh running on 4096 MPI tasks. }
+\label{fig.uniscale}
+\end{center}
+\end{figure}
 
 \subsubsection{AMR scaling \red{(Greg)}}
 
