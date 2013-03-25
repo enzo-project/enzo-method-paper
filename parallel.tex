@@ -87,7 +87,7 @@ figures that process the data from the logfile.  These capabilities are
 described in the online documentation, along with a further discussion of the 
 performance measurement implementation.
 
-\subsubsection{Unigrid scaling \red{(Brian)}}
+\subsubsection{Unigrid scaling}
 
 It is advantageous to use \enzo\ in its ``unigrid'' (i.e.,
 non-adaptive mesh) mode for a variety of problems, including
@@ -113,7 +113,7 @@ piecewise parabolic method, six-species non-equilibrium chemistry and
 radiative cooling, and a uniform metagalactic ultraviolet background.
 In this sequence of test calculations, we perform a weak scaling test
 on up to 13,824 MPI tasks on the NICS Kraken XT4 and ORNL Jaguar XT4
-supercomputers\footnote{these simulations were performed in 2008,
+supercomputers\footnote{These simulations were performed in 2008,
 prior to conversion of both machines to the current-generation
 systems}.  In this test, each MPI task was given a $128^3$ root grid
 tile (i.e., $128^3$ grid cells containing baryon quantities) and,
@@ -147,34 +147,47 @@ The difference in speed when using different numbers of MPI tasks per
 node can be attributed primarily due to differences in competing usage
 of shared cache on the quad-core chips used on this machine.
 
-Broadly, excellent scaling in \enzo's unigrid
-mode is seen for a variety of problems as long as each compute core is
-given an adequate amount of work to do.  For cosmological simulations, this seems to be
+Broadly, excellent scaling in \enzo's unigrid mode is seen for a
+variety of problems as long as each compute core is given an adequate
+amount of work to do.  For cosmological simulations, this seems to be
 roughly $128^3$ cells per core.  If fewer cells per core are used, the
 CPU is essentially data-starved, and poor scaling is observed due to
 computing units being idle while waiting for information to be
 communicated from other processes (for, e.g., boundary information or
-gravity solves).  Substantially larger cell counts per core  would in
-principle help scaling, but are typically impractical on
-most machines due to memory limits.
+gravity solves).  Substantially larger cell counts per core would in
+principle help scaling by reducing the amount of inter-process
+communication needed, but larger cell counts are typically impractical
+on most machines due to memory limits.
 
-As a final point, we 
-up to 98,304
-cores has been achieved on the NICS Kraken XT5 using a hybrid-parallel
-(MPI + OpenMP)
-version of \enzo\.  Excellent scaling in unigrid mode is seen as long
-as each core is given enough work -- somewhere around $128^3$
-cells/core seems to be about right.
+As a final point, we observe that scaling at larger core counts has
+been measured, but only with an experimental hybrid-parallel (MPI +
+OpenMP) version of \enzo.  Using this version, scaling comparable to
+that shown in Figure~\ref{fig.uniscale} was seen on up to 98,304 cores
+on the NICS Kraken XT5 (an upgraded version of the XT4 machine used
+for the scaling study shown in the figure), using 2-8 OpenMP threads
+per MPI process.  Hybrid parallelism has the potential to
+substantially improve scaling by reducing the amount of communication
+per grid tile (as described in the previous paragraph); however, the
+optimal ratio of OpenMP threads per MPI task seems to vary
+substantially between computational platforms and astrophysical
+problems/required \enzo\ physics modules, and thus we hesitate to
+provide strict guidelines here.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.4\textwidth]{figures/enzo_unigrid_weak_scaling.eps}
-\caption{Unigrid scaling.  ENZO weak scaling performance for a set of
-  Lyman Alpha Forest cosmology sim- ulations with constant physical
-  resolution per mesh point, showing cell updates per second per
-  computational core plotted as a function of the number of root grid
-  tiles of dimension $128^3$ (R) in each dimension. The number of MPI
-  tasks is N$ = R^3$, so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh running on 4096 MPI tasks. }
+\caption{\enzo\ weak scaling performance for a set of Lyman alpha
+forest cosmology simulations with constant comoving spatial resolution
+per grid cell, showing cell updates per second per computational core
+plotted as a function of the number of root grid tiles of dimension
+$128^3$ (R) in each dimension.  The number of MPI tasks is N$ = R^3$,
+so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh
+running on 4096 MPI tasks.  This plot goes from R$ = 2$ (8 MPI tasks)
+to R$ = 24$ (13,824 MPI tasks) on two supercomputers -- NICS Kraken
+and ORNL Jaguar when they were Cray XT4 systems -- and using 1, 2 or 4
+MPI processes per node, where each compute node contained a single
+quad-core AMD Opteron CPU having a speed of 2.1 GHz on Jaguar and 2.3
+GHz on Kraken.}
 \label{fig.uniscale}
 \end{center}
 \end{figure}
