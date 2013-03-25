@@ -89,12 +89,79 @@ performance measurement implementation.
 
 \subsubsection{Unigrid scaling \red{(Brian)}}
 
-% Brian to work on this, scaling data from Harkness
-Figure~\ref{fig.uniscale} shows \enzo\ weak scaling for a sequence of
-scaled non-AMR Lyman alpha forest calculations on NICS Kraken XT4 and
-ORNL Jaguar XT4 using decomposition with $128^3$ root grid tiles.  The
-grid resolution is of constant physical size.  Scaling up to 98,304
+It is advantageous to use \enzo\ in its ``unigrid'' (i.e.,
+non-adaptive mesh) mode for a variety of problems, including
+non-gravitating turbulence
+\citep[e.g.,][]{2002ApJ...569L.127K,Kritsuk04}, the Lyman-alpha forest
+\citep{2005MNRAS.361...70J,2009MNRAS.399.1934P}, or feedback of
+metal-enriched gas from galaxies into the intergalactic medium
+\citep{2004ApJ...601L.115N,2011ApJ...731....6S}.  Achieving good
+scaling of the code in unigrid mode is relatively straightforward --
+upon initialization, unigrid simulations are decomposed such that each
+MPI process has a roughly equal subvolume (and thus number of grid
+cells), meaning that work is evenly distributed.  Communication
+patterns for both the gravity solve (which uses a fast Fourier
+transform) and the fluid solves (which transfer boundary information
+between subvolumes) are predictable and straightforward, and
+rebuilding of the grid hierarchy does not take place, removing a
+substantial global operation and a great deal of communication.
+
+Figure~\ref{fig.uniscale} shows \enzo\ weak scaling results for a
+sequence of scaled unigrid Lyman alpha forest calculations. These
+calculations include dark matter dynamics, hydrodynamics using the
+piecewise parabolic method, six-species non-equilibrium chemistry and
+radiative cooling, and a uniform metagalactic ultraviolet background.
+In this sequence of test calculations, we perform a weak scaling test
+on up to 13,824 MPI tasks on the NICS Kraken XT4 and ORNL Jaguar XT4
+supercomputers\footnote{these simulations were performed in 2008,
+prior to conversion of both machines to the current-generation
+systems}.  In this test, each MPI task was given a $128^3$ root grid
+tile (i.e., $128^3$ grid cells containing baryon quantities) and,
+initially, approximately $128^3$ dark matter particles.  The number of
+grid cells was constant throughout the calculation; the number of dark
+matter particles varies as they are moved from subvolume to subvolume
+as structure evolves.  The grid resolution was kept at a constant
+comoving size of $\simeq 40$~kpc/h, and as the core count was
+increased, so was the simulation volume.  On each machine, a compute
+node contained a single AMD Opteron quad-core chip (2.1 Ghz on Jaguar;
+2.3 Ghz on Kraken) with 2 GB/memory per core (8 GB/total per node).
+Both machines used the SeaStar2 interconnect.  In the scaling study,
+calculations were run with 1, 2 or 4 MPI tasks per node.  The figure
+shows cell updates per second per MPI process; perfect scaling would
+be a horizontal line.
+
+As can be seen in Figure~\ref{fig.uniscale}, the unigrid weak scaling
+performance of the code is extremely good for this problem, with only
+a 20\% decrease in cell updates/second/task as the code is scaled from
+8 to 4,096 MPI tasks, and a 40\% decrease in performance overall going
+from 8 to 13,824 (or $24^3$) MPI tasks.  We speculate that this
+decrease is likely to be partially due to global MPI communications
+used to, e.g., calculate the overall timestep of the simulation, and
+also likely due to load imbalances due to increasing cosmological
+power (and thus an increasingly uneven distribution of dark matter
+particles between MPI tasks at late times) as the simulation volume
+grows.  We also observe that a systematic difference in speed can be
+seen between the two machines, which can be attributed primarily to
+the slightly faster CPUs on Kraken (2.3 Ghz, vs. 2.1 Ghz on Jaguar).
+The difference in speed when using different numbers of MPI tasks per
+node can be attributed primarily due to differences in competing usage
+of shared cache on the quad-core chips used on this machine.
+
+Broadly, excellent scaling in \enzo's unigrid
+mode is seen for a variety of problems as long as each compute core is
+given an adequate amount of work to do.  For cosmological simulations, this seems to be
+roughly $128^3$ cells per core.  If fewer cells per core are used, the
+CPU is essentially data-starved, and poor scaling is observed due to
+computing units being idle while waiting for information to be
+communicated from other processes (for, e.g., boundary information or
+gravity solves).  Substantially larger cell counts per core  would in
+principle help scaling, but are typically impractical on
+most machines due to memory limits.
+
+As a final point, we 
+up to 98,304
 cores has been achieved on the NICS Kraken XT5 using a hybrid-parallel
+(MPI + OpenMP)
 version of \enzo\.  Excellent scaling in unigrid mode is seen as long
 as each core is given enough work -- somewhere around $128^3$
 cells/core seems to be about right.
