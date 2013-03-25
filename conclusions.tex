@@ -8,37 +8,67 @@ self-gravitating compressible fluid dynamics, including the effects of
 magnetic fields, radiation transport, and a variety of microphysical
 and subgrid processes.  In addition, we have described the \enzo\ code
 development process, have shown the outputs of some representative
-test problems, and have provided information about its performance and
-scaling on current-generation (circa 2013) supercomputing platforms.
-The \enzo\ code, its test suite, and all of the scripts used to
-generate plots and figures for this paper are open-source and are
-available at the \enzo\ website, http://enzo-project.org.
-Furthermore, the yt toolkit, which is designed to analyze \enzo\ data
-(as well as data from a wide variety of other simulation tools), can
-be found at its website, http://yt-project.org.  Both of these codes
-have active user and developer communities, extensive documentation
-and user suppport, and strong mechanisms for
-users to contribute their changes and fixes to the codebase.
+test problems, and have provided information about \enzo's performance
+and parallel scaling on recent supercomputing platforms.  The \enzo\
+code, its test suite, and all of the scripts used to generate plots
+and figures for this paper are open source and are available at the
+\enzo\ website, http://enzo-project.org.  Furthermore, the yt toolkit,
+which is designed to analyze \enzo\ data (as well as data from a wide
+variety of other simulation tools), can be found at its website,
+http://yt-project.org.  Both of these codes have active user and
+developer communities, extensive documentation and user suppport, and
+strong mechanisms for users to contribute their changes and fixes to
+the codebase.
 
 The developers of the \enzo\ code are currently working on several
 projects that will extend the functionality, scalability, or overall
-performance of the code in the near future.  Work is
-underway to create a hybrid-parallel version of \enzo, combining MPI
-for communication between nodes of a supercomputer and OpenMP for
+performance of the code in the near future.  Projects that will appear
+in forthcoming releases of the \enzo\ code include:
+
+\begin{itemize}
+\item The creation of a hybrid-parallel version of \enzo, combining
+MPI for communication between nodes of a supercomputer and OpenMP for
 thread-based parallelism within a node.  This will reduce on-node
-memory usage and will in principle help with scaling.  \red{other stuff here!}.
-This work is currently underway, and will be released in the stable
-branch of \enzo\ in the near
-future.
+memory usage and overall scaling behavior.
+\item The restructuring of \enzo's treatment of particles to
+accommodate a wider range of ``active'' particles that can easily
+interact with each other and with multiple grids, and include sink,
+source, and particle creating, splitting, and merging functionality.
+\item A new HYPRE-based AMR gravity solver that is faster, more
+accurate, and more scalable than the current multigrid solver.
+\item New infrastructure for problem initialization, enabling
+  users to more quickly and easily create new types of simulations.
+\end{itemize}
 
-In the longer term, we plan to restructure \enzo's treatment of
-particles to accommodate a wider range of ``active'' particles that
-can easily interact with each other and with grids.  We also plan to
-use the HYPRE library to create a new gravity solver for the code,
-which will improve its scalability and correctness.  \red{other stuff
-  here!}
-
-\red{Do we want a separate paragraph for areas of improvement outside
-  of short-term and longer-term?}
-
- 
+In the longer term, it seems likely that trends in supercomputing
+hardware will require substantial modifications to \enzo's core
+infrastructure, and very possibly some of the core algorithsms.  More
+specifically, these trends involve the usage of specialized
+large-core-count, vectorized computing units such as graphics
+processuing units (GPUs) or chips like the Intel Xeon Phi, as well as
+precipitously decreasing amounts of RAM per computing core.  The
+former trend means that the amount of processing power per compute
+node will continue to trend upward, likely much faster than the
+bandwidth between nodes, and will require tremendous reduction in
+inter-node (and possibly inter-CPU) communication in order to maintain
+code scalability.  Also, much of the current code will need to be
+rewritten to take advantage of the vector nature of these CPUs, making
+assumptions that are quite unlike those made in much of the current
+codebase.  The latter trend means that duplication of data -- for
+example, the grid hierarchy -- must be effectively eliminated to save
+memory, and all inter-core and inter-node communication must be
+carefully thought through to minimize the amount of data moved.  An
+additional challenge as one goes to core counts in the tens to
+hundreds of millions (or more) is that the reliability of individual
+computing elements will become much more of an issue, requiring
+robustness to hardware failure to be built into the code at some
+level.  Furthermore, we are nearing the physical limits of transistor
+speed and latency~\citep{feynman1999feynman}, meaning that simple
+hardware improvements will not make these challenges disappear, and
+careful thought (and the rewriting of a great deal of code) must take
+place!  These challenges are not unique to the \enzo\ code, and in
+fact are faced by effectively all applications that wish to take
+advantage of new computational architectures.  Thus, we suspect that
+\enzo\ (or a code that has the capabilities of \enzo, from a user's
+point of view) will continue to be usable at the largest scales on
+such machines.
