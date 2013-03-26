@@ -60,11 +60,11 @@ densities.
 
 The system of equations
 (\ref{eq:fld_radiation}-\ref{eq:fld_heating}) along with the chemical network 
-(eq.~\ref{eq:species_evolution} is solved
+(eq.~\ref{eq:species_evolution}) is solved
 independently of Enzo's hydrodynamics, gravity and dark-matter solvers
 (sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
 the advective portions of equations (\ref{eq:fld_radiation}) and
-(\ref{eq:fld_chemistry}) to be taken care of by the fluid solvers.
+(\ref{eq:species_evolution}) to be taken care of by the fluid solvers.
 Due to the disparate time scales between radiation transport and chemical
 ionization and heating, the remainder of these equations is solved
 using an operator-split algorithm.  Within a given time step to evolve
@@ -79,7 +79,8 @@ preconditioner consists of a geometric multigrid solver.  Both of
 these linear solvers are provided by the HYPRE linear solver library
 (see \cite{FalgoutYang2002} and \cite{hypre-manual}). 
 
-We then evolve the system (\ref{eq:fld_heating}-\ref{eq:fld_chemistry}):  
+We then evolve the heating and chemistry system (\ref{eq:fld_heating})
+and (\ref{eq:species_evolution}):  
 $(E_r^{n+1}, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1},
 {\mathrm n}_i^{n+1})$.  Due to the lack of spatial derivatives (since
 advection is handled elsewhere), this system is a coupled system of
