@@ -594,17 +594,69 @@ plot that is representative of ray tracing techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Representative thermal conduction test}
+\subsubsection{Anisotropic Thermal conduction}
 \label{sec.tests.conduct}
-\red{(Brian)}
-One test for the thermal conduction (maybe 1 for isotropic, 1 for
-anisotropic).  Figure~\ref{fig.conduct}.
+
+In a plasma, conduction takes place primarily due to electron motion.
+In astrophysical environments such as the intergalactic and
+intracluster media, with typical magnetic strengths of $\sim 1 \mu$G
+and temperatures in the millions of Kelvin, the electron gyroradius is
+very small compared to the scapes of interest in a cosmological
+simulation.  As a result, electrons can only move \textit{along}
+magnetic field lines, not perpendicular to them, which can result in
+very interesting magnetohydrodynamical instabilities
+\citep[e.g.,][]{2008ApJ...677L...9P,2008ApJ...688..905P}. 
+ The correct modeling of this behavior can be quite challenging, and is described in 
+Section~\ref{sec.num.conductions}.  Conduction in \enzo\ is calculated
+in both an operator-split and directionally-split manner, and the
+addition of heat transport solely along magnetic field lines requires
+computation of cross-terms in the temperature derivative at cell
+faces, which can add spurious oscillations in the temperature field in
+regions where the temperature gradient is strong in more than one
+spatial direction unless an appropriate flux-limiter \citep[such as that
+of][]{1977JCoPh..23..263V} is chosen.
+
+Figure~\ref{fig.conduct} shows a test that demonstrates the
+correct behavior of anisotropic thermal conduction in \enzo.  We
+initialize a two-dimensional, $256^2$ cell simulation having a physical
+scale of 1 kpc on a side, a uniform density of 1 proton/cc, and a
+background temperature of $10^6$ Kelvin.  Magnetic fields with a
+strength of  B$_0 = 1 \mu$G are initialized such that the field lines form
+circles around the center of the simulation volume, such that B$_x =
+-B_0\sin(\theta)$ and B$_y = B_0\cos(\theta)$, where $\theta$ is the
+angle measured from the $+x$ direction in a counterclockwise manner.
+A Gaussian temperature pulse is injected at $(0.75, 0.5)$ (in units of the box
+size), with a peak temperature of $10^8$ K and a FWHM of $0.015625$ of
+the box size.  This initial setup is shown in the left panel of
+Figure~\ref{fig.conduct}.  The simulation is then allowed to evolve
+with \textit{only} anisotropic conduction turned on (e.g.,
+no hydrodynamics or radiative cooling), and with a Spitzer fraction of
+f$_{sp} = 1$.  
+
+The right panel of Figure~\ref{fig.conduct} shows the state of the
+simulation after 300 Myr.  Heat has clearly been transported only along
+field lines -- there has been no diffusion perpendicular to the
+magnetic field setup, which is critical for many studies involving
+anisotropic thermal conduction.  No oscillations are seen in the
+temperature field in regions where the fields are not aligned with the
+grid, suggesting that the flux-limiter is operating as expected.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.4\textwidth]{figures/iso_conduction_final_output.eps}
+\includegraphics[width=0.42\textwidth]{figures/aniso_conduction_initial_output.eps}
 \includegraphics[width=0.4\textwidth]{figures/aniso_conduction_final_output.eps}
-\caption{Temperature blah blah.  Conduction tests!}
+\caption{Two-dimensional anisotropic conduction test in a uniform,
+constant temperature background with circular magnetic fields centered
+on (0.5, 0.5).  The background medium has a density of 1 proton/cc and
+a temperature of $10^6$~K.  At t$ = 0$ (left panel), a Gaussian heat
+pulse is injected at (0.75, 0.5) with a FWHM of $0.015625$ (with all
+numbers given in units of the box size) and a peak temperature of
+$10^8$~K, and allowed to evolve without hydrodynamical motion (i.e.,
+static gas) and no radiative cooling for 300 Myr.  At t$ = 300$~Myr
+(right panel), heat has been transported along magnetic field lines
+with no significant diffusion perpendicular to field
+lines. Furthermore, there is no detectable oscillations in the
+temperature in regions where the field is not parallel with the grids.}
 \label{fig.conduct}
 \end{center}
 \end{figure}
