@@ -3,7 +3,14 @@
 \section{Physical Equations and Overview of Numerical Methodology}
 \label{sec.overview}
 
-We begin this section by first writing down the entire set of physical equations which \enzo\ can solve, and then briefly describe the numerical algorithms that we use to solve them.  This section is intended both to place all of the equations in a single place as well as to provide a brief introduction to the numerics of the code.  Detailed descriptions of the individual components are then provided in the following section.
+We begin this section by first writing down the complete set of
+physical equations that be solved by \enzo, and then briefly describe
+the numerical algorithms that we use to solve these equations.  This
+section is intended to be an overview of the \enzo\ code's
+capabilities: thus, we gather all of the equations solved into a
+single place and provide a brief and high-level introduction to the
+numerics of the code.  Detailed descriptions of the individual
+components are then provided in Section~\ref{sec.methods}.
 
 % ====================================================
 
@@ -14,7 +21,9 @@ We begin this section by first writing down the entire set of physical equations
 
 %\subsubsection{Magnetohydrodynamics and Gravity}
 
-The Eulerian equations of ideal magnetohydrodynamics including gravity in a coordinate systems comoving with the cosmological expansion are given by
+The Eulerian equations of ideal magnetohydrodynamics including gravity
+in a coordinate systems comoving with the cosmological expansion are
+given by:
 
 \begin{eqnarray} 
 \frac{\partial \rho}{\partial t} 
@@ -68,7 +77,11 @@ The Eulerian equations of ideal magnetohydrodynamics including gravity in a coor
 %        \label{eq:total_energy}
 %\end{eqnarray}
 %
-Here $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving total fluid energy, comoving baryonic density, peculiar velocity, and comoving magnetic field strength, respectively.  $\myvec{I}$ is the identity matrix.
+In these equations, $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving
+total fluid energy, comoving baryonic density, peculiar velocity, and
+comoving magnetic field strength, respectively.  $\myvec{I}$ is the
+identity matrix, and $a$ is the cosmological expansion parameter
+(which is discussed in more detail below).
 The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation.  The fourth equation is the magnetic induction equation.   Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}), as well as the flux due to thermal heat conduction ($\fcond$).
 
 The total fluid energy $E$ is given by:
@@ -93,7 +106,12 @@ e   & = & p / [(\gamma - 1) \rho ],
 \end{eqnarray}
 %
 The equation of state is shown here for an ideal gas with a ratio of specific heats $\gamma$.
-Equation (\ref{eq:potential}) includes contributions to the gravitational potential $\phi$ from the total mass density $\rho_{\rm total}$.  Although we write the equations including both MHD and comoving coordinates, the code can operate both in the pure hydrodynamic limit, and without cosmological expansion.
+Equation (\ref{eq:potential}) includes contributions to the
+gravitational potential $\phi$ from the total mass density $\rho_{\rm
+  total}$.  Although we write the equations including both MHD and
+comoving coordinates, the code can operate both in the pure
+hydrodynamic limit ($\vecB = 0$) and without cosmological expansion
+($a = 1$, $\dot{a} = 0$).
 
 % ----------------------------------------------------------------------------------------
 
@@ -167,18 +185,18 @@ The evolution of $a(t)$ is governed by the formula for the expansion of an isotr
       \label{eq:expansion} 
 \end{eqnarray}
 %
-Here, $\rho_0$ is the mean (baryonic and dark) comoving mass density and $p_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
+Here, $\rho_0$ is the mean comoving mass density (including both baryonic and dark matter), $p_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
 %$\gamma$ is the ratio of specific heats, and $\Lambda$ is the cosmological constant.
 %We note that if $\gamma$ is not $5/3$ then $E$ in the first term on
 %the right side of eq.~(ref{eq:total_energy}) must be replaced with 
 %eq.~(\ref{eq:state}).
 This system of equations is limited to the non-relativistic regime and assumes that curvature effects are not important --- both assumptions are reasonable as long as the  size of the simulated region is small compared to the radius of curvature and the Hubble length $c/H$ ($c$ is the speed of light and $H$ is the Hubble constant).
 
-It is clear that the evolution equation are equivalent to the fixed coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  We include the cosmological terms with the understanding that we are not restricting ourselves to cosmological applications.
+It is clear that the evolution equations are equivalent to the fixed coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  We include the cosmological terms with the understanding that we are not restricting ourselves to cosmological applications.
 
 %\subsubsection{Particles}
 
-Any collisionless component (e.g. dark matter or stars) are modeled by particles which are governed by Newton's equations in comoving coordinates:
+Any collisionless component (e.g. dark matter, stars) is modeled by particles which are governed by Newton's equations in comoving coordinates:
 %
 \begin{eqnarray}
 \frac{d \vecx}{dt} 
@@ -190,7 +208,7 @@ Any collisionless component (e.g. dark matter or stars) are modeled by particles
           \label{eq:dm_velocity} 
 \end{eqnarray}
 %
-The particles also make a contribution to the potential through their contribution to Poisson's equations.
+The particles also make a contribution to the potential through their contribution to Poisson's equation.
 
 %\subsubsection{Chemistry}
 
@@ -202,7 +220,14 @@ In addition, we can solve the mass conservation equations for a set of chemical 
       + \Gamma^{ph}_j n_j 
         \label{eq:species_evolution}
 \end{equation}
-where $k_{ij}$ are the rate coefficients for the two-body reactions and are usually functions of only the gas species (we will specifically note the cases where we either include three-body reactions or have density-dependent rates).  The $\Gamma^{ph}_j$ are destruction/creation rates due to photoionizations and/or photodissociations.  Currently the species we can follow include H, H$^+$, He, He$^+$, He$^++$, and $e^-$, as well as additional options that add H$^-$, H$_2$ H$_2^+$ and  HD, D, D$^+$.
+where $k_{ij}$ are the rate coefficients for the two-body reactions
+and are usually functions of only the gas species (we will
+specifically note the cases where we either include three-body
+reactions or have density-dependent rates).  The $\Gamma^{ph}_j$ are
+destruction/creation rates due to photoionizations and/or
+photodissociations.  Currently the species we can follow include H,
+H$^+$, He, He$^+$, He$^{++}$, and $e^-$, as well as additional options
+that add H$^-$, H$_2$, H$_2^+$, and  HD, D, and D$^+$.
 
 %\red{
 %There is some debate over whether to put in the hydro equations without cosmology, in addition
@@ -310,7 +335,7 @@ where $k_{ij}$ are the rate coefficients for the two-body reactions and are usua
 
 %\subsubsection{Radiation transport: ray-tracing}
 
-The code can include either a homogeneous radiation background (with possible local self-shielding corrections), or evolve an inhomogeneous radiation field either by directly solving the radiative transfer equation along rays, or by solving a set of moment equations derived from the radiative transfer equation.  
+The code can include either a homogeneous radiation background (with possible local self-shielding corrections), or evolve an inhomogeneous radiation field either by directly solving the radiative transfer equation along rays or by solving a set of moment equations derived from the radiative transfer equation.  
 
 The radiative transfer equation in comoving coordinates 
 \citep[e.g.,][]{Gnedin97} reads
@@ -356,7 +381,7 @@ densities. The equations solved are:
 %    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
 %    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 \end{eqnarray}
-where $E_r$ is a grey radiation energy density, $e_c$ is the
+where $E_r$ is a grey radiation energy density and $e_c$ is the
 internal energy correction due to photo-heating and chemical cooling.
 %and ${\mathrm n}_i$ correspond to the chemical number densities of
 %HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
@@ -372,9 +397,9 @@ defining the integrated quantity
    \tilde{E}_r(\vec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
 \end{equation}
 In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
-square-root flux-limiter} (see \cite{Morel2000}), $\kappa$ is the total
+square-root flux-limiter} \citep[see][]{Morel2000}, $\kappa$ is the total
 opacity, $\eta$ is the field of radiation sources, $\Gamma$ provides the
-radiation induced photo-heating and, $\Lambda$ the chemical
+radiation induced photo-heating, and $\Lambda$ the chemical
 cooling.
 %, $\alpha_{i,j}$ are the reaction rate coefficients defining
 %the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
@@ -391,7 +416,8 @@ flux of isotropic heat transport:
 \end{equation}
 
 Where $\kappa_{sp}$ is the Spitzer conduction coefficient
-\citep{1962pfig.book.....S}.  Saturation of the heat flux in
+\citep{1962pfig.book.....S} and T is the baryon temperature (with
+fluids explicitly assumed to be single-temperature).  Saturation of the heat flux in
 high-temperature, low-density regimes (such as the intracluster medium
 in galaxy clusters) is taken into account.  Thermal conduction in a
 plasma can be strongly affected by the presence of magnetic field
@@ -400,14 +426,13 @@ magnetic field.  In that case, we allow for heat transport only along
 the magnetic field lines in simulations that include this physics, as follows:
 
 \begin{equation}
-\fcond= -\kappa_{sp} \hat{b} (\hat{b} \cdot \nabla T)
+\fcond= -\kappa_{sp} \hat{\textbf{b}} (\hat{\textbf{b}} \cdot \nabla T)
 \end{equation}
 
-Where $\hat{b}$ is the unit vector denoting the direction of the
+Where $\hat{\textbf{b}}$ is the unit vector denoting the direction of the
 magnetic field.  In both the isotropic and anisotropic limits, we
 assume that conductivity can be suppressed relative to the ideal
-Spitzer conductivity, and express this as a constant multiplier.
-
+Spitzer conductivity, and express this as a multiplicative constant.
 
 % ====================================================
 
