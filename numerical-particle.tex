@@ -11,18 +11,23 @@
 % unappealing for the cosmological AMR code.
 %GB: removed the above (good discussion but not really appropriate in this paper I think, or maybe at the beginning)
 
-\enzo\ uses a particle-mesh N-body method to calculate the 
-dynamics of collisionless systems \citep{Hockney88}.  This method 
-follows trajectories of a representative sample of individual particles 
-and is much more efficient than a direct solution of the Boltzmann 
-equation in essentially all astrophysical situations. 
-As described earlier, the gravitational potential is computed by solving the elliptic 
-Poisson's equation (Eq.~\ref{eq:potential}), and differencing the potential
-to find accelerations, which are then interpolated back to particles.  This
-acceleration is time-centered (because the underlying gravitating mass
-field is approximately time-centered), and so we have accelerations $\myvec{a}^{n+1/2}$
-for each particle.  These are used to update the particle positions and velocities
-starting from $\myvec{x}^n$ and $\myvec{v}^n$ using a standard drift-kick-drift technique:
+\enzo\ uses a particle-mesh N-body method to calculate the dynamics of
+collisionless systems \citep{Hockney88}.  This method follows
+trajectories of a representative sample of individual particles that
+sample the phase space of the dark matter distribution, and is much
+more efficient than a direct solution of the Boltzmann equation in
+essentially all astrophysical situations for the levels of accuracy
+that are required for simulations of structure formation.  As
+described earlier, the gravitational potential is computed by solving
+the elliptic Poisson's equation (Eq.~\ref{eq:potential}), and
+differencing the potential to find accelerations, which are then
+interpolated back to particles.  This acceleration is time-centered
+(because the underlying gravitating mass field is approximately
+time-centered), and so we have accelerations $\myvec{a}^{n+1/2}$ for
+each particle.  These are used to update the particle positions and
+velocities starting from $\myvec{x}^n$ and $\myvec{v}^n$ using a
+standard drift-kick-drift technique:
+
 \begin{eqnarray}
 \label{eqn.driftkick}
 \myvec{x}^{n+1/2} & = & \myvec{x}^n + \frac{\Delta t}{2 a^n} \myvec{v}^{n} \nonumber \\
@@ -30,5 +35,12 @@ starting from $\myvec{x}^n$ and $\myvec{v}^n$ using a standard drift-kick-drift 
 \myvec{x}^{n+1} & = & \myvec{x}^{n+1/2} + \frac{\Delta t}{2 a^{n+1}} \myvec{v}^{n+1} \nonumber
 \end{eqnarray}
 
-Particles are stored in the most highly refined grid patch at the point in space where they exist, and particles which move out of a subgrid patch are sent to the grid patch covering the adjacent volume with the finest spatial resolution, which may be of the same spatial resolution, coarser, or finer than the grid patch that the particles are moved from.  This takes place in a communication process at the end of each timestep on a level.
+Particles are stored in the most highly refined grid patch at the
+point in space where they exist, and particles that move out of a
+subgrid patch are sent to the grid patch covering the adjacent volume
+with the finest spatial resolution, which may be of the same spatial
+resolution, coarser, or finer than the grid patch that the particles
+are moved from.  This takes place in a communication process at the
+end of each timestep on a level.
+
 
