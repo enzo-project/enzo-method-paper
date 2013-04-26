@@ -50,20 +50,21 @@ Riemann solver; third, the curl of that electric field is used to
 update the face centered field; finally, the cell centered magnetic
 field is updated with an average of the face centered field.
 
-Divergence-free AMR is somewhat more complex than the AMR employed elsewhere in
-Enzo.  First, the interpolation must be constrained to be divergence free.
-Thus, all three face-centered field components are interpolated in concert.
-Second, any magnetic field information from previous time steps must be included
-in the interpolation, making the interpolation more complex than the simple
-parent-child relation used for other fields.  Third, the flux correction
-involves more possible grid relations than traditional AMR.  In order to
-circumvent this last complexity, the electric field is projected from fine grids
-to parent grids (rather than the magnetic field), and is then used to re-update
+Divergence-free AMR is somewhat more complex than the AMR employed
+elsewhere in Enzo.  First, the interpolation must be constrained to be
+divergence free.  Thus, all three face-centered field components are
+interpolated in concert.  Second, any magnetic field information from
+previous time steps must be included in the interpolation, making the
+interpolation more complex than the simple parent-child relation used
+for other fields.  Third, the flux correction involves more possible
+grid relations than traditional AMR.  In order to circumvent this last
+complexity, the electric field is projected from fine grids to parent
+grids (rather than the magnetic field), and is then used to re-update
 the parent magnetic field.  This is described in detail in
 \citet{Balsara99} and \citet{Collins10}.
 
-Enzo's MHD-CT has been used in a variety of contexts, from galaxy cluster
-evolution \citep{Xu11,Xu12}, synthetic observations of radio halos
-\citep{Skillman13},  primordial star formation \citep{Xu08}, and
-present-day star formation \citep{Collins11,Collins12}.  
+Enzo's MHD-CT has been used in a variety of contexts, from galaxy
+cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
+halos \citep{Skillman13}, primordial star formation \citep{Xu08}, and
+present-day star formation \citep{Collins11,Collins12}.
 
