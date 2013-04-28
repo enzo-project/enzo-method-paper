@@ -7,7 +7,7 @@ Ensuring that a complex piece of software is behaving correctly is a
 non-trivial task.  While there are a range of techniques that one can
 apply to ensure correctness, the \enzo\ code uses two primary methods:
 a suite of test problems that can be compared to previous versions of
-the code, to ensure that \enzo\ is, e.g., running correctly on a new
+the code, to ensure that \enzo\ is running correctly on a new
 computer, with a new compiler, or after substantial changes have been
 made to the code base; and by direct comparisons to other
 astrophysical fluid dynamics codes.  We describe the \enzo\ test
@@ -27,18 +27,18 @@ reader.
 \subsubsection{The \enzo\ test suite}
 \label{sec.tests.suite}
 
-\enzo\ is capable of simulating a large variety of problems types, with
-all but a small few requiring only a parameter file as sole input.
-The notable exception is the cosmology simulation, which takes as
-input initial conditions created by other codes.  These test problems
-span a wide range in complexity.  At one end of this spectrum are
-simple problems that utilize only a single component of \enzo\ and for
-which analytic solutions exist for comparison with the simulation
+\enzo\ is capable of simulating a large variety of problems types,
+with all but a few of these types requiring only a parameter file as an
+input.  The notable exception is the cosmology simulation, which takes
+as input initial conditions created by other codes.  The suite of test
+problems spans a wide range in complexity.  At one end of this spectrum
+are simple problems that utilize only a single component of \enzo\ and
+for which analytic solutions exist for comparison with the simulation
 results.  At the opposite end are problems that exercise a large
 portion of \enzo's machinery in concert.  Together, the available
 problem types fully cover all of \enzo's functionality.  This enables
 them to serve as a vehicle for verifying that the code's behavior
-remains stable over time.
+remains stable over time and after modifcation of the codebase.
 
 \enzo\ uses an automated testing framework that allows a user to run,
 with a single command, a set of test problems and compare the results
@@ -50,21 +50,21 @@ Each parameter file is accompanied by a text file containing various
 descriptive keywords, such as the machinery tested, the
 dimensionality, and the approximate run time.  A test runner script is
 responsible for taking as input from the user a series of keywords
-with which to select a subset of all available test problems.  The
+that are used to select a subset of all available test problems.  The
 test problems are also grouped into three suites: the quick, push, and
 full suites, each a superset of the ones named before.  The quick
 suite is considered to minimally cover the primary functionality in
 \enzo\ and is designed to be run repeatedly during the development
 process.  The push suite has slightly increased feature coverage and
 is mandated to be run before code changes are accepted into the main
-repository.  The full suite consists of all test problems which can be
+repository.  The full suite consists of all test problems that can be
 run with no additional input.  Approximate run times for the quick,
 push, and full suite are 15 minutes, 1 hour, and 60 hours,
-respectively.
+respectively, on a relatively new desktop computer (circa 2013).
 
 After the test problems are selected by the test runner script, they
-are run in succession either by with \enzo\ executable contained
-within that distribution or an external executable built from another
+are run in succession using either the \enzo\ executable contained
+within that distribution or an external executable built from another \enzo\
 version and specified by the user.  This allows for any version of the
 code to be tested with an identical set of test problems.  After
 running the test problem simulations, the test runner then performs a
@@ -76,14 +76,16 @@ present in the output data.  Custom analysis provided by scripts that
 accompany the test problem parameter files is run for special cases,
 such as when an analytical solution exists that can be compared
 against the simulation data.  After the analysis is performed, the
-results are compared against a set of gold standard results which are
+results are compared against a set of gold standard results that are
 maintained on a website and downloaded on the fly by the test runner
 script.  Alternately, results from any version of \enzo\ can be stored
 locally and compared to any other version of the code.  In
 Section~\ref{sec.tests.problems}, we describe some of the key test
-problems which are used to verify proper behavior.  All of these test
+problems that are used to verify proper behavior.  All of these test
 problems, as well as the scripts to generate the figures from them,
-are available in the \enzo\ test suite.
+are available in the \enzo\ test suite, allowing the interested reader
+to regenerate all of the figures in Section~\ref{sec.tests.compare}
+using the \textit{'methodpaper'} suite of test problems.
 
 \subsubsection{Code comparisons}
 \label{sec.tests.compare}
