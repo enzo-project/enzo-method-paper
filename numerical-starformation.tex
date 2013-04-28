@@ -1,9 +1,15 @@
 \subsection{Star formation and feedback}
 \label{sec.ov.star}
 
+\red{( (BWO) I am a little worried that this section is too
+  long. The editorial hatchet may be called for, but I think somebody
+  else (who didn't write the section in the first place) needs to
+  think it through. )}
+
 \subsubsection{Overview}
 % Overview of methodology
 
+\red{(BWO: can this whole paragraph go?)}
 While the physics discussed in other sections of this paper is crucial
 to the study of cosmological structure formation, most observations of
 galaxies in the infrared, optical, and ultraviolet wavelengths are of
@@ -36,14 +42,12 @@ currently lacking.  Due to these challenges, models of star formation
 in cosmological simulations are largely phenomenological, and the
 ``stars'' that are formed are in most cases meant to represent an
 ensemble stellar population (although not all; see
-Section~\ref{sec:starform_pop3}).  % BWO: I use 'phenomenological'
-right above this, but could probably % go for 'parametric' or
-'heuristic' if people object to my usage.
+Section~\ref{sec:starform_pop3}). 
 
 The \enzo\ code includes approximately ten models for star formation
 and feedback.  Broadly speaking, these methods all work in similar
 ways: At a specified time interval, all grid cells that are at the
-highest local level of refinement (i.e., have no child cells) are
+highest local level of refinement (i.e., that have no child cells) are
 examined to see if they meet a set of criteria for star formation.
 This may simply be a baryon density threshold, but may include more
 complex tests, such as an examination of local cooling and dynamical
@@ -115,11 +119,11 @@ is created and given several attributes: mass, a unique index number,
 the time of formation $t_{\rm form}$, the local dynamical free-fall time
 $t_{\rm dyn}$ and the metallicity fraction of the baryon gas in the cell
 $f_{\rm Zb}$.  There is a user-defined minimum dynamical time
-$T_{\rm dyn,min}$ which is observationally motivated and affects the
+$T_{\rm dyn,min}$, which is observationally motivated and affects the
 feedback rates (see below).  The particle is placed in the center of
 the cell and given the same peculiar velocity as the gas in the cell,
 and is then treated in the same manner as the dark matter particles.
-An amount of baryon gas corresponding to the new particle's mass is
+An amount of gas corresponding to the new particle's mass is
 removed from the cell.
 
 % In addition, we have added a stochastic star formation algorithm that
@@ -127,8 +131,8 @@ removed from the cell.
 % been created and when the total mass of uncreated stars is greater
 % than the minimum mass, a star particle is created.
 
-The feedback of energy and metals into the baryon gas is similar to
-the Kravtsov feedback, with some important differences.  
+% The feedback of energy and metals into the baryon gas is similar to
+% the Kravtsov feedback, with some important differences.  
 
 The star formation algorithm creates each star particle
 instantaneously.  However, feedback should take place over a
@@ -235,7 +239,8 @@ density threshold is determined by observations of star forming
 regions on $\sim 100$ pc scales.
 
 Algorithmically, the star formation events in Kravtsov's code are
-assumed to occur once every global time step $\Delta t_0 \leq 10^7$.
+assumed to occur once every global time step (with the constraint $\Delta t_0 \leq
+10^7$ years).
 In cells where star formation is determined to occur (i.e. $\rho_{\rm
   gas} \geq \rho_{\rm SF}$), star particles with a mass of $m_* =
 \dot{\rho}_* V_{\rm cell} \Delta t_0$ (where $V_{\rm cell}$ is the
@@ -284,9 +289,9 @@ in simulations that have very poor resolution, $\Delta x \ga 1$~kpc.
 At this physical scale, individual star forming regions are not
 resolved, so all uncertainty about the behavior of molecular clouds is
 folded into a density threshold for star formation.  In calculations
-with much higher resolution, however ( $\la$~few pc), individual
+with much higher resolution, however (on the order of a few pc), individual
 molecular clouds can be resolved, thus rendering these approximations
-irrelevant.  To that end, \citet{2012ApJ...749...36K} have implemented
+invalid.  To that end, \citet{2012ApJ...749...36K} have implemented
 a star formation algorithm that is specifically geared to
 high-resolution cosmological simulations of galaxy formation, where
 the formation of molecular hydrogen is followed directly, and stars
@@ -321,22 +326,23 @@ treating particles as ensembles.  One particular example of this is
 Population III star formation
 \citep{ABN02,2007ApJ...654...66O,2008ApJ...685...40W,2009Sci...325..601T},
 where a given halo may only form one star of primordial composition.
-To accommodate this, Enzo contains a star formation algorithm that
-forms Population III stars directly \citep{2007ApJ...659L..87A,
+To accommodate this, \enzo\ contains a star formation algorithm that
+forms individual Population III stars directly \citep{2007ApJ...659L..87A,
   2008ApJ...685...40W, 2012MNRAS.427..311W}.  Using criteria similar
-to~\citet{CO1992}, a star particle forms when a cell has all of the
-following criteria:
+to~\citet{CO1992}, a star particle forms when a cell meets all of the
+following conditions:
 
 \begin{enumerate}
-\item a baryon overdensity of $5 \times 10^5$ (corresponding to
-  roughly $10^3$ g cm$^{-3}$ at $z=10$),
+\item A baryon overdensity of $5 \times 10^5$ (corresponding to a
+  hydrogen number density of 
+  roughly $10^3$ cm$^{-3}$ at $z=10$),
 
-\item a converging gas flow ($\nabla \cdot \vec{v} < 0$), and
+\item A converging gas flow ($\nabla \cdot \vec{v} < 0$), and
 
-\item a molecular hydrogen fraction f$_{\rm H2} > 5 \times 10^{-4}$,
+\item A molecular hydrogen mass fraction f$_{\rm H2} > 5 \times 10^{-4}$,
 \end{enumerate}
 
-conditions typical of a collapsing metal-free molecular cloud roughly
+These are comparable to the conditions typical of a collapsing metal-free molecular cloud roughly
 10 million years before the birth of a Pop III main-sequence star.  If
 multiple neighboring cells are flagged as being able to form stars, a
 single star is created instead.  This star has a mass that is randomly
@@ -347,8 +353,8 @@ f(\log M) dM = M^{\alpha} \exp \Big[ -\Big( \frac{M_{\rm char}}{M}
 \Big)^{\beta} \Big]
 \end{equation}
 
-Feedback from the Population III stars comes in multiple forms.
-Radiative feedback using the MORAY radiation transport algorithm
+Feedback from Population III stars created using this algorithm comes in multiple forms.
+Radiative feedback using the \moray\ radiation transport algorithm
 \citep{Wise11_Moray} is available, using the mass-dependent hydrogen
 ionizing and Lyman-Werner photon luminosities and lifetimes of the
 Population III stars from \citet{2002A&A...382...28S}.  At the end of
