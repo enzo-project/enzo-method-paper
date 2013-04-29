@@ -90,12 +90,12 @@ using the \textit{'methodpaper'} suite of test problems.
 \subsubsection{Code comparisons}
 \label{sec.tests.compare}
 
-Over the course of its existence, \enzo\ has been involved in several
+Over the course of its existence, \enzo\ has been involved in numerous
 comparisons with other astrophysical codes used for self-gravitating
 fluid dynamics.  In general, \enzo\ behaves in a manner similar to other
 grid-based (and particularly AMR-based) codes, as we will summarize below.
 
-\enzo\ has been involved in several cosmological code comparisons,
+\enzo\ has been involved in multiple cosmological code comparisons,
 including the Santa Barbara Cluster code comparison project
 \citep{SantaBarbara}, a large comparison of N-body simulations
 \citep{2008CS&D....1a5003H}, as well as several direct comparisons
@@ -108,36 +108,40 @@ small-scale self-gravitating structures (for an equivalent dark matter
 particle count and nominally equivalent force resolution), but does
 comparably well as a tree-based code for larger structure, and is
 typically superior in terms of resolving fluid features due to its
-higher-order (and artificial viscosity-free) hydrodynamics solver.
-When examining classical test cases such as the Santa Barbara
-project \citep{SantaBarbara}, \enzo\ forms galaxy clusters with very similar density,
-temperature, and entropy profiles to other grid-based codes that use
-Godunov-type hydro methods, which
-systematically differ from particle-based codes using SPH.  Similarly,
-in galaxy cluster simulations that look specifically at the properties
-of cosmological shocks \citep[e.g.][]{2011MNRAS.418..960V}, \enzo\
-produces results that are similar to other high-order grid-based
-hydrodynamics codes, and far superior behavior of \enzo\ in
-low-density regions when compared to a particle-based code.  In tests
-of the Lyman-alpha forest that include radiative cooling and a uniform
-metagalactic ultraviolet background, \enzo\ and Gadget provide results
-on metrics such as the matter power spectrum that are comparable to
-within 5\% \citep{2007MNRAS.374..196R}.
+higher-order (and artificial viscosity-free) Piecewise Parabolic
+Method hydrodynamics solver.  When examining classical test cases such
+as the Santa Barbara project \citep{SantaBarbara}, \enzo\ forms galaxy
+clusters with very similar density, temperature, and entropy profiles
+to other grid-based codes that use Godunov-type hydro methods, which
+systematically differed from particle-based codes using SPH in this
+code comparison.  Similarly, in galaxy cluster simulations that look
+specifically at the properties of cosmological shocks
+\citep[e.g.][]{2011MNRAS.418..960V}, \enzo\ produces results that are
+similar to other high-order grid-based hydrodynamics codes, and far
+superior performance of \enzo\ is observed (in terms of resolution of
+fluid features and shock detection) in low-density regions when
+compared to a particle-based code.  In tests of the Lyman-alpha forest
+that include radiative cooling and a uniform metagalactic ultraviolet
+background, \enzo\ and Gadget provide results on metrics such as the
+matter power spectrum that are comparable to within 5\%
+\citep{2007MNRAS.374..196R}.
 
 Several comparisons have been made that focus specifically on
-hydrodynamics solvers.  In particular, the work of
+hydrodynamics solvers and fluid behavior.  In particular, the work of
 \citet{2007MNRAS.380..963A} and \citet{Tasker2008} perform
 head-to-head comparisons between several grid- and particle-based
-codes for a variety of test problems (including shocked gas clouds,
+codes for a variety of fluid-centric test problems (including shocked gas clouds,
 self-gravitating, translating clouds, and Sedov-Taylor explosions),
 and show that \enzo\ is comparable or superior in behavior to the
 other grid-based hydrodynamics codes involved in the comparison, and
-provide useful information on whether an AMR code such as \enzo\
-experiences challenges.  More specific comparisons, including one
+provide useful information on the sort of practical challenges that a
+user of an
+AMR code such as \enzo\ may experience.  More specific comparisons, including one
 specifically testing the linear and nonlinear growth of the
-Kelvin-Helmholz instability \citep{2012ApJS..201...18M} and one more
-broadly examining Galilean invariance in grid-based codes
-\citep{2010MNRAS.401.2463R} show that \enzo, and in particular its
+Kelvin-Helmholz instability \citep{2012ApJS..201...18M}, as well as a
+comparison that more
+broadly examines Galilean invariance in grid-based codes
+\citep{2010MNRAS.401.2463R}, show that \enzo, and in particular its
 implementation of the Piecewise Parabolic Method hydrodynamics solver,
 converge to the correct solution as expected, and generally provide
 less diffusive solutions than lower-order codes, including those that
@@ -148,33 +152,35 @@ the behavior of decaying isothermal supersonic turbulence
 magnetohydrodynamical turbulence \citep{2011ApJ...737...13K}.  Both
 included the \enzo\ code, with the former testing the PPM
 hydrodynamics and the latter the constrained transport MHD
-implementation.  In both cases, \enzo\ performed similarly to other
+implementation of \citet{Collins10}.  In both cases, \enzo\ performed similarly to other
 grid-based codes that use Godunov-based fluid solvers, and typically
 had better effective resolution than particle-based codes using the
 same number of particles as the \enzo\ simulation used grid cells.
 
-Three other comparisons between portions of the \enzo\ code and other
-simulation tools have been performed in recent years.  The
-flux-limited diffusion radiation transport scheme was measured against
-several test problems by \citet{IlievEtAl2009}, producing results that
-are similar to both expected results and other methods, although there
-are some minor differences (although all codes in the study exhibited
-differences from the majority of other codes on at least a subset of
-the tests).  \citet{2011ApJ...726...55T} shows the result of varied
-reaction rate coefficients for the formation of molecular hydrogen via
-the 3-body process in both the \enzo\ and Gadget-2 codes.  Similar
-trends were visible in both the \enzo\ and Gadget simulations, though
-at a nominally equivalent resolution (i.e., with particle and cell gas
-masses being comparable) \enzo\ simulations typically displayed a much
-higher level of gas structure.  This is unsurprising due to \enzo's
-higher-order hydro solver.  Finally, \citet{2012ApJ...744...52P} show
-the results of comparing \enzo\ in its non-AMR mode to a
-smoothed-particle hydrodynamics code, SNSPH, in the context of
-common-envelope binary stellar interactions.  The authors show that
-the codes display reasonable convergence properties as a function of
-simulation resolution, and also agree quite well with each other --
-however, the observed mass-loss rates do not agree particularly well
-with observations.
+Three other comparisons between the \enzo\ code and other simulation
+tools have been performed that focus on physics other than gravity and
+fluid flow.  The flux-limited diffusion radiation transport scheme was
+measured against several test problems by \citet{IlievEtAl2009},
+producing results that are similar to both expected results (i.e.,
+analytic test problems) and other methods (i.e., codes using other
+methods, written by other groups), although there are some minor
+differences (although all codes in the study exhibited differences
+from the majority of other codes on at least a subset of the tests).
+\citet{2011ApJ...726...55T} shows the results of varied reaction rate
+coefficients for the formation of molecular hydrogen via the 3-body
+process in both the \enzo\ and Gadget-2 codes.  Similar trends were
+visible in both the \enzo\ and Gadget simulations, though at a
+nominally equivalent resolution (i.e., with particle and cell gas
+masses being comparable) \enzo\ simulations typically displayed a
+substantially higher level of gas structure.  This is unsurprising due
+to \enzo's higher-order hydro solver.  Finally,
+\citet{2012ApJ...744...52P} show the results of comparing \enzo\ in
+its non-AMR mode to a smoothed-particle hydrodynamics code, SNSPH, in
+the context of common-envelope binary stellar interactions.  The
+authors show that the codes display reasonable convergence properties
+as a function of simulation resolution, and also agree quite well with
+each other -- however, the observed mass-loss rates do not agree
+particularly well with observations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Representative test problems}
