@@ -279,18 +279,17 @@ Problem type 3, with AMR.  Tests passage of shock through a refinement boundary.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Double mach reflection}
 \label{sec.tests.doublemach}
-\red{(Brian)}
 
 The double mach reflection test is a classic two-dimensional test of
 hydrodynamic algorithms, and was originally described in
 \citet{1984JCoPh..54..115W} \citep[and more recently
-in][]{2008ApJS..178..137S}.  In this problem (shown in
-Figure~\ref{fig.doublemach}), a shock is injected at an angle to a
-reflecting surface, and a jet appears along the reflecting surface.
-The ideal solution is self-similar, and the appearance of this
-solution is highly sensitive to numerical diffusion.  If numerical
-noise is present, a Kelvin-Helmholz instability develops along this
-jet and breaks the self-similarity.
+in][]{2008ApJS..178..137S}.  In this problem, shown in
+Figure~\ref{fig.doublemach}, a shock is injected at an angle to a
+reflecting surface (the -y boundary), and a jet appears along the
+reflecting surface.  The ideal solution is self-similar, and the
+appearance of this solution is highly sensitive to numerical
+diffusion.  If numerical noise is present, a Kelvin-Helmholz
+instability develops along this jet and breaks the self-similarity.
 
 In the test problem shown in Figure~\ref{fig.doublemach}, a 2D
 simulation with $960 \times 240$ cells was formed with a domain of $x
@@ -306,8 +305,8 @@ as if it extends to infinity.  The simulation starts at t$ = 0$ and
 runs until t$ = 0.205$ (arbitrary units), at which point the rightmost
 extent of the shock should be at roughly x$ = 3$.  In this run, we use
 the direct Eulerian implementation of the piecewise parabolic hydro
-method, with diffusion, flattening, and shock steepening all turned
-on.
+method, with the diffusion, flattening, and shock steepening all
+turned on.
 
 It is instructive to compare Figure~\ref{fig.doublemach} to Figure 9
 in~\citet{1984JCoPh..54..115W}.  By the end of the simulation, a dense
@@ -319,7 +318,13 @@ images from Woodward \& Colella.
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figures/DoubleMachTest.eps}
-\caption{Double mach test.}
+\caption{Density field at the final time in the Double Mach test.  A
+Mach 10 shock is injected into the domain with a shock normal that is
+30$^\circ$ from the x-axis with a time-dependent +y boundary condition
+that mimics a shock of infinite length.  The solution is self-similar,
+with the jet and whorls at $x \simeq 2.5-3.0$ in this figure being very sensitive
+to numerical diffusion.  Our results compare favorably to the
+higher-order images from \citet{1984JCoPh..54..115W}.}
 \label{fig.doublemach}
 \end{center}
 \end{figure}
@@ -332,12 +337,11 @@ images from Woodward \& Colella.
 \begin{center}
 \includegraphics[width=0.4\textwidth]{figures/sedov-ppm-slice.eps}
 \includegraphics[width=0.4\textwidth]{figures/sedov-zeus-slice.eps}
-\caption{Density slice from the Sedov Blast Test at $t =
-0.07$. Left-hand image shows the results from PPM ({\tt HydroMethod =
-0}), right-hand image shows the results from Zeus ({\tt Hydromethod =
-2}). Notably, the Zeus shock front has progressed less far than forthe
-PPM run. This is due to energy loss when conserving internal, not
-total, energy.}
+\caption{Density slice from the Sedov Blast test at $t = 0.07$. Left:
+results using the Piecewise Parabolic Method hydro scheme.  Right: results using the \zeus\
+hydro method. Notably, the \zeus\ shock front has progressed less far
+than in the PPM run. This is due to energy loss when conserving only
+internal, and not total, energy.}
 \label{fig.sedov1}
 \end{center}
 \end{figure}
@@ -346,9 +350,13 @@ total, energy.}
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{figures/sedov-profiles.eps}
-\caption{Radially averaged profiles for the Sedov Blast Test at $t =
+\caption{Radially averaged profiles for the Sedov Blast test at $t =
 0.07$. Clockwise from top-left shows density, velocity, internal
-energy and pressure.}
+energy and pressure.  The black solid line shows the analytic
+solution.  The blue dashed line shows the simulation using the PPM
+method, and the red dot-dashed line using \zeus.  The \zeus\ result
+substantially lags the true result due to total energy not being
+explicitly converged.}
 \label{fig.sedov2}
 \end{center}
 \end{figure}
@@ -357,9 +365,9 @@ The Sedov Blast Test \citep{Sedov1959} models an intense explosion,
 initiated by depositing thermal energy into a homogenous distribution
 of gas. The result is a strong spherical shock wave centered on the
 point of energy injection.  This problem is a popular test of
-astrophysical numerical codes for three reasons: Firstly, it is
+astrophysical numerical codes for three reasons: First, it is
 particularly appropriate to astrophysics since it represents the
-situation when a supernovae explosion occurs. Secondly, it has an
+situation when a supernovae explosion occurs. Second, it has an
 exact analytical solution whereby the shock front's radial position is
 given by:
 
@@ -371,53 +379,52 @@ given by:
 background density and $\alpha = 1.0$ for cylindrical symmetry and an
 ideal gas with $\gamma = 1.4$. For the full derivation see
 \citet{Sedov1959}. This solution makes it possible to assess how well
-the code performs. Thirdly, the spherical shock is a challenging
+the code performs.  Third, the spherical shock is a challenging
 problem for numerical codes (both grid and particle) since the shock
 wave increases in size as the simulation progresses and its
 symmetrical nature highlights any directional preferences that grid
 codes can succumb to. The test presented here is the two-dimensional
-version that is included in the Enzo distribution. The
-three-dimensional results from this test, both for Enzo and three
+version that is included in the \enzo\ distribution. The
+three-dimensional results from this test, both for \enzo\ and three
 other leading astrophysics codes, can be founds in \citet{Tasker2008}.
 
 In the initial state, the box contains a homogenous distribution of
 gas at a density of 1 (note that, in the absense of gravity, this
-problem is scale-free and so without units). Thermal energy is
+problem is scale-free and thus without units). Thermal energy is
 deposited into a single cell at the center of the box with $E_0 =
 10.0$. The problem is completed in two dimensions with reflecting
-boundary conditions (the default for Enzo) and uses a boxsize of side
-$1$. For this problem, we selected a top grid of $100 \times 100$ and
-four levels of refinement, placed based on shock location and the
-slope in density and total energy (this corresponds to cell flagging
-methods 1 and 3 in the Enzo parameter file). The exception to this
-scheme is in the initial conditions where grids are placed directly
-around the injection point. The results were assessed at $t = 0.07$,
-which corresponding to a time just before the shock reaches the box
-edge (see Figure~\ref{fig.sedov1}).
+boundary conditions (the default for \enzo) and uses a box size of side
+$1$. For this problem, we selected a top grid of $100 \times 100$
+cells and a maximum of four levels of refinement, placed based on
+shock location and the slope in density and total energy. The
+exception to this scheme is in the initial conditions, where grids are
+placed directly around the injection point. The results were assessed
+at $t = 0.07$, which corresponding to a time just before the shock
+reaches the box edge (see Figure~\ref{fig.sedov1}).
 
 Figure~\ref{fig.sedov2} shows the radial profiles for the simulation
-run with the PPM hydro-solver (blue dashed line) and the Zeus
+run with the PPM hydro-solver (blue dashed line) and the \zeus\
 hydro-solver (red dash-dot-dot line) together with the analytical
 solution (black solid line). Clockwise from the top-left are density,
 velocity, internal energy and pressure. PPM matches the analytical
-solution extremely well for all quantities. However, Zeus' shock front
-lags behind the analytical position. This can also be seen in the
-slices shown in Figure~\ref{fig.sedov1}. The cause of this discrepancy
-is that Zeus shows a substantial energy lost during the first few
-timesteps and produces a diamond-shaped, rather than spherical,
-shockfront during this time. After this, the code correctly conserves
-energy but this intial energy loss remains clearly visible in the
-position of the shock at $t = 0.07$. This problem was addressed
-directly by \citet{Clarke2010}, who attributed the source of the issue
-to this version of Zeus solving the internal, rather than total,
-energy equation. In situations with strong energy gradients, this
-choice caused an energy loss and the artificial viscosity produces the
-direction-dependent shockfront shape. In their paper,
+solution extremely well for all quantities. However, the shock front
+in the \zeus\ simulation lags behind the analytical position. This can
+also be seen in the slices shown in Figure~\ref{fig.sedov1}. The cause
+of this discrepancy is that \zeus\ shows a substantial energy loss
+during the first few timesteps and produces a diamond-shaped, rather
+than spherical, shockfront during this time. After this, the code
+correctly conserves energy but this intial energy loss remains clearly
+visible in the position of the shock at $t = 0.07$. This problem was
+addressed directly by \citet{Clarke2010}, who attributed the source of
+the issue to this version of \zeus\ solving the internal, rather than
+total, energy equation. In situations with strong energy gradients,
+this choice caused an energy loss and the artificial viscosity
+produces the direction-dependent shockfront shape. In their paper,
 \citet{Clarke2010} presents results from an alternative version of
-Zeus that conserves total energy. This problem is less marked for
-smaller energy gradients and it should be noted that Zeus' stability
-and speed make it a highly competitive choice, despite the
-disagreements in this test.
+\zeus\ that conserves total energy. This problem is less marked for
+smaller energy gradients and it should be noted that the \zeus\ hydro
+algorithm's stability and speed make it a highly competitive choice,
+despite the disagreements in this test.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -446,13 +453,13 @@ solution, and tests gravity + hydro.
 The Zel`dovich pancake \citep{1970A&A.....5...84Z} is particularly
 relevant to cosmological simulations, because it includes many
 features that are critical to structure formation: hydrodynamics,
-expansion, and self gravity.  This problem represents an ideal,
-isolated caustic formation, and is thus a useful proxy for much more
+expansion, and self gravity.  This problem represents the formation of an ideal,
+isolated caustic, and is thus a useful proxy for much more
 complicated structures in full 3-dimensional cosmological simulations
 (such as the collapse of gas onto a cosmological halo or filament).
 
 The initial conditions are simple, and we follow the prescription of
-\citet{Anninos94}.  Assuming a flat cosmology, the density
+\citet{Anninos94}.  Assuming a geometrically flat cosmology, the density
 perturbation is given by
 
 \begin{equation}
@@ -463,12 +470,12 @@ with the internal energy of the gas set so that the entropy of the gas
 maintains a constant value throughout.  The velocity perturbation is given by
 
 \begin{equation}
-v(x_l) = -H_0 \frac{1 + z_c}{(1+z)^{1/2}} \frac{\sin(k x_l}{k}
+v(x_l) = -H_0 \frac{1 + z_c}{(1+z)^{1/2}} \frac{\sin(k x_l)}{k}
 \end{equation}
 
 In the equations above, $\rho_0$ is the background density, z$_c$ is a
-free parameter and is the redshift at which the sheet forms a caustic
-(i.e., 'pancakes'), z is the redshift of initialization, x$_l$ is the
+free parameter and is the redshift where the sheet forms a caustic
+(i.e., where it `pancakes'), z is the redshift of initialization, x$_l$ is the
 Lagrangian mass coordinate, $k = 2 \pi / \lambda$ (where $\lambda$ is
 the perturbation wavelength), and H$_0$ is the $z = 0$ value of the
 Hubble constant.  Note that this solution is expressed in terms of
@@ -481,7 +488,7 @@ x_e = x_l - \frac{1 + z_c}{1 + z} \frac{\sin(k x_l)}{k}
 
 We note that the solution described above is exact up to the point of
 caustic formation.  In Figure~\ref{fig.pancake}, we show the results
-of a test of the AMR version of \enzo's Zel'dovich Pancake test.  A
+of a test of the adaptive mesh version of \enzo's Zel'dovich Pancake test.  A
 one-dimensional box of length $64$~Mpc/h is initialized at z$ = 20$ in
 an $\Omega_M = 1$ universe with h$ = 0.5$ and a background temperature
 of 100~K, $\rho_0 = \rho_c$.  The simulation is initialized with 64
@@ -493,10 +500,10 @@ of the calculation being shown in Figure~\ref{fig.pancake}.
 
 Figure~\ref{fig.pancake} shows the key features of this test problem.
 The strong shocks and large density gradients are well-resolved, with
-density and velocity jumps being well-delineated.  The key features of
+density and velocity jumps being well-delineated and at the correct locations.  The key features of
 this test problem can be resolved with far fewer cells -- simulations
 including a mere 8 cells resolve the key features, as shown in
-sections 3.3.4-3.3.5 of~\citet{1996PhDT........80B} -- but we choose a
+Sections 3.3.4-3.3.5 of~\citet{1996PhDT........80B} -- but we choose a
 higher resolution here for illustrative purposes.
 
 \begin{figure}
@@ -506,7 +513,13 @@ higher resolution here for illustrative purposes.
 $\Omega_m = 1$ universe at z$ = 20$ on a one-dimensional grid having
 64 cells, and further refined by factors of four based on cell mass
 and the presence of shocks for up to two additional levels of mesh,
-having a maximum effective resolution of 1024 grid cells.}
+having a maximum effective resolution of 1024 grid cells. The top,
+middle, and bottom rows show density, temperature, and velocity of the
+gas, respectively; all are a function of position in units of the box
+size.  The central region ($x \simeq 0.45-0.55$) has bene adaptively
+refined, as can be seen by the locations of grid points.  Shocks and
+the central density peak are clearly resolved, with well-delineated
+jumps at the appropriate locations.}
 \label{fig.pancake}
 \end{center}
 \end{figure}
@@ -515,28 +528,35 @@ having a maximum effective resolution of 1024 grid cells.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{MHD: Orszag-Tang Vortex}
 \label{sec.tests.mhd}
-Figure \ref{fig.orszag} shows the Orszag-Tang vortex problem, a
-typical test problem for MHD \citep{Orszag79}.  The left panel shows
-the MHD-CT result, while the right panel shows the Dedner result.
-This test shows that small scale structure can be generated in MHD
-from large scale initial perturbations.  The test begins with uniform
-density, $\rho_0=25/36 \pi$ and pressure, $P_0=5/12 \pi$.  There is a
+Figure~\ref{fig.orszag} shows the Orszag-Tang vortex problem, a
+standard magnetohydrodynamic test problem \citep{Orszag79}.  The left panel shows
+the result using \enzo's constrained transport MHD method, while the right panel shows the result using
+\enzo's implementation of Dedner MHD.
+The Orszag-Tang vortex test shows that significant small scale structure can be generated in MHD
+from large scale initial perturbations, and is used to compare the
+effective resolution of different MHD schemes.  The test begins with uniform
+density, $\rho_0=25/36 \pi$ and pressure, $P_0=5/12 \pi$ (as with
+other tests in this section, in the absence of gravity or chemistry we use
+arbitrary units).  There is a
 single rotational mode in the velocity, and two in the magnetic field:
 ${\bf v}_0 $ = (-sin(2$\pi$ y) $ \hat{x}$ , sin(2$\pi$ x) $\hat{y}$),
 ${\bf B}_0$ = (-sin(2 $\pi$ y) $ \hat{x},$ sin( 4 $\pi$ x )$\hat{y}$).
-The simulation is evolved to t=0.48.  One can see that the structures
+The simulation is evolved to $t=0.48$ (in arbitrary units).  One can see that the structures
 are accurately represented as compared to, for instance,
 \citet{Toth00}, and that the resolution of shocks is comparable in
 both methods.
-
-{\emph Dave's note: I'll probably play around with these results in
-future versions.}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.4\textwidth]{figures/MHDCT_OrszagTang_Density.eps}
 \includegraphics[width=0.4\textwidth]{figures/MHDDedner_OrszagTang_Density.eps}
-\caption{TANG}
+\caption{Density field from the Orszag-Tang vortex test, at $t=0.48$.
+Left: solution using constrained transport MHD.  Right: solution using
+Dedner MHD. The initial conditions are uniform density, with a single
+rotating velocity structure and two circular magnetic structures.
+These initial conditions generate significant small-scale structure in
+both the CT and Dedner schemes, which have approximately equal
+effective resolution.}
 \label{fig.orszag}
 \end{center}
 \end{figure}
@@ -558,8 +578,9 @@ the self-similar Larson-Penston \citep{1969MNRAS.145..271L,
 modification to account for the efficiency with which the heat
 introduced by compression can be radiated away
 \citep{1983ApJ...265.1047Y}.  Our implementation, described briefly
-here, follows the work of \citet{2005ApJ...626..627O}, which one
-should consult for further details.  The density evolution is given by 
+here, follows the work of \citet{2005ApJ...626..627O}, and we direct
+the interested reader to this paper for further details.  The
+evolution of the gas density, $\rho$, is given by 
 \begin{equation}
 \frac{d\rho}{dt} = \frac{\rho}{t_{col}},
 \end{equation}
@@ -567,17 +588,18 @@ where the collapse timescale, $t_{col}$, is
 \begin{equation} \label{eqn.tcol}
 t_{col} = \frac{t_{dyn}}{\sqrt{1 - f}},
 \end{equation}
-and $t_{dyn}$ is the dynamical time, expressed as
+In this equation, $t_{dyn}$ is the dynamical time and is expressed as
 \begin{equation}
 t_{dyn} = \sqrt{\frac{3 \pi}{32 G \rho}}.
 \end{equation}
-The collapse timescale is altered from the dynamical time by the
-factor, $f$ in Equation \ref{eqn.tcol}, which an approximation of the
-ratio of the pressure to the force of gravity.  The value of $f$
+
+with G being the gravitational constant.  The collapse timescale is altered from the dynamical time by a
+factor $f$ in Equation \ref{eqn.tcol}, which is an approximation of the
+ratio of the gas pressure to the force of gravity.  The value of $f$
 depends on the effective adiabatic index, $\gamma_{ef} \equiv (\partial
 ln\ p / \partial ln\ \rho)$, which we calculate by linearly extrapolating
 from derivative values for the two previous timesteps.  For the value
-of $f$, we use the piecewise function of \citet{2005ApJ...626..627O},
+of $f$ in this test problem, we use the piecewise function of \citet{2005ApJ...626..627O},
 given by
 \begin{equation}
 f = \left\{
@@ -596,18 +618,28 @@ where $\Lambda$ is the cooling rate in units of erg s$^{-1}$ g$^{-1}$
 and energy, temperature, density, and pressure are related by the
 ideal gas law.  Figure \ref{fig.onezone} shows an example of the
 one-zone collapse test performed with an initial number density of 1
-cm$^{-3}$ and temperature of 100 K using the 12 species chemistry
+hydrogen atom per
+cm$^{-3}$ and an initial temperature of 100 K using the 12 species chemistry
 network with H, D, and He species and metal cooling rates calculated
-with Cloudy.
+with the \texttt{Cloudy} code.  The effects of metal cooling can be
+clearly seen; as the metallicity increases from zero to
+$10^{-2}$~Z$_\odot$, the gas deviates from the primoridal result
+(black line) both more rapidly and more significantly.  Our primordial results
+compare very well to those shown in \citet{2005ApJ...626..627O}; however,
+we use a different cooling method than Omukai, so the lines describing
+the evolution of the metal-enriched gas are not directly comparable.
 
 \begin{figure}
   \begin{center}
     \includegraphics[width=1.0\textwidth]{figures/OneZoneCollapseTest.eps}
   \end{center}
   \caption{Evolution of temperature versus number density for a one-zone
-    collapse test for gas at metallicities from 0 to 10$^{-2} Z_{\odot}$
-    using the primordial chemistry network with tabulated metal cooling
-    rates calculated with Cloudy.}
+    collapse test for gas at metallicities from 0 to 10$^{-2}
+    Z_{\odot}$.  This test is based on the results of
+    \citet{2005ApJ...626..627O}, and approximates the collapse of a
+    self-gravitating, cooling gas cloud.  This test problem uses \enzo's primordial chemistry network with tabulated metal cooling
+    rates calculated with the \texttt{Cloudy} code, and compares
+    favorably to Omukai's results.}
   \label{fig.onezone}
 \end{figure}
 
