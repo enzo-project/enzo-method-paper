@@ -186,22 +186,79 @@ particularly well with observations.
 \subsection{Representative test problems}
 \label{sec.tests.problems}
 
-General structure for each test problem:  Outline how the test problem is constructed (initial and boundary conditions), 
-the analytical solution, why we have in the paper (what does it break, or what flaw does it expose (not in enzo of course)),
-a plot showing how well enzo solves said test problem, and a brief description of the plot and how awesome enzo is.
+The \enzo\ test suite (described in Section~\ref{sec.tests.suite})
+contains hundreds of test problems that probe the code's behavior in a
+wide range of physical circumstances, and explicitly test each physics
+package in the \enzo\ code, both individually and in combination.  It
+is impractical to include a substantial fraction of these problems in
+a method paper; as a result, we have chosen to publish the results of
+only a small subset of particularly crucial test problems here.  If
+the interested reader desires, they can download \enzo\ and
+\texttt{yt}, run the test suite, and see the results of any other test
+problem and its comparison to an analytic solution (if available).
+
+The general structure of each test problem description is as follows.
+We will describe the construction of the test problem (including its
+initial and boundary conditions), the analytical or expected
+solutions, and motivate why we have included it in the paper.  After
+that, we will show and describe \enzo's solution to the test problem.
+
+% General structure for each test problem: Outline how the test problem
+% is constructed (initial and boundary conditions), the analytical
+% solution, why we have in the paper (what does it break, or what flaw
+% does it expose (not in enzo of course)), a plot showing how well enzo
+% solves said test problem, and a brief description of the plot and how
+% awesome enzo is.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sod Shock Tube}
 \label{sec.tests.sodshock}
 
-We begin the paper test suite with the classic Sod shock tube problem \citep{Sod78}, which provides a good test of a scheme's ability to resolve a clean Riemann problem with clear separation between the three waves, in particular a rarefaction fan, a contact discontinuity and a moderate shock.  In Figure~\ref{fig.sodshocktube}, we show the solution for three of our hydro solves, the spatially third-order PPM, as well as the two second-order Zeus and MUSCL schemes.  We use 100 cells across the domain, which is a relatively standard choice and show solutions both with and without AMR.  Without AMR, it is clear that the PPM scheme produces by far the cleanest solution, with all wave families crisply reproduced.  Zeus and MUSCL produce similar results, with MUSCL doing a slightly better job on the rarefaction fan.  In the figure, we also show the mean absolute deviation from the exact solution, as well as the maximum deviation.  These numbers confirm the qualitative differences noted previously.
+\red{(BWO: this is missing an explanation of the ICs)}
 
-We also run the same simulation but with two levels of AMR (using a refinement factor of 2), triggered based on a normalized slope greater than 10\% in the density.  This is a minimal level of refinement, and does not include the rarefaction fan at late times.  The results are shown in the bottom panels of Figure~\ref{fig.sodshocktube}, and the results are much better for all three methods, with much sharper shocks and contact discontinuities, and even a better representation of the rarefaction wave, which is only refined at early times.  Although the results are improved for all methods, the PPM still produces the best result, as shown clearly by the compute error norms, shown again in the figure.
+We begin the paper test suite with the classic Sod shock tube problem
+\citep{Sod78}, which provides a good test of a hydrodynamical solver's
+ability to resolve a clean Riemann problem with clear separation
+between the three waves.  These waves include a rarefaction fan, a
+contact discontinuity, and a moderate shock.  In
+Figure~\ref{fig.sodshocktube}, we show the density solution at the
+final time for three of our hydro solvers -- the spatially third-order
+PPM, as well as the two second-order \zeus\ and MUSCL schemes.  We use
+100 cells across the domain, (which is a relatively standard choice in
+code method papers) and show solutions both with and without adaptive
+mesh refinement.  Without AMR (in the top row of the figure), it is
+clear that the PPM scheme produces by far the cleanest solution, with
+all wave families crisply reproduced (in particular, the contact
+discontinuity and shock).  \zeus\ and MUSCL produce similar results,
+with MUSCL doing a slightly better job on the rarefaction fan.  In the
+figure, we also show the mean absolute deviation from the exact
+solution ($||E_\infty||$), as well as the maximum deviation
+($||E_1||$).  These numbers confirm the qualitative differences noted
+previously.
+
+We also run the same simulation but with two levels of AMR (using a
+refinement factor of 2), triggered based on a normalized slope greater
+than 10\% in the density.  This is a minimal level of refinement, and
+does not include the rarefaction fan at late times.  The results are
+shown in the bottom row of Figure~\ref{fig.sodshocktube}.  Using AMR,
+the results are much better for all three methods, with much sharper
+shocks and contact discontinuities and even a better representation of
+the rarefaction wave, which is only refined beyond the root grid at
+early times.  Although the results are improved for all methods, PPM
+still produces the best result, as is shown clearly by the computed
+error norms (displayed again in each of the individual panels).
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{figures/SodShockTube.eps}
-\caption{The density distribution of the classic Sod Shock Tube for three different solvers (from left to right) and with (bottom) and without (top) AMR.  In each case 100 zones are used on the root level and the results are shown at $t=0.25$.  All cells are plotted and color-coded by level (at the time shown, only small region surrounding the contact discontinuity and the shock are refined).  In each panel, we show the exact solution as a solid line and the $L_1$ and $L_\infty$ error norms in the upper right.}
+\caption{The density distribution of the classic Sod Shock Tube for
+three different solvers (from left to right column) and with (bottom
+row) and without (top row) AMR.  In each case 100 zones are used on
+the root level and the results are shown at $t=0.25$.  All cells are
+plotted and color-coded by level (at the time shown, only small region
+surrounding the contact discontinuity and the shock are refined).  In
+each panel, we show the analytic solution as a solid line and the $E_1$
+and $E_\infty$ error norms in the upper right.}
 \label{fig.sodshocktube}
 \end{center}
 \end{figure}
