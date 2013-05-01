@@ -13,7 +13,7 @@ conservative formulation, however, the Direct Eulerian variant is
 preferred for \enzo\ AMR simulations.  We will describe the Direct
 Eulerian (PPM-DE) variant here.
 
-We can examine the structure of eqs.~(\ref{eq:mass})-(\ref{eq:total_energy})
+We can examine the structure of Equations~(\ref{eq:mass})-(\ref{eq:total_energy})
 to obtain a better understanding of the effect of each term.
 The derivatives are first order in time
 and provide us with the dependent variables that will be evaluated each
@@ -25,9 +25,9 @@ advection, the flow of conserved quantities
 ($\rhob$, $\rhob \vecvb$, and $\rhob E$) 
 across the mesh.  These will be termed the transport terms.
 
-The first term on the right hand side of eqs. (\ref{eq:momentum}) and
+The first term on the right hand side of Equations~(\ref{eq:momentum}) and
 (\ref{eq:total_energy}) comes from our choice of comoving coordinates
-(a similar term also appears in eq.~(\ref{eq:dm_velocity}), the velocity 
+(a similar term also appears in Equation~(\ref{eq:dm_velocity}), the velocity 
 relation for the dark matter particles).  It does not
 appear in the mass conservation equation (\ref{eq:mass}) because
 of the comoving density definition.   
@@ -51,7 +51,7 @@ Because we are interested in phenomena with no special geometry, we will
 restrict discussion to Cartesian coordinates.
 Once again we use the concept of operator splitting,
 but now apply it spatially.   We can rewrite the one-dimensional (Eulerian) 
-versions of eqs.~(\ref{eq:mass})--(\ref{eq:total_energy}) without expansion terms
+versions of Equations~(\ref{eq:mass})--(\ref{eq:total_energy}) without expansion terms
 in conservative form as,
 \begin{eqnarray}
 \frac{\partial \rho}{\partial t}  + \frac{1}{a} \frac{\partial \rho v }{\partial x}    & = &  
@@ -66,14 +66,28 @@ in conservative form as,
 %
 Note that $x$ and $v$ refer to the one dimensional comoving position and 
 peculiar velocity of the baryonic gas, and $g$ is the acceleration at the cell center.
-We write this including the cosmological scale-factors but it reduces to the non-cosmological case with $a = 1$.
+We write this including the cosmological scale factors, but it reduces to the non-cosmological case with $a = 1$.
 These equations are now in a form that can be solved by the split PPM scheme.
 
 % ------------------------------------------------------------
 
 \subsubsection{The piecewise parabolic method in one dimension} % 2.2
 
-We now restrict ourselves to the solution of eqs. (\ref{eq:mass1d})--(\ref{eq:total_energy1d}), plus transport, in one dimension.  In the Direct Eulerian version of PPM, this is accomplished by a three-step process.  First, we compute effective left and right states at each grid boundary by constructing a piecewise parabolic description of the primary variables ($\rho$, $u$ and $E$) and then averaging over the regions corresponding to the distance each characteristic wave can travel ($u$, $u-c$ and $u+c$).  Second, a Riemann problem is solved using these effective left and right states, and finally the fluxes are computed based on the solution to this Riemann problem.  This is described in detail in \citet{1984JCoPh..54..174C}, but we will briefly outline the procedure here both for completeness and to put the changes we will make in context.
+We now restrict ourselves to the solution of Equations
+(\ref{eq:mass1d})--(\ref{eq:total_energy1d}), plus transport, in one
+dimension.  In the Direct Eulerian version of PPM, this is
+accomplished by a three-step process.  First, we compute effective
+left and right states at each grid boundary by constructing a
+piecewise parabolic description of the primary variables ($\rho$, $u$
+and $E$) and then averaging over the regions corresponding to the
+distance each characteristic wave can travel ($u$, $u-c$ and $u+c$).
+Second, a Riemann problem is solved using these effective left and
+right states, and finally the fluxes are computed based on the
+solution to this Riemann problem.  This is described in detail in
+\citet{1984JCoPh..54..174C}, but we will briefly outline the procedure
+here both for completeness and to put the changes we will make in
+context.
+
 
 The Eulerian difference equations are:
 %
@@ -119,7 +133,7 @@ describe the steps required to compute these quantities.
 We first construct monotonic piecewise 
 parabolic (third order) interpolations in one dimension
 for each of $p$, $\rho$, and $v$  The pressure is determined from
-eq.~(\ref{eq:eq_of_state}), the equation of state.
+Equation~(\ref{eq:eq_of_state}), the equation of state.
 %We have dropped the subscript b in this and the following two sections because we will be referring solely to baryonic quantities.  
 The interpolation formula for some quantity $q$ is given by:
 %
@@ -129,7 +143,7 @@ q_j(x) & = &  q_{L,j} + \tilde{x}(\Delta q_j + q_{6,j}(1-\tilde{x})), \\
              x_{j-1/2} \leq x \leq x_{j+1/2}. \nonumber
 \end{eqnarray}
 %
-This is eq.~(1.4) of CW84 (in the radial rather than mass coordinate as is appropriate for the direct rulerian approach). 
+This is Equation~(1.4) of CW84 (in the radial rather than mass coordinate as is appropriate for the direct rulerian approach). 
 %The zones edges in the mass coordinates are $m_{j-1/2}$ and $m_{j+1/2}$ for the left and right edges, respectively.  
 The quantities $q_{L,j}$, $\Delta q_j$,
 and $q_{6,j}$ can be viewed simply as interpolation constants; however,
@@ -145,12 +159,13 @@ is simple in principle, it is complicated somewhat by the requirement that
 these values be of sufficient accuracy and that the resulting distribution
 be monotonic.  That is, no new maxima or minima are introduced.
 The resulting formulae are straightforward but complicated and are not
-reproduced here, but see eqs. 1.7 to 1.10 of \citet{1984JCoPh..54..174C}.
+reproduced here, but see Equations 1.7 to 1.10 of \citet{1984JCoPh..54..174C}.
 We also optionally allow steepening as described in this reference.
 
 In the Lagrangian case, once we have the interpolation constants we compute the characteristic domain for each zone edge.  This is simply the farthest a sound wave could travel in order to reach the interface by the end of a timestep. The characteristic domain encompasses all of the information that can reach the (Lagrangian) zone edge during the current timestep.  This information would then be fed into the Riemann solver to find the flux at each Lagrangian cell boundary.
 
-In the Eulerian approach, this is more complex because the Eulerian zone-boundary does not naturally correspond to one the three characteristic waves and so a more complicated approach is required.  First, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$ or $u+c$ (where $c$ is the sound speed in a cell):
+In the Eulerian approach, this is more complex because the Eulerian
+zone boundary does not naturally correspond to one the three characteristic waves and so a more complicated approach is required.  First, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$ or $u+c$ (where $c$ is the sound speed in a cell):
 \begin{eqnarray}
       q^{C+}_{j+1/2} & = & f_{j+1/2,L}(\Delta t C^n_j), \\
       q^{C-}_{j+1/2} & = & f_{j+1/2,R}(-\Delta t C^n_{j+1}), \nonumber
@@ -164,18 +179,19 @@ f_{j+1/2,L}(y) & = &
 f_{j+1/2,R}(y) & = &
        {1 \over y} \int^{x_{j+1/2}+y}_{x_{j+1/2}} q_{j+1}(x) dx. \nonumber
 \end{eqnarray}
-The linearized gas dynamics equations are then used to compute second-order correct left and right states which take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
+The linearized gas dynamics equations are then used to compute second-order correct left and right states that take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
 
 With these effective states, an approximation to the Riemann problem is found
 with an iterative approach \citep[see][]{Woodward86}, producing estimates for 
 $\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm1/2}$, and $\overline{v}_{j\pm 1/2}$ that are third order
-accurate in space and second order accurate in time.  These are then used to solve the difference eqs. (\ref{eq:mass_diff})--(\ref{eq:energy_diff}) for $\rho^{n+1}$, $v^{n+1}$, and $E^{n+1}$.
+accurate in space and second order accurate in time.  These are then
+used to solve the difference Equations (\ref{eq:mass_diff})--(\ref{eq:energy_diff}) for $\rho^{n+1}$, $v^{n+1}$, and $E^{n+1}$.
 
-We include an optional diffusive flux (and flattening for the parabolic curves) which can improve the solution in some cases.  Our implementation follows that in the appendix of \citet{1984JCoPh..54..174C}.
+We include an optional diffusive flux (and flattening for the parabolic curves) that can improve the solution in some cases.  Our implementation follows that in the appendix of \citet{1984JCoPh..54..174C}.
 
-In addition, as discussed earlier, the three dimensional scheme is achieved by operator splitting and repeating the above procedure in the other two orthogonal directions.  The transverse velocities and any additional passive quantities are naturally and easily added to this system (see eq. 3.6 of \citet{1984JCoPh..54..174C}).  
+In addition, as discussed earlier, the three dimensional scheme is achieved by operator splitting and repeating the above procedure in the other two orthogonal directions.  The transverse velocities and any additional passive quantities are naturally and easily added to this system (see Equation 3.6 of \citet{1984JCoPh..54..174C}).  
 
-We note that the acceleration required in eq.~(\ref{eq:momentum_diff}) is actually the
+We note that the acceleration required in Equation~(\ref{eq:momentum_diff}) is actually the
 acceleration felt by the entire zone and not just at the zone center.
 Therefore, it is possible to find the mass weighted average acceleration over the zone
 by expanding the density and acceleration distributions and
@@ -199,10 +215,10 @@ Generally we find that the potential is so slowly varying that this change is un
 
 \subsubsection{The dual energy formulation for  very high Mach flows} % 2.4
 
-The system described so far works well for gravitating systems with
+The system described thus far works well for gravitating systems with
 reasonable Mach numbers ($<100$) as long as the structures are well resolved.
 This section and the next detail changes that are required
-to correctly account for situations in which one or both of these
+to correctly account for situations where one or both of these
 requirements are not met.
 
 Large, hypersonic bulk flows appear to be very common in cosmological
@@ -217,7 +233,7 @@ pressure is negligibly small.  Therefore, even if we suffer large
 errors in the pressure distribution in these regions, the dynamics and
 total energy budget of the flow will remain unaffected.  Nevertheless,
 if the temperature distribution is required for other reasons
-(e.g. radiative processes), a remedy is required.
+(e.g., for calculating radiative processes), a remedy is required.
 
 To overcome this, we also solve the internal energy equation:
 \begin{equation}
@@ -227,7 +243,7 @@ To overcome this, we also solve the internal energy equation:
          = - 3 \frac{\dot{a}}{a} \frac{p}{\rho}
            - \frac{p}{a\rho} \nabla \cdot \vecv
 \end{equation}
-in comoving co-ordinates.  The structure is similar to the total energy
+in comoving coordinates.  The structure is similar to the total energy
 equation; the second term on the left hand side represents transport, while
 the first term on the right is due to expansion of the coordinate
 system.  
@@ -242,7 +258,13 @@ It is differenced (again, in Eulerian form without the expansion term) as,
                   \label{eq:gasenergy_diff}
 \end{equation}
 %
-Note that because of the structure of this equation, is not in flux-conservative form.  In particular, the pressure is evaluated at the cell-center.  Unfortunately, time-centering of this pressure has proved difficult to do without generating large errors in the internal energy and so we conservatively leave the pressure at the old time in this difference equation.  This leads to spreading of shocks; however, we note that this equation is only used in hypersonic flows.
+Note that because of the structure of this equation, it is not in
+flux-conservative form.  In particular, the pressure is evaluated at
+the cell center.  Unfortunately, time-centering of this pressure has
+proved difficult to do without generating large errors in the internal
+energy and so we conservatively leave the pressure at the old time in
+this difference equation.  This leads to spreading of shocks; however,
+we note that this equation is only used in hypersonic flows.
 
 It is necessary, however, to conserve the total energy so that the conversion
 of kinetic to thermal energy is performed properly.   We must therefore,
@@ -268,7 +290,7 @@ p = \cases{ \rho(\gamma - 1)(E - \vecv^2/2),&
 
 It should be stressed that as long as the parameter ${\eta}_1$ is small enough
 the dual energy method {\it will have no dynamical effect}.  We use
-${\eta}_1 = 10^{-3}$ which is consistent with the truncation error of the
+${\eta}_1 = 10^{-3}$, which is consistent with the truncation error of the
 scheme.  We are now free to select the method by which the internal energy
 field variable $e$ is updated so that it will not become contaminated with
 errors advected by the total energy formulation but still give the

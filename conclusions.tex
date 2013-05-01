@@ -1,21 +1,22 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
+\label{sec.conclusions}
 
 In this paper, we have presented the algorithms underlying \enzo, an
 open-source adaptive mesh refinement code designed for
 self-gravitating compressible fluid dynamics, including the effects of
 magnetic fields, radiation transport, and a variety of microphysical
 and subgrid processes.  In addition, we have described the \enzo\ code
-development process, have shown the outputs of some representative
+development process, have shown the outputs of a set of representative
 test problems, and have provided information about \enzo's performance
 and parallel scaling on recent supercomputing platforms.  The \enzo\
 code, its test suite, and all of the scripts used to generate plots
 and figures for this paper are open source and are available at the
-\enzo\ website, http://enzo-project.org.  Furthermore, the yt toolkit,
+\enzo\ website, \url{http://enzo-project.org}.  Furthermore, the yt toolkit,
 which is designed to analyze \enzo\ data (as well as data from a wide
 variety of other simulation tools), can be found at its website,
-http://yt-project.org.  Both of these codes have active user and
+\url{http://yt-project.org}.  Both of these codes have active user and
 developer communities, extensive documentation and user suppport, and
 strong mechanisms for users to contribute their changes and fixes to
 the codebase.
@@ -33,7 +34,7 @@ memory usage and overall scaling behavior.
 \item The restructuring of \enzo's treatment of particles to
 accommodate a wider range of ``active'' particles that can easily
 interact with each other and with multiple grids, and include sink,
-source, and particle creating, splitting, and merging functionality.
+source, and particle creation, destruction, splitting, and merging functionality.
 \item A new HYPRE-based AMR gravity solver that is faster, more
 accurate, and more scalable than the current multigrid solver.
 \item New infrastructure for problem initialization, enabling
@@ -72,3 +73,4 @@ advantage of new computational architectures.  Thus, we suspect that
 \enzo\ (or a code that has the capabilities of \enzo, from a user's
 point of view) will continue to be usable at the largest scales on
 such machines.
+

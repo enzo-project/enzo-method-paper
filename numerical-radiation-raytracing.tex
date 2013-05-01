@@ -36,7 +36,7 @@ code tests and six applications.
 %that includes any point sources of radiation or diffuse radiation.
 %GB: this was moved to the equations section.
 
-We solve the radiative transfer equation in comoving coordinates (given by eq.~\ref{eq:rteqn}).
+We solve the radiative transfer equation in comoving coordinates (given by Equation~\ref{eq:rteqn}).
 We can make some appropriate approximations to reduce the complexity
 of this equation in order to include radiation transport
 in numerical calculations.  Typically timesteps in dynamic
@@ -73,6 +73,7 @@ transfer equation reduces to
 \frac{1}{c} \frac{\partial P}{\partial t} + \frac{\partial P}{\partial
   r} = -\kappa P,
 \end{equation}
+
 where $P$ is the photon number flux along the ray.  To sample the
 radiation field at large radii, ray tracing requires at least $N_{ray}
 = 4\pi R^2 / (\Delta x)^2$ rays to sample each cell with one ray,
@@ -80,8 +81,8 @@ where $R$ is the radius from the source to the cell and $\Delta x$ is
 the cell width.  If one were to trace $N_{ray}$ rays out to $R$, the
 cells at a smaller radius $r$ would be sampled by, on average,
 $(r/R)^2$ rays, which is computationally wasteful because only a few
-rays per cell, as we will show later, provides an accurate calculation
-of the radiation field.
+rays per cel  are required to provide an accurate calculation
+of the radiation field (as we will show later).
 
 We avoid this inefficiency by utilizing adaptive ray tracing
 \citep{Abel02_RT}, which progressively splits rays when the sampling
@@ -89,7 +90,7 @@ becomes too coarse and is based on Hierarchical Equal Area isoLatitude
 Pixelation \citep[HEALPix;][]{HEALPix}.  In this scheme, the rays are
 traced along normal directions of the centers of HEALPix pixels, which
 evenly divides a sphere into equal areas.  The rays are initialized at
-each point source with the photon luminosity (ph s$^{-1}$) equally
+each point source with the photon luminosity (photon s$^{-1}$) equally
 spread across $N_{\rm pix} = 12 \times 4^l$ rays, where $l$ is the
 initial HEALPix level.  We usually find $l$ = 0 or 1 is sufficient
 because these coarse rays will usually be split before traversing
@@ -126,9 +127,9 @@ level, i.e. $p^\prime = 4 \times p + [0,1,2,3]$, where $p$ is the
 original pixel number.  The child rays (1) acquire the new normal
 vectors of the pixels, (2) retain the same radius of the parent ray,
 and (3) gets a quarter of the photon flux of the parent ray.
-Afterward the parent ray is discontinued.
+Afterward, the parent ray is discontinued.
 
-A ray propagates and splits until (1) the photon has traveled $c
+A ray propagates and splits until at least one of the following conditions is met: (1) the photon has traveled $c
 \times dt_P$, where $dt_P$ is the radiative transfer timestep; (2) its
 photon flux is almost fully absorbed ($>99.9\%$) in a single cell,
 which significantly reduces the computational time if the radiation
@@ -149,7 +150,7 @@ computational domain, but a uniform radiation background can be used
 in conjunction with ray tracing that adds the local radiation field to
 the background intensity.
 
-The radiation field is calculated by integrating equation
+The radiation field is calculated by integrating Equation
 (\ref{eqn:rtray}) along each ray, which is done by considering the
 discretization of the ray into segments.  In the following
 description, we assume the rays are monochromatic for simplicity.  For
@@ -171,8 +172,9 @@ solution, and the photon flux of a ray is reduced by
 \end{equation}
 as it crosses a cell.  We equate the photo-ionization rate to the
 absorption rate, resulting in photon conservation \citep{Abel99_RT,
-  Mellema06}.  Thus the photo-ionization $k_{\rm ph}$ and
-photo-heating $\Gamma_{\rm ph}$ rates associated with a single ray are
+  Mellema06}.  Thus the photo-ionization and
+photo-heating rates associated with a single ray ($k_{\rm ph}$ and
+$\Gamma_{\rm ph}$, respectively)  are
 %
 \begin{equation}
   \label{eqn:kph}
@@ -187,7 +189,7 @@ energy, and $E_i$ is the ionization energy of the absorbing material.
 In each cell, the photo-ionization and photo-heating rates from each
 ray in the calculation are summed, and after the ray tracing is
 complete, these rates are used to update the ionization state and
-energy of the cells with the solver described in \S\ref{sec.ov.chem}.
+energy of the cells with the solver described in Section~\ref{sec.ov.chem}.
 
 
 %%% Local Variables: 

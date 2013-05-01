@@ -1,31 +1,35 @@
-\subsection{The Zeus hydro method}
+\subsection{The \zeus\ hydro method}
 \label{sec.hydro.zeus}
 
-As an alternative to PPM, \enzo\ also includes an implementation of the finite-difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator split) solution procedure which is fully explicit in time.  This method is formally second order-accurate in space but first order-accurate in time.  
+As an alternative to PPM, \enzo\ also includes an implementation of the finite-difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus\ \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator split) solution procedure that is fully explicit in time.  This method is formally second order-accurate in space but first order-accurate in time.  
  
-As discussed in the section describing PPM, operator split methods break the solution of the hydrodynamic equations into parts, with each part representing a single term in the equations.  Each part is evaluated successively using the results preceding it.  In this method, in addition to operator splitting the expansion terms (i.e. those terms in eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}) which depend on $\dot{a}$), we divide the remaining terms into \emph{source} and \emph{transport} steps.  The terms to be solved in the source step are those on the right-hand side of eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}), while the transport terms are on the left-hand side of these equations and are responsible for the advection of mass, momentum and energy across the grid.
+As discussed in the section describing the Piecewise Parabolic Method (Section~\ref{sec.hydro.ppm}), operator split methods break the solution of the hydrodynamic equations into parts, with each part representing a single term in the equations.  Each part is evaluated successively using the results preceding it.  In this method, in addition to operator splitting the expansion terms (i.e. those terms in eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}) that depend on $\dot{a}$), we divide the remaining terms into \emph{source} and \emph{transport} steps.  The terms to be solved in the source step are those on the right-hand side of eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}), while the transport terms are on the left-hand side of these equations and are responsible for the advection of mass, momentum and energy across the grid.
 
-The \zeus\ method uses a von Neumann-Richtmeyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a break-down of finite-difference equations.  The artificial viscosity term is added in the source terms as:
+The \zeus\ method uses a von Neumann-Richtmeyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a breakdown of the finite-difference equations.  The artificial viscosity term is added in the source terms as:
+
 \begin{eqnarray}
 \rho \frac{\partial\vecv}{\partial t} &=& - \nabla p - \rho \nabla \phi 
 - \nabla \cdot \textbf{Q} \\
 \frac{\partial e}{\partial t} &=& -p \nabla \cdot \vecv - \textbf{Q} : \nabla \vecv, 
 \end{eqnarray}
 %where \textbf{v} is the baryon velocity, $\rho$ is the mass density, $p$ is the pressure, $e$ is the internal energy density of the gas and 
+
 Here \textbf{Q} is the artificial viscosity stress tensor, which we take to be diagonal with on-axis terms given by $l^2 \rho (\partial v / \partial x)^2$ as proposed by von Neumann \& Richtmyer.  The length scale $l$ determines the width of shocks and is typically a few times the cell spacing.
 
-In our Cartesian coordinate system, the finite difference version of these equations is particularly simple, although there is one important complication.  In the \zeus\ formalism, the velocity is a face-centered quantity -- that is the velocity is recorded on a grid which is staggered as compared to the density, pressure and energy, which are at the cell center.  Therefore we must remember that $v_j$ is at position $x_{j-1/2}$ (we use notation, rather than writing $v_{j+1/2}$ both to match the original \zeus\ paper and also to make it easier to compare these equations to what is actually in the code).  
+In our Cartesian coordinate system, the finite difference version of these equations is particularly simple, although there is one important complication.  In the \zeus\ formalism, the velocity is a face-centered quantity -- that is, the velocity is recorded on a grid that is staggered as compared to the density, pressure and energy, which are at the cell center.  Therefore we must remember that $v_j$ is at position $x_{j-1/2}$ (we use this notation, rather than writing $v_{j+1/2}$ both to match the original \zeus\ paper and also to make it easier to compare these equations to what is actually in the code).  
 
 As in the original \zeus\ paper, the source terms are added in three steps. First we add the pressure and gravity forces:
 \begin{equation}
 v_j^{n+a}  =  v_j^n - \frac{\Delta t}{\Delta x_j} \frac{p^n_j - p^n_{j-1}} {(\rho^n_j + \rho^n_{j-1})/2}.
 \end{equation}
-Partial updates are denoted by the $n+a$, $n+b$ notation.  We show only one-dimension as the extension to the multi-dimensional case is straightforward (note that all dimensions are carried out for each substep before progressing to the next substep). Then we add the artificial viscosity:
+Partial updates are denoted by the $n+a$, $n+b$ notation.  We show updates in one dimension as the extension to the multi-dimensional case is straightforward (note that all dimensions are carried out for each substep before progressing to the next substep). We then add the artificial viscosity:
+
 \begin{eqnarray}
 v_j^{n+b} & = & v_j^{n+a} - \frac{\Delta t}{\Delta x_j} 
                              \frac{q^{n+a}_j - q^{n+a}_{j-1}} {(\rho^n_j + \rho^n_{j-1})/2} \\
 e_j^{n+b} & = & e_j^n - \frac{\Delta t}{\Delta x_j} q^{n+a}_j (v^{n+a}_{j+1} - v^{n+a}_{j}).
 \end{eqnarray}
+
 The artificial viscosity coefficient $q_j$ is given by:
 \begin{equation}
 q_j = \left\{ \begin{array}{ll}
@@ -46,11 +50,11 @@ e^{n+c}_j = e^{n+b}_j \left( \frac{1 - (\Delta t/2) (\gamma - 1) (\nabla \cdot \
 \end{equation}
 We have used the notation $(\nabla \cdot \vecv)_j$ to indicate the (potentially) multi-dimensional velocity divergence evaluated at the cell center position $x_j$.  This equation differs from the previous ones in that in the multi-dimensional case, still only one finite difference equation is evaluated, but the divergence becomes multi-dimensional.
 
-Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and so present only the one-dimensional version.  The finite-difference equations actually solved are:
+Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite-difference equations actually solved are:
 \begin{equation}
 \rho_j^{n+d} = \rho_j^{n} - \frac{\Delta t}{\Delta x} (v^{n+c}_{j+1/2} \rho^{*}_{j+1/2} - v^{n+c}_{j-1/2} \rho^{*}_{j-1/2} )
 \end{equation}
-Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-face corresponding to $v_j$, making $\rho^*_j v_j$ the mass flux at the cell boundary and guaranteeing mass conservation.   This requires interpolating each cell-centered quantity to the cell edge.  As recomended in \citet{Stone92a}, we use the second-order van Leer scheme, which uses piecewise linear functions.  These are given by equations (48) and (49) of \citet{Stone92a}.  The transport steps for the other variables are similar.  Note that we advect the specific energy and specific momenta using the mass flux, as dictated by the principle of consistent transport.  This requires appropriate averaging for the momenta in the perpendicular directions as outline in equations (57)-(72) of \citet{Stone92a}.
+Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-face corresponding to $v_j$, making $\rho^*_j v_j$ the mass flux at the cell boundary and guaranteeing mass conservation.   This requires interpolating each cell-centered quantity to the cell edge.  As recomended in \citet{Stone92a}, we use the second-order van Leer scheme, which uses piecewise linear functions.  These are given by equations (48) and (49) of \citet{Stone92a}.  The transport steps for the other variables are similar.  Note that we advect the specific energy and specific momenta using the mass flux, as dictated by the principle of consistent transport.  This requires appropriate averaging for the momenta in the perpendicular directions as outlined in equations (57)-(72) of \citet{Stone92a}.
 
 %GB: the following is not correct (it is based on the Anninos & Norman paper which uses a
 %GB: different set of definitions for the comoving coordinates).
@@ -71,6 +75,5 @@ Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-
 %along the $i$-th axis and the corresponding difference in gas
 %peculiar velocities across the grid cell, respectively, and $a$ is the
 %cosmological scale factor.  
-
 
 A limitation of a technique that uses an artificial viscosity is that, while the correct Rankine-Hugoniot jump conditions are achieved, shocks are broadened over 3-4 mesh cells and are thus not treated as true discontinuities. This may cause unphysical pre-heating of gas upstream of the shock wave, as discussed in \citet{1994ApJ...429..434A}.  On the other hand, it is much more robust than PPM and is easy to add additional physics.  We also note that this method solves only the internal energy equation rather than total energy, so the ``dual energy formulation'' discussed in Section~\ref{sec.hydro.ppm} is unnecessary.

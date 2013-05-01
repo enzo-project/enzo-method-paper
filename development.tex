@@ -1,90 +1,102 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Code development methodology}
+\label{sec.development}
 
-Over time, Enzo's development has followed a trajectory toward openness.
-Started as the graduate research project of Greg Bryan at the University of
-Illinois, it has been subsequently been stewarded by the Laboratory for
-Computational Astrophysics (LCA) at the University of California at San Diego,
-and has transitioned to a distributed, completely open, and community-driven
-project.  Initially, Enzo was versioned using a series of ``snapshots'' of the
-code base, usually hand-created by the developing individuals.  These were
-distributed to collaborators and colleagues, but the central ``trunk'' of
-development was updated primarily by a single person: while patches and
-technology were accepted from external developers, the relatively small number
-of individuals using the code resulted in a strong centralization of
+Over time, \enzo's development has followed a trajectory toward
+openness.  Started as the graduate research project of Greg Bryan at
+the University of Illinois, it has been subsequently been stewarded by
+the Laboratory for Computational Astrophysics (LCA) at the University
+of California at San Diego, and has transitioned to a distributed,
+completely open, and community-driven project.  Initially, \enzo\ was
+versioned using a series of ``snapshots'' of the code base, usually
+hand-created by the developing individuals.  These were distributed to
+collaborators and colleagues, but the central ``trunk'' of development
+was updated primarily by a single person: while patches and technology
+were accepted from external developers, the relatively small number of
+individuals using the code resulted in a strong centralization of
 development.
 
-As the stewardship of the code passed to the LCA, the code was released first
-to ``friendly users'' and then as an open source release.  However, while the
-code was made available with documentation, technology developed in the broader
-community of users was typically not re-integrated.  This led to a wide
-dispersal of development, largely independent, by individuals who downloaded
-and used the version of the code developed by the LCA.
+As the stewardship of the code passed to the LCA, the code was
+released first to ``friendly users'' and then as an open source
+release.  However, while the code was made available with
+documentation, technology developed in the broader community of users
+was typically not re-integrated.  This led to a wide dispersal of
+development, largely independent, by individuals who downloaded and
+used the version of the code developed by the LCA.
 
-Following the first public, open source release of Enzo, the code was migrated
-to using the Subversion version control system.  This is a centralized version
-control system, and the ``stable'' Enzo source code was made globally readable
-following the Enzo 1.5. release.  Access to the primary development tree
-required a password and login for each user, and providing upstream changes
-either required this password and the granting of write access or a sequence of
-patches and manually-created diffs (much like the original development system.)
-The technical friction of manually contributing patches and modifications,
-combined with Subversion's difficulty with tracking merges, resulted in further
-fragmentation of the code base.
+Following the first public, open source release of \enzo, the code was
+migrated to using the Subversion version control system.  This is a
+centralized version control system, and the ``stable'' \enzo\ source
+code was made globally readable following the \enzo\ 1.5. release.
+Access to the primary development tree required a password and login
+for each user, and providing upstream changes either required this
+password and the granting of write access or a sequence of patches and
+manually-created diffs (much like the original development system).
+The technical friction of manually contributing patches and
+modifications, combined with Subversion's difficulty with tracking
+merges, resulted in further fragmentation of the code base.
 
-The main development streams of Enzo were eventually merged using the
-distributed version control system (DVCS) Mercurial
-(\url{http://mercurial.selenic.com/}) into a branch of the code known as
-\texttt{week-of-code}, so named after the in-person development sprint at which
-it was created.  The fundamental, and transformative, distinction between the
-previous \textit{centralized} version control system and mercurial's
-\textit{distributed} version control system is the elimination of gatekeepers.
-While there still exists a canonical, central location that stable and
-development versions of Enzo can be obtained, changesets and versions can be
-exchanged between peers without the intervention of designated gatekeepers.
-This has the direct effect of enabling local development to be versioned and
+The main development streams of \enzo\ were eventually merged using
+the distributed version control system (DVCS) Mercurial
+(\url{http://mercurial.selenic.com/}) into a branch of the code known
+as \texttt{week-of-code}, so named after the in-person development
+sprint at which it was created.  The fundamental, and transformative,
+distinction between the previous \textit{centralized} version control
+system and mercurial's \textit{distributed} version control system is
+the elimination of gatekeepers.  While there still exists a canonical,
+central location where stable and development versions of \enzo\ can
+be obtained, changesets and versions can be exchanged between peers
+without the intervention of designated gatekeepers.  This has the
+direct effect of enabling local development to be versioned and its
 provenance ensured, while still retaining the ability to benefit from
-``upstream'' development.  An important, even crucial, side effect is that the
-technology used for local versioning provides mechanisms for submitting
-locally-developed modifications to the community source location.  Mercurial
-internally represents all changes as nodes in a directed, acyclic graph (DAG),
-which results in the natural ability to more consistently and easily manage
-merging development streams.
+``upstream'' development.  An important, even crucial, side effect is
+that the technology used for local versioning provides mechanisms for
+easily submitting locally-developed modifications to the community
+source location.  Mercurial internally represents all changes as nodes
+in a directed, acyclic graph (DAG), which results in the natural
+ability to more consistently and easily manage merging development
+streams.
 
-Currently, Enzo is developed using the hosted source control platform Bitbucket
-(\url{http://bitbucket.org/}) at \url{http://bitbucket.org/enzo/}.  There are
-two mailing lists, one for usage-focused questions and discussion, and another
-for development discussion.  Both of these lists are open and publicly
-archived.  Bitbucket provides mechanisms for inspecting source, hosting
-branches and forks of the primary source, as well as code review.  All proposed
-source code changes for Enzo are subjected to a peer review process, where
-experienced developers read, inspect, test and provide feedback on source code
-changes.  All developers, including long-time Enzo contributors and developers,
-are subject to this process for including code in the primary Enzo repository.
-By using a remote, hosted system, Enzo is now \textit{completely} open to
-contributions from the community.  Individuals, who may or may not consider
-themselves Enzo developers, are free to ``fork'' the Enzo code base, develop
-changes (signed with their own name), and submit them for review and inclusion.
-In contrast to the centralized, gatekeeper-focused technology used previously,
-this enables anyone to contribute changes to be evaluated for inclusion in the
-Enzo codebase.
+Currently, \enzo\ is developed using the hosted source control
+platform Bitbucket (\url{http://bitbucket.org/}) at
+\url{http://bitbucket.org/enzo/}.  There are two mailing lists, one
+for usage-focused questions and discussion, and another for
+development discussion.  Both of these lists are open and publicly
+archived.  Bitbucket provides mechanisms for inspecting source,
+hosting branches and forks of the primary source, and for code review.
+All proposed source code changes for \enzo\ are subjected to a peer
+review process, where experienced developers read, inspect, test, and
+provide feedback on source code changes.  All developers, including
+long-time \enzo\ contributors and developers, are subject to this
+process before their code is included in the primary \enzo\
+repository.  By using a remote, hosted system, \enzo\ is now
+\textit{completely} open to contributions from the community.
+Individuals, who may or may not consider themselves \enzo\ developers,
+are free to ``fork'' the \enzo\ code base, develop changes (signed
+with their own name), and submit them for review and inclusion.  In
+contrast to the centralized, gatekeeper-focused technology used
+previously, this enables anyone to contribute changes to be evaluated
+for inclusion in the \enzo\ codebase.
 
 While peer review is able to catch many bugs and problems with source
-code changes, Enzo is also subject to ``answer'' testing.  We have created a
-set of parameter files and problem types that exercise the underlying machinery
-of Enzo.  These ``test problems'' have affiliated ``tests,'' which consist of
-scripts that use \texttt{yt} \citep{2011ApJS..192....9T} to produce results
-such as mass distribution, projections, profiles and so on.  The testing
-infrastructure then evaluates whether the variation in the new results compared
-to a ``gold standard'' of results has exceeded an acceptable threshold,
-typically set to roughly single precision.  Optionally, for those test problems
-that are deemed unsafe to change to any precision, the tests also produce
-hashes of the outputs; these hashes will only remain unchanged in the event of
-bitwise identicality between results.  The results of the gold standard are
-versioned and stored in Amazon S3, enabling remote testing to proceed.  While
-the testing process -- building, running, analyzing and comparing -- is not yet
-automated against incoming pull requests, we hope to deploy that functionality
-in the future.  The primary challenge is that of compute time; the tests are
-organized into multiple categories, including by the expected run time, but
-the full suite of tests can take several days to run.
+code changes, \enzo\ is also subject to ``answer'' testing.  We have
+created a set of parameter files and problem types that exercise the
+underlying machinery of \enzo.  These ``test problems'' have
+affiliated ``tests,'' which consist of scripts that use \texttt{yt}
+\citep{2011ApJS..192....9T} to produce results such as mass
+distribution, projections, profiles and so on.  The testing
+infrastructure then evaluates whether the variation in the new results
+compared to a ``gold standard'' of results has exceeded an acceptable
+threshold, typically set to roughly single precision.  Optionally, for
+those test problems that are deemed unsafe to change to any precision,
+the tests also produce hashes of the outputs; these hashes will only
+remain unchanged in the event of bitwise identicality between results.
+The results of the gold standard are versioned and stored in Amazon
+S3, enabling remote testing to proceed.  While the testing process --
+building, running, analyzing and comparing -- is not yet automated
+against incoming pull requests, we hope to deploy that functionality
+in the future.  The primary challenge is that of compute time; the
+tests are organized into multiple categories, including by the
+expected run time, but the full suite of tests can take several days
+to run.

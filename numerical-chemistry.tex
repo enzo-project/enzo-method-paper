@@ -3,14 +3,15 @@
 
 While it is often safe to assume that species (both chemical and
 ionization) within a gas can be treated as being in equilibrium, in
-some regimes that are found in astrophysics this is not true.  For
-example, the cooling and collapse of primordial gas in Population III
-star formation is dominated by molecular hydrogen, which in the
-absence of dust forms via an inefficient pair of collisional processes
-that depend heavily on the local population of free electrons.  As a
-result, when modeling primordial star formation, it is critical to
-follow the non-equilibrium evolution of the chemical species of
-hydrogen, including molecular hydrogen and deuterium.
+some regimes that are found in astrophysics this assumption leads to
+considerable error.  For example, the cooling and collapse of
+primordial gas in Population III star formation is dominated by
+molecular hydrogen, which in the absence of dust forms via an
+inefficient pair of collisional processes that depend heavily on the
+local population of free electrons.  As a result, when modeling
+primordial star formation, it is critical to follow the
+non-equilibrium evolution of the chemical species of hydrogen,
+including molecular hydrogen and deuterium.
 
 The primordial non-equilibrium chemistry routines used in \enzo\ were
 first described by Abel et al. and Anninos et
@@ -24,16 +25,16 @@ heating and cooling of the gas from atomic and molecular line
 excitation, recombination, collisional excitation, free-free
 transitions, Compton scattering of the cosmic microwave background, as
 well as several models for a metagalactic UV background that heat the
-gas via photoionization and discussion -- see
+gas via photoionization and photodissociation; see
 Section~\ref{sec.num.cooling} for more details).  Depending on user
-parameters, one can follow simply atomic species (H, \Hp, He, \Hep,
-\Hepp, and e$^-$), include those relevant for molecular hydrogen
-formation (\HH, \HHp, and \Hm), and further include deuterium and its
-species (D, \Dp, and HD).  \red{A total of 9 kinetic equations are
-  solved, including 29 kinetic and radiative processes, for the 9
-  species mentioned above.  See Table~\ref{table.collisional} for the
-  collisional processes and Table~\ref{table.radiative} for the
-  radiative processes solved.}
+parameters, one can follow only atomic species (H, \Hp, He, \Hep,
+\Hepp, and e$^-$), include those species relevant for molecular
+hydrogen formation (\HH, \HHp, and \Hm), and can further include
+deuterium and its species (D, \Dp, and HD).  A total of 9 kinetic
+equations are solved, including 29 kinetic and radiative processes,
+for the 12 species mentioned above.  See Table~\ref{table.collisional}
+for the collisional processes and Table~\ref{table.radiative} for the
+radiative processes solved.
 
 The chemical reaction equation network is technically challenging to
 solve due to the huge range of reaction timescales involved -- the
@@ -42,7 +43,7 @@ species and reactions can differ by many orders of magnitude.  As a
 result, the set of rate equations is extremely stiff, and an explicit
 scheme for integration of the rate equations can be exceptionally
 costly if small enough timesteps are taken to keep the network stable.
-This makes an implicit scheme much more preferable for such a set of
+This makes an implicit scheme strongly preferable for such a set of
 equations.  However, an implicit scheme typically require an iterative
 procedure to converge, and for large networks (such as this one) an
 implicit method can be very time-consuming, making it undesirable for
@@ -51,28 +52,27 @@ a large, three-dimensional simulation.
 \enzo\ solves the rate equations using a method based on a backwards
 differencing formula (BDF) in order to provide a stable and accurate
 solution. This technique is optimized by taking the chemical
-intermediaries \Hm and \HHp, which have large rate coefficients
-and low concentrations, and grouping them into a separate category of
-equations.  Due to their fast reactions these species are very
+intermediaries \Hm and \HHp, which have large rate coefficients and
+low concentrations, and grouping them into a separate category of
+equations.  Due to their fast reactions, these species are very
 sensitive to small changes in the more abundant species.  However, due
 to their low overall concentrations, they do not significantly
 influence the abundance of species with higher concentrations.
 Therefore, reactions involving these two species can be decoupled from
 the rest of the network and treated independently.  In fact, \Hm~and
-\HHp~are treated as being in equilibrium at all times, independent
-of the other species and the hydrodynamic variables.  This allows a
-large speedup in solution as the BDF scheme is then applied only to
-the slower 7- or 10-species network (depending on whether deuterium is
+\HHp~are treated as being in equilibrium at all times, independent of
+the other species and the hydrodynamic variables.  This allows a large
+speedup in solution as the BDF scheme is then applied only to the
+slower 7- or 10-species network (depending on whether deuterium is
 included or not) on timescales closer to those required by the
 hydrodynamics of the simulation.  Even so, the accuracy and stability
 of the scheme is maintained by subcycling the rate solver over a
 single hydrodynamic timestep.  These subcycle timesteps are determined
-so that the maximum fractional change in the electron concentration is
-limited to no more than $10\%$ per timestep.  Given this subcycling,
-the method is not truly implicit over an entire hydrodynamical
-timestep, and thus not truly a BDF method -- however, it uses the
-formalism and is implicit over subcycle timesteps.
-
+so that the estimated fractional change in the electron concentration
+is limited to no more than $10\%$ per timestep.  Given this
+subcycling, the method is not truly implicit over an entire
+hydrodynamical timestep, and thus not truly a BDF method -- however,
+it uses the formalism and is implicit over subcycle timesteps.
 
 It is important to note the regime in which this model is valid.
 According to \citet{abel97} and \citet{anninos97},
@@ -84,14 +84,14 @@ allows correct modeling of the chemistry of the gas up until the point
 where collisionally-induced emission from molecular hydrogen becomes
 an important cooling process, which occurs at $n_{\rm H} \sim
 10^{14}$~cm$^{-3}$.  A further concern is that the optically thin
-approximation for radiative cooling breaks down, which occurs before
-$n_{\rm H} \sim 10^{16} - 10^{17}$~cm$^{-3}$.  Beyond this point,
+approximation for radiative cooling eventually breaks down, which occurs before
+$n_{\rm H} \sim 10^{16} - 10^{17}$~cm$^{-3}$ in gas of primordial composition.  Beyond this point,
 modifications the cooling function that take into account the
 non-negligible opacity in the gas must be made, as discussed by
 \citet{2004MNRAS.348.1019R}, and was put into \enzo\ for the work
 published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  Even
 with these modifications, a completely correct description of the
-cooling of this gas will require some form of radiation transport,
+cooling of primordial gas requires some form of radiation transport,
 which will greatly increase the cost of the simulations.
 
 %---------------- table of collisional processes

@@ -10,9 +10,9 @@
 %% Working in a reference or two to science papers is also great! 
 
 In addition to the ray-tracing approach for radiation transport
-described in Section \ref{sec.num.raytracing}, Enzo currently includes
+described in Section~\ref{sec.num.raytracing}, \enzo\ currently includes
 a field-based radiation transport solver for problems posed on uniform
-(i.e.~non-SAMR grids).  Detailed explanations of the model and
+(i.e.~non-AMR grids).  Detailed explanations of the model and
 solution approach may be found in
 \cite{NBHBROW2007}, \cite{ReynoldsHayesPaschosNorman2009} and
 \cite{NRS2009}, the salient features of which are reproduced here. 
@@ -60,10 +60,10 @@ densities.
 
 The system of equations
 (\ref{eq:fld_radiation}-\ref{eq:fld_heating}) along with the chemical network 
-(eq.~\ref{eq:species_evolution}) is solved
+(Equation~\ref{eq:species_evolution}) is solved
 independently of Enzo's hydrodynamics, gravity and dark-matter solvers
-(sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
-the advective portions of equations (\ref{eq:fld_radiation}) and
+(Sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
+the advective portions of Equations (\ref{eq:fld_radiation}) and
 (\ref{eq:species_evolution}) to be taken care of by the fluid solvers.
 Due to the disparate time scales between radiation transport and chemical
 ionization and heating, the remainder of these equations is solved
@@ -79,7 +79,7 @@ preconditioner consists of a geometric multigrid solver.  Both of
 these linear solvers are provided by the HYPRE linear solver library
 (see \cite{FalgoutYang2002} and \cite{hypre-manual}). 
 
-We then evolve the heating and chemistry system (\ref{eq:fld_heating})
+We then evolve the heating and chemistry system, Equations~(\ref{eq:fld_heating})
 and (\ref{eq:species_evolution}):  
 $(E_r^{n+1}, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1},
 {\mathrm n}_i^{n+1})$.  Due to the lack of spatial derivatives (since

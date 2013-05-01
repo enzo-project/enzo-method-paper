@@ -10,7 +10,7 @@ curves for each of \enzo's primary cooling methods are shown in Figure
 
 \subsubsection{Primordial Cooling}
 
-As discussed in \S\ref{sec.ov.chem}, the set of reactions that
+As discussed in Section~\ref{sec.num.chemistry}, the set of reactions that
 characterize a metal-free gas is simple enough to be computed in
 non-equilibrium during the simulation.  Similarly, the radiative
 cooling of metal-free gas is solved by directly computing the cooling
@@ -29,8 +29,8 @@ cooling calculation is coupled to the update of the chemistry network
 such that they both occur within the same subcycling loop.  This is
 necessary in regimes where rapid cooling or change in the ionization
 state occur.  In addition to the subcycle timestepping contraints
-mentioned in \S\ref{sec.ov.chem}, the subcycle timestep is also not
-permitted to exceed 10\% of the cooling time, $e/\dot{e}$.  A
+mentioned in Section~\ref{sec.num.chemistry}, the subcycle timestep is also not
+permitted to exceed 10\% of the cooling time, $t_{cool} = e/\dot{e}$.  A
 metagalactic background affects the gas through both photo-heating and
 photo-ionization.  These are treated by including redshift-dependent
 photo-ionization and photo-heating rate terms in the chemistry and
@@ -39,7 +39,7 @@ black curves in Figure \ref{fig.cooling_rate} show cooling rates for a
 metal-free gas with number density $n_{\rm H} = 10^{-4}$ cm$^{-3}$ both
 with and without a radiation background.  More detail on the specific
 UV backgrounds present in \enzo is presented below in
-\S\ref{sec.num.rad-homogeneous}.
+Section~\ref{sec.num.rad-homogeneous}.
 
 \subsubsection{Metal Cooling}
 
@@ -55,18 +55,18 @@ The cooling rate produced by this cooling function is shown by the red
 curve in Figure \ref{fig.cooling_rate}.
 
 A more sophisticated method makes use of multidimensional cooling and
-heating rate tables computed with the photo-ionization code,
+heating rate tables computed with the photo-ionization code
 \texttt{Cloudy} \citep{1998PASP..110..761F}.  This method, detailed in
 \citet{2008MNRAS.385.1443S} and \citet{2011ApJ...731....6S}, works by
 using \texttt{Cloudy} to compute the cooling and heating rates from
 the metal species only.  The primary assumption made is that of
 ionization equilibrium.  The tables can have up to five dimensions,
 where those dimensions are density, metallicity, electron fraction,
-redshift (for an evolving metagalactic UV backgroun), and
+redshift (for an evolving metagalactic UV background), and
 temperature.  Tables can be created for any abundance pattern for
 elements up to atomic number 30 (Zn) and for any incident radiation
 field.  The cooling from H and He is calculated by the non-equilibrium
-primordial chemistry and cooling solver.  The contribution from metals
+primordial chemistry and cooling solver.  The contribution of metals
 to the cooling is computed within the same subcycling loop as the
 coupled primordial chemistry and cooling solver.  The blue curves in
 Figure \ref{fig.cooling_rate} show cooling rates calculated with this
@@ -85,9 +85,11 @@ metallicity of 0.5 Z$_{\odot}$.
     black and blue lines assume collisional processes only while the
     dashed lines include photo-ionization and photo-heating from a UV
     metagalactic background at $z = 0$ with a gas number density of
-    10$^{-4}$ cm$^{-3}$.  The low temperature rates shown by the
-    dashed lines indicate a net heating.  The red curve is the
-    tabulated cooling function of \citet{SW87} which assumes a fully
+    10$^{-4}$ cm$^{-3}$.  The rates shown by the
+    dashed lines indicate a net heating below $T \sim 10^{4.5}$, where
+    the rapid change in rate is evident (the curve is an absolute
+    value so it can be shown on a log plot).  The red curve is the
+    tabulated cooling function of \citet{SW87}, which assumes a fully
     ionized gas with metallicity of 0.5 $Z_{\odot}$.}
   \label{fig.cooling_rate}
 \end{figure}

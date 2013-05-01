@@ -1,7 +1,7 @@
 \subsection{Thermal conduction}
 \label{sec.num.conductions}
 
-Enzo implements the equations of isotropic heat conduction in a manner
+\enzo\ implements the equations of isotropic heat conduction in a manner
 similar to that of \citet{2007ApJ...664..135P}, where we model the
 flux of isotropic heat transport:
 
@@ -35,7 +35,7 @@ where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 temperature gradient.  Furthermore, it is important to note that the
 overall level of thermal conductivity can be strongly affected
 by the presence of magnetic fields, which may strongly suppress heat
-flow.  The strength and confuction of magnetic fields in the
+flow.  The strength and distribution of magnetic fields in the
 intracluster medium is poorly understood, and it is unclear to what
 extent these magnetic fields will suppress conduction.  For the
 purposes of the work described in this paper, we assume that the
@@ -62,7 +62,7 @@ multiplicative factor f$_{Sp}$ to take into account the possible
 behavior of magnetic fields below the resolution limit of the
 simulation.
 
-Both isotropic and anisotropic thermal conduction in Enzo are treated
+Both isotropic and anisotropic thermal conduction in \enzo\ are treated
 in an operator-split manner.  Furthermore, within the heat transport
 module, transport along the x, y, and z directions are computed in a
 directionally-split fashion, with heat flux along each direction
