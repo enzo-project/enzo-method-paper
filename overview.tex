@@ -518,7 +518,21 @@ As described in \citet{Bryan95}, we modify the method for use in hypersonic flow
 
 %The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
 
-\subsubsection{Godunov MUSCL (HD) with Dender divergence cleaning (MHD)}
+\subsubsection{Godunov MUSCL (HD) with Dedner divergence cleaning (MHD)}
+This solver was developed by Wang \& Abel to attack problems in
+magnetic field amplification during the formation of galaxies
+\citep{Wang:2009a} and to understand the role proto-stellar jets for
+the theory of star formation \citep{Wang:2009b}. It combines the standard
+approach of Godunov \citep{Godunov1959} for finite volume techniques
+with the method of lines as described as e.g. by
+\cite{leveque2002finite} and \cite{toro-1997}. In addition, however,
+it implements the hyperbolic divergence cleaning algorithm of
+\cite{2002JCoPh.175..645D}. It supports multiple approximate Riemann
+solvers and supports non-ideal equations of states. Consequently,
+these suite of solvers can be used for hydro and magneto-hydrodynamic
+simulations. It is also this class of solvers as well as a version of
+the PPM hydro solver which have been ported to Nvidia's CUDA framework
+allowing enzo to take advantage of modern graphics hardware \citep{Wang:2010}.
 
 \subsubsection{MHD with Constrained Transport (MHD)}
 
