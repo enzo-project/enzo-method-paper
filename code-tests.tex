@@ -221,6 +221,7 @@ between the three waves.  These waves include a rarefaction fan, a
 contact discontinuity, and a moderate shock.  The initial state is 
 $\rho_{\rm L}, P_{\rm L} = 1.0, 1.0$ on the left of the boundary at 
 $x=0.5$ and $\rho_{\rm R}, P_{\rm R} = 0.125, 0.1$ on the right.
+All velocities are initially zero.  In
 Figure~\ref{fig.sodshocktube}, we show the density solution at the
 final time ($t=0.25$) for three of our hydro solvers -- the spatially third-order
 PPM, as well as the two second-order \zeus\ and MUSCL schemes.  We use
@@ -238,7 +239,8 @@ previously.
 
 We also run the same simulation but with two levels of AMR (using a
 refinement factor of 2), triggered based on a normalized slope greater
-than 10\% in the density.  This is a minimal level of refinement, and
+than 10\% in the density.  This refinement criterion results in only
+the refinement of strong gradients, and
 does not include the rarefaction fan at late times.  The results are
 shown in the bottom row of Figure~\ref{fig.sodshocktube}.  Using AMR,
 the results are much better for all three methods, with much sharper
@@ -268,20 +270,20 @@ and $E_\infty$ error norms in the upper right.}
 \subsubsection{Wave pool}
 \label{sec.tests.wavepool}
 
-In this one-dimensional test, we pass a short wavelength, linear wave through a static refined region.  The entire domain is from 0 to 1 with a region region with a factor of from 0.25 to 0.75.  We modify the left boundary consistent with a linear pressure wave $\rho(x,t) = \rho_0 (1 + A \sin(kx - \omega t))$, where the amplitude is $A = 0.01$ and the wavelength $\lambda = k/2\pi = 0.1$.  The initial density and pressure are set to unity and we use $\gamma = 1.4$.  The (unrefined) root grid is covered with 100 cells making the wavelength of the linear wave only 10 cells.  This is, therefore, a challenging problem for hydro methods.  We are particularly interested in any reflection or artifacts introduced by the wave entering and exiting the refined regions.
+In this one-dimensional test, we pass a short wavelength, linear wave through a static refined region.  The full domain is from 0 to 1 and the refined region is set from 0.25 to 0.75 at all times.  We modify the left boundary consistent with a single linear sound wave with density given by $\rho(x,t) = \rho_0 (1 + A \sin(kx - \omega t))$, where the amplitude is $A = 0.01$ and the wavelength $\lambda = k/2\pi = 0.1$, and similar expressions exist for the pressure and velocity.  The initial, unperturbed density and pressure are set to unity and we adopt $\gamma = 1.4$.  The (unrefined) root grid is covered with 100 cells, resulting in a wavelength for the linear wave of only 10 cells.  This is, therefore, a challenging problem for hydro methods.  We are particularly interested in any reflection or artifacts introduced by the wave entering and exiting the refined regions.
 
-In Figure~\ref{fig.wavepool}, we show a 9x9 set of plots showing the evolution of the wave at three different times ($t = 0.2, 0.3$ and 0.8) for three of our solvers (PPM, Zeus, and MUSCL).  The leftmost column show the wave just before it enters the refined region so that we can gauge how the solver is operating in the absence of AMR, the center column shows the wave after it has fully entered the refined region, and the rightmost column shows the wave well after it has exited the refined region.
+Figure~\ref{fig.wavepool} shows the evolution of the wave at three different times ($t = 0.2, 0.3$ and 0.8) for three of our solvers (PPM, Zeus, and MUSCL).  The leftmost column show the wave just before it enters the refined region so that we can gauge how the solver is operating in the absence of AMR, the center column shows the wave after it has fully entered the refined region, and the rightmost column shows the wave well after it has exited the refined region.
 
-Beginning with the PPM, we see that even before it has entered the refine region, the wave is getting clipped, which is not unexpected for such a short wavelength mode, even for PPM.  The remaining panels demonstrate that the wave cleanly enters and exits the refined region.  No reflection is seen, either on entry or exit, and the amount of damping is mild.
+Beginning with the PPM, we see that even before it has entered the refine region, the wave is slightly damped, which is not unexpected for such a short wavelength mode, even for PPM.  The remaining panels demonstrate that the wave cleanly enters and exits the refined region.  No significant reflection is seen, either on entry or exit, and the amount of damping is mild.
 
-For the Zeus solver, we see that even before it has entered the refine region, there are small oscillations excited behind the wave; although it is also worth noting that the wave itself is beautifully propagated without significant damping or phase errors.  In this test, we use only the standard, low amount of quadratic viscosity -- these waves can be damped by additional viscosity, but we do not add any in order to be sensitive to any artifacts at the grid boundary.  The remaining panels show that the trailing oscillations continue, but do not generate any additional noise -- the end result is very similar to the case without any refined region.
+For the Zeus solver, we see that even before it has entered the refined region, there are small oscillations excited behind the wave; although it is also worth noting that the wave itself is beautifully propagated without significant damping or phase errors.  In this test, we use only our standard, low amount of quadratic artificial viscosity -- these waves can be damped by additional viscosity, but we do not add any in order to be sensitive to any artifacts at the grid boundary.  The remaining panels show that the trailing oscillations continue, but do not generate any additional noise -- the end result is similar to the case without any refined region.
 
-Finally, the MUSCL solver shows also shows a very clear entry and exit from the refined region without any oscillations, although (for the PLM reconstruction used here).  The wave is spread more than with the other methods, although very little energy is lost.
+Finally, the MUSCL solver shows also shows a very clean entry and exit from the refined region without any oscillations, although (for the PLM reconstruction used here) the wave is spread more than with the other methods.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\textwidth]{figures/WavePool.eps}
-\caption{This plot shows, for each column, three snap shots (at $t=0.2, 0.3$ and 0.8) of a linear wave as it propagates through the grid.  The static refined region extends from $x = 0.25$ to 0.75 and is shown in grey in each panel.  The individual cells are also color-coded by level (blue is the root grid, and red is for the refined region)  Each row shows the result for a different solver (top is PPM, middle is Zeus, and the bottom is MUSCL).   The solid line shows the analytic solution for a linear, undamped wave.  Note that we focus each panel on a small region of the entire domain to better show the wave itself.}
+\includegraphics[width=0.8\textwidth]{figures/WavePool.eps}
+\caption{This plot shows, for each column, three snap shots (at $t=0.2, 0.3$ and 0.8) of a linear wave as it propagates through the grid.  The static refined region extends from $x = 0.25$ to 0.75 and is shown in grey in each panel.  The individual cells are also color-coded by level (blue indicates the root grid, and red is for the refined region)  Each row shows the result for a different solver (top is PPM, middle is Zeus, and the bottom is MUSCL).   The solid line shows the analytic solution for a linear, undamped wave.  Note that we focus each panel on a small region of the entire domain to better show the wave itself.}
 \label{fig.wavepool}
 \end{center}
 \end{figure}
