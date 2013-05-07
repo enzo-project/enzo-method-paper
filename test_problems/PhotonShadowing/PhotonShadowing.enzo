@@ -1,0 +1,88 @@
+#  RADIATIVE TRANSFER TEST PROBLEM
+#
+#  ** Test 7 from Iliev et al. (2009), MNRAS, 400, 1283 **
+#
+#  - Shadowing test
+#  - Source at the x-face, emulating plane parallel flux
+#  - Hydro on
+#  - 2 levels of AMR
+#  - Runtime of 15 Myr
+#
+ProblemType             = 50
+TopGridRank             = 3
+StopTime                = 15
+
+TopGridDimensions       = 128 128 128
+
+MultiSpecies            = 1
+RadiativeCooling        = 1
+RadiativeTransfer       = 1
+RadiationFieldType      = 0
+
+dtPhoton = 2.5e-2
+RadiativeTransferRaysPerCell = 10
+RadiativeTransferInitialHEALPixLevel = 2
+RadiativeTransferHIIRestrictedTimestep = 0
+RadiativeTransferAdaptiveTimestep = 0
+RadiativeTransferHydrogenOnly = 1
+RadiativeTransferLoadBalance = 1
+
+ComovingCoordinates     = 0
+DensityUnits = 3.346e-28   // 2e-4 cm^-3
+TimeUnits = 3.1557e13      // Myr
+LengthUnits = 2.03676e22   // 6.6 kpc
+
+HydroMethod             = 0   // Hydro
+DualEnergyFormalism     = 1 
+
+CourantSafetyNumber = 0.4
+TopGridGravityBoundary     = 0
+LeftFaceBoundaryCondition  = 1 1 1       // same for fluid
+RightFaceBoundaryCondition = 1 1 1
+CorrectParentBoundaryFlux          = 0
+
+StaticHierarchy            = 0        // AMR
+MaximumRefinementLevel     = 2        // use up to __ levels
+RefineBy                   = 2        // refinement factor
+CellFlaggingMethod         = 2        // use baryon mass for refinement 
+MinimumOverDensityForRefinement = 1.5   // times the initial density
+
+GravitationalConstant      = 1
+SelfGravity                = 0
+
+PhotonTestNumberOfSources     = 1
+
+PhotonTestRefineAtStart       = 1
+
+PhotonTestSourceType[0]       = 1
+PhotonTestSourcePosition[0]   = 1e-3 0.5 0.4990234375
+PhotonTestSourceLuminosity[0] = 2.991863e51    // 1e6 ph/s/cm2 at l=0.75
+PhotonTestSourceLifeTime[0]   = 1e10
+PhotonTestSourceCreationTime[0] = -1
+PhotonTestSourceEnergyBins[0] = 4
+PhotonTestSourceEnergy[0]    = 17.98 31.15 49.09 76.98
+PhotonTestSourceSED[0]       = 0.23 0.36 0.24 0.06
+
+PhotonTestOmegaBaryonNow   = 1.0
+PhotonTestInitialTemperature = 8000
+PhotonTestInitialFractionHII  = 1e-20
+PhotonTestInitialFractionHeII = 1e-20
+PhotonTestInitialFractionHeIII = 1e-20
+
+PhotonTestNumberOfSpheres      = 1
+
+PhotonTestSphereType[0]        = 1
+PhotonTestSphereConstantPressure[0] = 1
+PhotonTestSphereSmoothSurface[0] = 1
+PhotonTestSphereSmoothRadius[0] = 1.2
+PhotonTestSphereRadius[0]      = 0.121212
+PhotonTestSphereDensity[0]     = 200
+PhotonTestSphereTemperature[0] = 40.0
+#PhotonTestSphereTemperature[0] = 8000.0
+#PhotonTestSphereCoreRadius[0]  = 0.121212
+PhotonTestSpherePosition[0]    = 0.75757575 0.5 0.4990234375
+PhotonTestSphereHIIFraction[0] = 1e-20
+
+dtDataDump = 0.1
+Initialdt  = 0.005
+OutputTemperature = 1
