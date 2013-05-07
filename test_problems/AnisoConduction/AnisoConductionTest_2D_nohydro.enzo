@@ -1,0 +1,85 @@
+#
+#  Conduction test (2D)
+#
+#  Test problem for the Enzo conduction code.  Inserts a pulse
+#  (square, gaussian, or sinusoidal pulse) in the temperature
+#  at the center of the box (or across the whole box, in the 
+#  sinusoidal one), which then evolves.  This test problem
+#  DISABLES THE HYDRODYNAMICS in Enzo - it JUST allows 
+#  energy to flow via conduction!
+#
+
+# Initialization Parameters
+ProblemType                = 70    # problem type 70 = hydro off, 71 = hydro on
+TopGridRank                = 2
+TopGridDimensions          = 256 256
+LeftFaceBoundaryCondition  = 3 3
+RightFaceBoundaryCondition = 3 3
+
+# Hierarchy Control Parameters
+StaticHierarchy            = 1 
+MaximumRefinementLevel     = 1
+RefineBy                   = 4
+MinimumSlopeForRefinement  = 0.2
+
+# I/O Parameters
+#dtDataDump                 = 0.005
+#StopTime                   = 0.5
+dtDataDump                 = 1.0
+StopTime                   = 300.0
+StopCycle = 1000000
+DataDumpDir                = DD
+DataDumpName = DD
+OutputTemperature          = 1 
+
+# Units Parameters
+DensityUnits               = 1.67262171e-24
+LengthUnits                = 3.08567758135e+21
+TimeUnits                  = 3.15576e+13
+
+# Gravity Parameters
+SelfGravity                = 0 
+
+# Hydrodynamic Parameters
+HydroMethod                = 4  # 0 = PPM, 2 = ZEUS
+Gamma                      = 1.66666666667
+PPMDiffusionParameter      = 0
+CourantSafetyNumber        = 0.5
+Theta_Limiter               = 1.5
+RiemannSolver               = 3
+ReconstructionMethod        = 0
+DualEnergyFormalism         = 0
+RKOrder                     = 2
+
+
+# Parameters for Additional Physics
+RadiativeCooling           = 0
+
+# Global Parameters
+tiny_number                = 1.0e-10
+MinimumEfficiency          = 0.4
+
+#conduction parameters
+IsotropicConduction = 0                       #  turns conduction on and off
+AnisotropicConduction = 1
+IsotropicConductionSpitzerFraction = 1.0
+AnisotropicConductionSpitzerFraction = 1.0      # f_Spitzer (controls efficiency of conduction)
+ConductionCourantSafetyNumber = 0.5  # equivalent to CFL parameter.  Must be <= 0.5
+ConductionSubcycleTimesteps = 3      # Number of conduction subcycles per 
+				     # hydro step.  Should be 3.
+ConductionTestTemperature = 1.0e+6
+
+# Problem-specific Parameters
+
+ConductionTestPulseType = 1    # 1 = gaussian, 2 = box, 3 = sinusoid
+ConductionTestFieldGeometry = 1  # 0 = uniform, 1 = circular.
+ConductionTestPulseHeight = 100.0  # max pulse height relative to mean temp in the box
+				  # for PulseType 1, 2.  This is the variation in temp.
+				  # for PulseType 3. 
+ConductionTestPulseWidth = 0.015625  # FWHM of gaussian, radius of box pulse, or
+ 				 # period of sinusoid pulse (in units of box width).
+ConductionTestPulseCenter = 0.75 0.5 0.0
+ConductionTestPulseBFieldX = 1.0e-6
+ConductionTestPulseBFieldY = 1.0e-6
+ConductionTestPulseBFieldZ = 0.0
+Debug1 = 0
