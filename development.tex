@@ -25,6 +25,7 @@ was typically not re-integrated.  This led to a wide dispersal of
 development, largely independent, by individuals who downloaded and
 used the version of the code developed by the LCA.
 
+
 Following the first public, open source release of \enzo, the code was
 migrated to using the Subversion version control system.  This is a
 centralized version control system, and the ``stable'' \enzo\ source
@@ -37,26 +38,31 @@ The technical friction of manually contributing patches and
 modifications, combined with Subversion's difficulty with tracking
 merges, resulted in further fragmentation of the code base.
 
-The main development streams of \enzo\ were eventually merged using
+A version developed at Penn State and Stanford forked from a version
+prior to the LCA version and was the one in which MHD with Dedener
+divergence cleaning, the MUSCL hydro solvers, the ray tracing
+radiative transfer module, relativistic fluid dynamics, the shearing
+box boundaries and updates to the multi-species chemistry were
+included. This version was the one that was eventually merged using
 the distributed version control system (DVCS) Mercurial
 (\url{http://mercurial.selenic.com/}) into a branch of the code known
 as \texttt{week-of-code}, so named after the in-person development
-sprint at which it was created.  The fundamental, and transformative,
-distinction between the previous \textit{centralized} version control
-system and mercurial's \textit{distributed} version control system is
-the elimination of gatekeepers.  While there still exists a canonical,
-central location where stable and development versions of \enzo\ can
-be obtained, changesets and versions can be exchanged between peers
-without the intervention of designated gatekeepers.  This has the
-direct effect of enabling local development to be versioned and its
-provenance ensured, while still retaining the ability to benefit from
-``upstream'' development.  An important, even crucial, side effect is
-that the technology used for local versioning provides mechanisms for
-easily submitting locally-developed modifications to the community
-source location.  Mercurial internally represents all changes as nodes
-in a directed, acyclic graph (DAG), which results in the natural
-ability to more consistently and easily manage merging development
-streams.
+sprint at KIPAC in June 2009 at which it was created.  The
+fundamental, and transformative, distinction between the previous
+\textit{centralized} version control system and mercurial's
+\textit{distributed} version control system is the elimination of
+gatekeepers.  While there still exists a canonical, central location
+where stable and development versions of \enzo\ can be obtained,
+changesets and versions can be exchanged between peers without the
+intervention of designated gatekeepers.  This has the direct effect of
+enabling local development to be versioned and its provenance ensured,
+while still retaining the ability to benefit from ``upstream''
+development.  An important, even crucial, side effect is that the
+technology used for local versioning provides mechanisms for easily
+submitting locally-developed modifications to the community source
+location.  Mercurial internally represents all changes as nodes in a
+directed, acyclic graph (DAG), which results in the natural ability to
+more consistently and easily manage merging development streams.
 
 Currently, \enzo\ is developed using the hosted source control
 platform Bitbucket (\url{http://bitbucket.org/}) at
