@@ -6,7 +6,12 @@
 \def\Evec{{\bf E}}
 \def\Divb{\ensuremath{\nabla \cdot \Bvec}}
 
-Physically, the divergence of the magnetic field, \Divb, is
+This MHD method was developed by \citet{Collins10} in order to study Population
+III stars \citep{Xu08}, molecular clouds \citep{collins12}, and galaxy clusters
+\citep{Xu12, Skillman13}.  A full description and suite of test problems can be
+found in \citet{Collins10}
+
+The divergence of the magnetic field, \Divb, is
 identically zero due to the fact that the evolution of the magnetic field is the
 curl of a vector, and the divergence of the curl of a vector is identically
 zero:
@@ -62,6 +67,41 @@ complexity, the electric field is projected from fine grids to parent
 grids (rather than the magnetic field), and is then used to re-update
 the parent magnetic field.  This is described in detail in
 \citet{Balsara99} and \citet{Collins10}.
+
+Cosmological MHD can be treated in a number of ways.  As described in Section
+\red{reference}, the MUSCL with Dedner treats the cosmological dilution of
+$\vecB$ with a source term, 
+$$ 
+\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
+\vecB)  =  -\frac{\dot{a}}{2 a} \vecB. \label{eq:induction_cosmo_source}
+$$
+However, one can eliminate the right hand side of Equation 
+\ref{eq:induction_cosmo_source} by defining
+$\vecB^\prime = \vecB / \sqrt{a}.$
+Then Equation \ref{eq:induction_cosmo_source} becomes
+$$ 
+\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
+\vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
+$$
+and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
+electric field creation, interpolation, projection, and flux correction) without
+modification.  
+
+Dual energy formalism has also been incorporated in two methods, one internal
+energy, similar to that described in Section \ref{sec.hydro.ppm}, and one that
+uses entropy.  The additional equations are
+\begin{eqnarray}
+\end{eqnarray}
+\begin{eqnarray}
+  \frac{\partial S}{\partial t} +\frac{1}{a} \nabla \cdot (S \vecv) & = &  -
+  \frac{ 3 (\gamma - 1) \dot{a}}{a} S \\
+  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \nabla \cdot (\rho e \vecv) &
+  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \nabla \cdot \vecv,
+\end{eqnarray}
+where $e$ is the internal energy and $S=p/\rho^{\gamma-1}$ is the entropy.  If
+the ratio of thermal to kinetic energy, $\eta$, is below a certain value, the
+alternative energy is used.  As in \citet{Li08}, we use $\eta=0.008$.
+
 
 Enzo's MHD-CT has been used in a variety of contexts, from galaxy
 cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
