@@ -576,6 +576,14 @@ the PPM hydro solver which have been ported to Nvidia's CUDA framework
 allowing \enzo to take advantage of modern graphics hardware \citep{Wang:2010}.
 
 \subsubsection{MHD with Constrained Transport (MHD)}
+This MHD method is second order in time and space, and preserves the divergence constraint,
+$\nabla \cdot \vecB = 0$, to machine precision through the Constrained Transport
+(CT) method.  CT, originally described by \citet{Evans88}, updates the
+magnetic field with the curl of an electric field, suitably formulated to
+preserve $\nabla \cdot \vecB$.  We employ the CT methods
+described by \citet{Balsara99} and \citet{Gardiner05}.  Further, we employ the
+second order hyperbolic solver of \citet{Li08} and the divergence free AMR
+scheme of \citet{Balsara01}.
 
 \subsubsection{Second order finite difference method (HD only)}
 
