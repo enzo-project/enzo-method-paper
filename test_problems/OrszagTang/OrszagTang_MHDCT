@@ -1,0 +1,51 @@
+#run with dd75d5398456.  As of this writing, this is in the bitbucket.org/dcollins4096/mhdct-extras repo.
+ProblemType            = 103
+WriteBoundary          = 0
+MHD_WriteElectric      = 1
+MHD_WriteCentered      = 1
+MHD_WriteCurrent       = 0
+MHD_CenteringMethod    = 2
+CourantSafetyNumber    = 0.5
+#MHD_CT_Method          = 1  //0 = none, 1 = Balsara, 2 = Poisson, 3=RJ (use 1)
+
+
+Gamma                  = 1.6667
+RiemannSolver = 6
+
+StopCycle = 2000
+StopTime = 0.48
+
+CycleLastDataDump = -20
+CycleSkipDataDump = 20
+
+TopGridRank            = 2
+TopGridDimensions      = 256 256
+#4
+
+RightFaceBoundaryCondition = 3 3 3
+LeftFaceBoundaryCondition =  3 3 3
+ProcessorTopology = 4 4 1
+
+HydroMethod            = 6
+
+#
+# AMR crap
+#
+
+#Refinement options:
+# 1 = slope, 2=baryon mass, 3=shocks, 4=particle mass, 6=jeans length
+# 7= cooling time, 8=mhd dummy
+
+CellFlaggingMethod     = 8
+NumberOfBufferZones    = 0
+MaximumRefinementLevel    = 0
+MinimumSlopeForRefinement        = 0.3;
+
+FluxCorrection         = 1
+
+StaticHierarchy           = 0    // dynamic hierarchy
+RefineBy                  = 2    // refinement factor
+
+TopGridGravityBoundary = 0       // Periodic BC
+SelfGravity            = 0       // Gravity on.
+
