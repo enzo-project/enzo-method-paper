@@ -1,0 +1,42 @@
+\subsection{Hydrodynamics: MUSCL}
+\label{sec.num.hydro-muscl}
+
+The equations of compressible inviscid hydrodynamics can be written in the form of conservation laws,
+\begin{equation}
+ \frac{\partial{U}}{\partial{t}} +
+ \frac{\partial{F^x}}{\partial{x}} + \frac{\partial{F^y}}{\partial{y}} + \frac{\partial{F^z}}{\partial{z}}= 0, \label{hydro}
+\end{equation}
+The conserved variable $U$ is given by
+\begin{equation}
+ U = (\rho, \rho v_x, \rho v_y, \rho v_z, \rho E)^{T},
+\end{equation} 
+where $\rho$ is density, $v_i$ are the three components of velocity
+for $i={x,y,z}$, $E=v^2/2 + e$ denotes the specific total energy and $e$ the
+specific internal energy.
+
+For the generalized Lagrange multiplier formulation of the MHD
+equations \citep{}{}{2002JCoPh.175..645D}, we consider these 
+conserved variables
+\begin{equation}
+ U = (\rho, \rho v_x, \rho v_y, \rho v_z, \rho E+B^2/2, B_x, B_y, B_z, \psi)^{T},
+\end{equation} 
+where $B_i$ with $i={x,y,z}$ are the three components of magnetic
+fields and $\psi$ is the additional scalar field introduced in the GLM
+formulation for the divergence cleaning.  The fluxes then are
+\begin{eqnarray}
+ F^x &=& (\rho v_x, \rho v_x^2+p+B^2/2-B_x^2, \rho v_yv_x-B_yB_x, \cr
+ && \rho v_zv_x-B_zB_x, \rho ({v^2\over2} + h)v_x+B^2v_x-B_xB\cdot v, \cr
+&& \psi, v_xB_y-v_yB_x, -v_zB_x+v_xB_z, c_h^2B_x)^T,\\
+ F^y &=& (\rho v_y, \rho v_xv_y-B_xB_y, \rho v_y^2+p+B^2/2-B_y^2, \cr
+ && \rho v_zv_y-B_zB_y, \rho ({v^2\over2} + h)v_y+B^2v_y-B_yB\cdot v, \cr
+ && v_yB_z-v_zB_y,\psi,-v_xB_y+v_yB_x, c_h^2B_y)^{T}, \\
+ F^z &=& (\rho v_z, \rho v_xv_z-B_xB_z, \rho v_yv_z-B_yB_z, \rho v_z^2+p+B^2/2-B_z^2, \cr
+ && \rho ({v^2\over2} + h)v_z+B^2v_z-B_zB\cdot v, \cr
+    &&  -v_yB_z+v_zB_y, v_zB_x-v_xB_z,\psi, c_h^2B_z)^{T},
+\end{eqnarray}
+where $c_h$ is a constant controlling the propagation speed and
+damping rate of $\nabla\cdot B$. $h=e+p/\rho$ denotes the enthalpy.
+
+As a reconstruction scheme we here implemented only the simple
+piecewise linear reconstruction. And a number of approximate Riemann
+solvers. 
