@@ -98,7 +98,18 @@ typically includes the tracer particle's unique ID, position, velocity, density,
 and temperature, but is easily extensible to output any grid-based
 quantity that a user requires.  This capability has been used quite
 effectively in several papers, including \citet{2010ApJ...715.1575S}
-and \citet{2012ApJ...748...12S}.
+and \citet{2012ApJ...748...12S}. It is crucial to keep in mind that
+tracer particles model some Lagrangian fluid trajectories. The fluid
+on the grid, however, models the motion of all the mass and represents
+the average quantity in a grid cells volume. Consequently, after some
+evolution tracer particles, which even if they initially had the same
+density distribution as the gas, will not have the same density
+distribution as the fluid. They tend to accumulate at stagnation points
+of the flow, e.g., and care has to be taken in using these particles
+appropriately. They can be very useful, e.g. to study a variety of
+histories of the hydrodynamic quantities in Lagrangian fluid elements
+and evaluate complex chemical and cooling models in regard to the
+simpler ones used in the actual numerical evolution.  
 
 \subsubsection{Shock finding}
 
