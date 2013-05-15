@@ -40,3 +40,8 @@ damping rate of $\nabla\cdot B$. $h=e+p/\rho$ denotes the enthalpy.
 As a reconstruction scheme we here implemented only the simple
 piecewise linear reconstruction. And a number of approximate Riemann
 solvers. 
+
+The method is dimensionally un-split in that the fluxes are computed
+for all dimensions first and the conserved quantities are updated in
+one go in contrast to the Strang splitting employed in the Zeus and
+PPM solvers described above. 
