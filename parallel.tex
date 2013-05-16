@@ -89,6 +89,7 @@ described in the online documentation, along with a further discussion of the
 performance measurement implementation.
 
 \subsubsection{Unigrid scaling}
+\label{sec:weak_scaling}
 
 \begin{figure}
 \begin{center}
@@ -99,7 +100,7 @@ per grid cell, showing cell updates per second per computational core
 plotted as a function of the number of root grid tiles of dimension
 $128^3$ (R) in each dimension.  The number of MPI tasks is N$ = R^3$,
 so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh
-running on 4096 MPI tasks.  This plot goes from R$ = 2$ (8 MPI tasks)
+running on 4,096 MPI tasks.  This plot goes from R$ = 2$ (8 MPI tasks)
 to R$ = 24$ (13,824 MPI tasks) on two supercomputers -- NICS Kraken
 and ORNL Jaguar when they were Cray XT4 systems -- and using 1, 2 or 4
 MPI processes per node, where each compute node contained a single
@@ -193,7 +194,7 @@ substantially between computational platforms and astrophysical
 problems/required \enzo\ physics modules, and thus we hesitate to
 provide strict guidelines here.
 
-\subsubsection{AMR scaling \red{(John)}}
+\subsubsection{AMR scaling}
 
 \begin{figure}
 \begin{center}
@@ -208,12 +209,105 @@ provide strict guidelines here.
   additional cores.  The weak scaling test in Figure
   \ref{fig.uniscale} is more representative of the scaling on the root
   level.  The performance in the refined levels show good strong
-  scaling up to 4096 cores.  \emph{Right:} Time spent in the major
-  routines in the same AMR calculation.}
-\label{fig:amr_hierarchy}
+  scaling up to 2,048 cores.  \emph{Right:} Time spent in
+  representative major routines in the same AMR calculation.}
+\label{fig:strong_scaling}
 \end{figure}
 
-% Greg to work on this, scaling data from his runs, or maybe from John Wise
+Many astrophysical problems, such as cosmological galaxy formation
+\citep{}, high-resolution disk galaxy simulations \citep{},
+high-redshift \citep{} and present-day star formation \citep{},
+involve multi-scale physics that span several orders of magnitude in
+both space and time.  In these situations, using Enzo in its adaptive
+mesh refinement mode is beneficial.  Because the adaptive grid
+hierarchy is dynamic and not static, grid boundaries and, thus,
+communication patterns can be unpredictable, hindering good strong
+scaling at high core counts.
+
+Figure \ref{fig:strong_scaling} shows strong scaling results from a
+single 50 Mpc/h cosmology simulation run on $N_{\rm core}$ compute
+cores, ranging from 128 to 16,384 at power-of-two intervals.  It was
+run on the NICS Kraken XT5 supercomputer that has two AMD Opteron
+hexa-core processors with 16 GB of memory per compute node.  The
+simulations that utilized 128, 256, and 512 cores were executed on 128
+nodes because of the memory requirements.  The higher core count jobs
+were run with 8 cores per node.  This simulation would not run with 12
+cores per node because of the memory overhead associated with the grid
+hierarchy being duplicated on each MPI process.  However, this
+overhead is greatly diminished if a hybrid-parallel (MPI + OpenMP)
+approach is used.
+
+This simulation includes dark matter dynamics, hydrodynamics using the
+piecewise parabolic method, six-species non-equilibrium chemistry and
+radiative cooling, and a uniform metagalactic ultraviolet background.
+The simulation uses the space-filling curve method for load balancing
+the AMR grids.  It has a $512^3$ root grid that is divided into 512
+tiles, and 6 additional AMR levels are used.  We perform these scaling
+tests when the simulation reaches $z=4$.  The results shown in Figure
+\ref{fig:strong_scaling} come from a single root-level timestep
+$\Delta t = 2.1\, \textrm{Myr}$.  At this time, there are $3.04 \times
+10^5$ AMR grids, $9.03 \times 10^8$ ($\sim 967^3$) computational
+cells, and $1.34 \times 10^8$ dark matter particles in total.  The
+breakdown of the number of AMR grids, cells, timesteps, and number of
+cell updates on each level is shown in Table \ref{tab:amr_scale}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table*}
+  \begin{center}
+  \caption{Strong scaling test computational details}
+  \begin{tabular*}{0.9\textwidth}{@{\extracolsep{\fill}}c c c c c}
+    \tableline\tableline
+    {Level} & {$N_{\rm grid}$} & {$N_{\rm cells}$} & {$N_{\rm up}$} &
+    {$N_{\rm timesteps}$}\\
+    \tableline
+    0 & 512 & $1.34 \times 10^8$ & $1.34 \times 10^8$ & 1\\
+    1 & 61,868 & $4.01 \times 10^8$ & $4.01 \times 10^8$ & 1\\
+    2 & 91,182 & $1.99 \times 10^8$ & $5.96 \times 10^8$ & 3\\
+    3 & 59,932 & $7.62 \times 10^7$ & $5.34 \times 10^8$ & 7\\
+    4 & 40,700 & $3.32 \times 10^7$ & $5.65 \times 10^8$ & 17\\
+    5 & 28,346 & $2.76 \times 10^7$ & $1.36 \times 10^9$ & 49\\
+    6 & 19,771 & $2.80 \times 10^7$ & $5.25 \times 10^9$ & 187\\
+    \tableline
+    Total & 302,311 & $9.03 \times 10^8$ & $8.83 \times 10^9$ & --\\
+  \end{tabular*}
+  \parbox[t]{0.9\textwidth}{\textbf{Note.} --- Data shown at $z=4$ for
+    a root grid timestep of 2.1~Myr.  Col. (1): AMR Level. Col. (2):
+    Number of grids. Col. (3): Number of computational
+    cells. Col. (4): Number of cell updates. Col. (5): Number of
+    timesteps.}
+  \label{tab:amr_scale}
+  \end{center}
+\end{table*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The left panel in Figure \ref{fig:strong_scaling} shows the
+computational and communication time spent on each level.  In the AMR
+levels, there exists good strong scaling up to 2,048 cores, and
+marginal speed-ups are found at 4,096 cores.  On the root-grid level,
+there exists good scaling up to 1,024 cores, but the performance
+dramatically decreases at higher core counts.  This occurs because the
+root grid is not re-partitioned into $N_{\rm core}$ tiles when the
+simulation is restarted with a different core count.  This feature can
+be easily implemented and is planned in the next major release of
+Enzo, where scaling results would be similar to the weak scaling shown
+in \S\ref{sec:weak_scaling}.  The right panel in Figure
+\ref{fig:strong_scaling} shows the time spent in some representative
+major routines in Enzo.  The local physics routines, for example
+\texttt{SolveHydroEquations}, exhibit perfect strong scaling because
+they involve no communication.  By investigating the scaling behavior
+in each routine, it is clear that the communication in the
+\texttt{SetBoundaryConditions}, \texttt{SolveForPotential} (multi-grid
+solver in AMR levels), and \texttt{RebuildHierarchy} are responsible
+for the lack of strong scaling at $N_{\rm core} \ga$~4,096 in this
+particular simulation.  The transpose of the root grid tiles are
+responsible for the performance decrease because it is not optimized
+for situations where the number of tiles is greater than the number of
+MPI processes.  These results are directly applicable to simulations
+with similar computational demands.  In simulations with less
+computational cells, strong scaling will cease at a smaller core count
+because the CPUs will become data-starved faster, and the opposite
+occurs with larger simulations.
 
 %%% Local Variables: 
 %%% mode: latex
