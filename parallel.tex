@@ -90,6 +90,25 @@ performance measurement implementation.
 
 \subsubsection{Unigrid scaling}
 
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figures/enzo_unigrid_weak_scaling.eps}
+\caption{\enzo\ weak scaling performance for a set of Lyman alpha
+forest cosmology simulations with constant comoving spatial resolution
+per grid cell, showing cell updates per second per computational core
+plotted as a function of the number of root grid tiles of dimension
+$128^3$ (R) in each dimension.  The number of MPI tasks is N$ = R^3$,
+so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh
+running on 4096 MPI tasks.  This plot goes from R$ = 2$ (8 MPI tasks)
+to R$ = 24$ (13,824 MPI tasks) on two supercomputers -- NICS Kraken
+and ORNL Jaguar when they were Cray XT4 systems -- and using 1, 2 or 4
+MPI processes per node, where each compute node contained a single
+quad-core AMD Opteron CPU having a speed of 2.1 GHz on Jaguar and 2.3
+GHz on Kraken.}
+\label{fig.uniscale}
+\end{center}
+\end{figure}
+
 It is advantageous to use \enzo\ in its ``unigrid'' (i.e.,
 non-adaptive mesh) mode for a variety of problems, including
 non-gravitating turbulence
@@ -174,26 +193,25 @@ substantially between computational platforms and astrophysical
 problems/required \enzo\ physics modules, and thus we hesitate to
 provide strict guidelines here.
 
+\subsubsection{AMR scaling \red{(John)}}
+
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.4\textwidth]{figures/enzo_unigrid_weak_scaling.eps}
-\caption{\enzo\ weak scaling performance for a set of Lyman alpha
-forest cosmology simulations with constant comoving spatial resolution
-per grid cell, showing cell updates per second per computational core
-plotted as a function of the number of root grid tiles of dimension
-$128^3$ (R) in each dimension.  The number of MPI tasks is N$ = R^3$,
-so R$ = 16$ on this plot corresponds to a $2048^3$ computational mesh
-running on 4096 MPI tasks.  This plot goes from R$ = 2$ (8 MPI tasks)
-to R$ = 24$ (13,824 MPI tasks) on two supercomputers -- NICS Kraken
-and ORNL Jaguar when they were Cray XT4 systems -- and using 1, 2 or 4
-MPI processes per node, where each compute node contained a single
-quad-core AMD Opteron CPU having a speed of 2.1 GHz on Jaguar and 2.3
-GHz on Kraken.}
-\label{fig.uniscale}
+\includegraphics[width=0.48\textwidth]{figures/strong_scaling_levels.eps}
+\hfill
+\includegraphics[width=0.48\textwidth]{figures/strong_scaling_routines.eps}
 \end{center}
+\caption{\emph{Left:} Strong scaling test of a 512$^3$ AMR
+  cosmological calculation.  The root grid scaling is not
+  representative of the true strong scaling of Enzo because the root
+  grid tiles are not repartitioned when a simulation is restarted with
+  additional cores.  The weak scaling test in Figure
+  \ref{fig.uniscale} is more representative of the scaling on the root
+  level.  The performance in the refined levels show good strong
+  scaling up to 4096 cores.  \emph{Right:} Time spent in the major
+  routines in the same AMR calculation.}
+\label{fig:amr_hierarchy}
 \end{figure}
-
-\subsubsection{AMR scaling \red{(Greg)}}
 
 % Greg to work on this, scaling data from his runs, or maybe from John Wise
 
