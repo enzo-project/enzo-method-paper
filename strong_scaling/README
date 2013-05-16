@@ -1,0 +1,19 @@
+John Wise
+16 May 2013
+
+All of these scaling tests were performed on NICS / Kraken.
+
+Cores  	     Cores/node
+-----------------------
+128	     1
+256	     2
+512	     4
+1024	     4
+2048	     8
+4096	     8
+8192	     8
+16384	     8
+
+Because this 512^3 AMR simulation had ~300k grids, the memory overhead
+for the hierarchy data was too large and did not allow the simulation
+to be run with 12 cores/node.
