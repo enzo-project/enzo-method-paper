@@ -1,0 +1,116 @@
+#;-*-C-*-
+StopCycle           = 100000
+#StopCycle           = 1
+StopCPUTime         = 3600000
+dtRestartDump       = 3600
+
+ParallelRootGridIO              =  1
+HierarchyFileOutputFormat = 1
+LoadBalancing = 4
+UnigridTranspose = 2
+
+# AMR PROBLEM DEFINITION FILE: Cosmology Simulation (amr version)
+#
+#  define problem
+#
+ProblemType                = 30      // cosmology simulation
+TopGridRank                = 3
+TopGridDimensions          = 512 512 512
+PotentialIterations        = 10
+SelfGravity                = 1       // gravity on
+TopGridGravityBoundary     = 0       // Periodic BC for gravity
+LeftFaceBoundaryCondition  = 3 3 3   // same for fluid
+RightFaceBoundaryCondition = 3 3 3
+#
+#  problem parameters
+#
+CosmologySimulationOmegaBaryonNow       = 0.049
+CosmologySimulationOmegaCDMNow          = 0.2685
+#CosmologySimulationInitialTemperature   = 300
+CosmologySimulationDensityName          = GridDensity
+CosmologySimulationVelocity1Name        = GridVelocities_x
+CosmologySimulationVelocity2Name        = GridVelocities_y
+CosmologySimulationVelocity3Name        = GridVelocities_z
+CosmologySimulationParticleVelocity1Name = ParticleVelocities_x
+CosmologySimulationParticleVelocity2Name = ParticleVelocities_y
+CosmologySimulationParticleVelocity3Name = ParticleVelocities_z
+CosmologySimulationCalculatePositions   = 1
+CosmologySimulationNumberOfInitialGrids = 1
+#
+#RefineRegionLeftEdge  =  0.281250000000 0.281250000000 0.281250000000
+#RefineRegionRightEdge =  0.718750000000 0.718750000000 0.718750000000
+
+#
+#  define cosmology parameters
+#
+ComovingCoordinates        = 1       // Expansion ON
+CosmologyOmegaMatterNow    = 0.3175
+CosmologyOmegaLambdaNow    = 0.6825
+CosmologyHubbleConstantNow = 0.6711   // in km/s/Mpc
+CosmologyComovingBoxSize   = 50     // in Mpc/h = 100 Mpc comoving
+CosmologyMaxExpansionRate  = 0.015   // maximum allowed delta(a)/a
+CosmologyInitialRedshift 	 = 100.000000
+CosmologyFinalRedshift 	 = 0.000000
+GravitationalConstant      = 1       // this must be true for cosmology
+#
+#  set I/O and stop/start parameters
+#
+#CycleSkipDataDump      = 1
+DataDumpName            = output_
+dtDataDump 	 = 13.290599
+#
+#  set hydro parameters
+#
+Gamma                  = 1.6667
+HydroMethod            = 0
+PPMDiffusionParameter  = 0       // diffusion off
+DualEnergyFormalism    = 1       // use total & internal energy
+InterpolationMethod    = 1     // SecondOrderA
+FluxCorrection         = 1
+ConservativeInterpolation = 0
+CourantSafetyNumber    = 0.5
+RadiationFieldType = 3
+ParticleCourantSafetyNumber = 0.8
+RadiativeCooling            = 1
+MultiSpecies                = 1
+UseMinimumPressureSupport   = 1
+#RefineByJeansLengthSafetyFactor  = 8.0
+
+#
+#  set grid refinement parameters
+#
+StaticHierarchy           = 0    // dynamic hierarchy
+MaximumRefinementLevel 	 = 8
+MaximumGravityRefinementLevel 	 = 8
+MaximumParticleRefinementLevel 	 = 8
+RefineBy                  = 2    // refinement factor
+#CellFlaggingMethod        = 2 4 6   // use baryon mass for refinement 
+CellFlaggingMethod        = 2 4    // use DM mass for refinement 
+MinimumEfficiency         = 0.3  // fraction efficiency
+MinimumOverDensityForRefinement = 4.0 4.0 // times the initial density refers to top grid: devide by 8 for each additional level
+MinimumMassForRefinementLevelExponent = 0 0
+MinimumEnergyRatioForRefinement = 0.4 // min Egas/Etot for shock refinement
+#
+#  set some global parameters
+#
+GreensFunctionMaxNumber   = 30   // # of greens function at any one time
+
+CosmologyOutputRedshift[0] = 10.0
+CosmologyOutputRedshift[1] = 9.0
+CosmologyOutputRedshift[2] = 8.0
+CosmologyOutputRedshift[3] = 7.0
+CosmologyOutputRedshift[4] = 6.0
+CosmologyOutputRedshift[5] = 5.0
+CosmologyOutputRedshift[6] = 4.0
+CosmologyOutputRedshift[7] = 3.0
+CosmologyOutputRedshift[8] = 2.0
+CosmologyOutputRedshift[9] = 1.5
+CosmologyOutputRedshift[10] = 1.0
+CosmologyOutputRedshift[11] = 0.8
+CosmologyOutputRedshift[12] = 0.6
+CosmologyOutputRedshift[13] = 0.5
+CosmologyOutputRedshift[14] = 0.4
+CosmologyOutputRedshift[15] = 0.3
+CosmologyOutputRedshift[16] = 0.2
+CosmologyOutputRedshift[17] = 0.1
+CosmologyOutputRedshift[18] = 0.0
