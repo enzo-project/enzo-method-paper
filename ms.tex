@@ -10,38 +10,41 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Paper Outline  (last updated January 18, 2013)
+% Paper Outline  (last updated May 17, 2013)
 %
 % 1.  Introduction
-% 2.  Physical equations and overview
+% 2.  Physical equations and overview of numerical methodology
 %   2.1 Physical equations
 %   2.2 Overview of numerical methods
-% 3.  Numerical methods   %%%%%% THIS IS NOW A BUNCH OF DIFFERENT SECTIONS
-%   3.1   AMR
-%   3.2.  Hydro: Godunov (PPM)
-%   3.3   Hydro: Godunov (MUSCL)
-%   3.4   Hydro: Finite difference (ZEUS)
-%   3.5   MHD: Dedner
-%   3.6   MHD: CT
-%   3.7   Gravity
-%   3.8   Particle Integration
-%   3.9.  Chemistry
-%   3.10 Cooling
-%   3.11 Radiation: Homogeneous
-%   3.12 Radiation: ray-tracing
-%   3.13 Radiation: FLD
-%   3.14 Thermal conduction
-%   3.15 Star formation & Feedback
-%   3.16 Timestep constraints
-%   3.17 Analysis
-% 4. Code tests
-%   4.1 Verifying and Validating the Enzo code
-%   4.2 Representative test problems
-% 5. Parallelism 
-%   5.1 Parallel strategy 
-%   5.2 Parallel performance 
-% 6. Code development methodology
-% 7. Conclusions
+% 3.  The structured AMR method
+% 4.  Fluid methods
+%   4.1 PPM
+%   4.2 MUSCL
+%   4.3 MHD-CT
+%   4.4 ZEUS 
+% 5.  Gravity and N-body
+%   5.1 Gravity
+%   5.2 N-body dynamics
+% 6. Microphysics
+%   6.1  Chemistry
+%   6.2  Radiative Cooling and heating
+% 7. Radiation
+%   7.1 Radiation: Homogeneous
+%   7.2 Radiation: ray-tracing
+%   7.3 Radiation: FLD
+% 8. Other physics
+%   8.1 Thermal conduction
+%   8.2 Star formation & Feedback
+% 9. Time stepping
+% 10.  Analysis
+% 11. Code tests
+%   11.1 Verifying and Validating the Enzo code
+%   11.2 Representative test problems
+% 12. Parallelism 
+%   12.1 Parallel strategy 
+%   12.2 Parallel performance 
+% 13. Code development methodology
+% 14. Conclusions
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -103,7 +106,7 @@ discuss the \enzo\ consortium's code development methodology.
 \input{numerical-amr}
 
 \section{Fluid methods}
-\label{sec:fluids}
+\label{sec.fluids}
 
 \input{numerical-ppm}
 %\input{numerical-muscl} 
@@ -112,23 +115,23 @@ discuss the \enzo\ consortium's code development methodology.
 \input{numerical-zeus}
 
 \section{Gravity and N-body}
-\label{sec:allgrav}
+\label{sec.allgrav}
 \input{numerical-gravity}
 \input{numerical-particle}
 
 \section{Microphysics}
-\label{sec:microphysics}
+\label{sec.microphysics}
 \input{numerical-chemistry}
 \input{numerical-cooling} 
 
 \section{Radiation}
-\label{sec:allrad}
+\label{sec.allrad}
 \input{numerical-radiation-homogeneous} 
 \input{numerical-radiation-raytracing} 
 \input{numerical-radiation-fld} 
 
 \section{Other physics}
-\label{sec:otherphys}
+\label{sec.otherphys}
 \input{numerical-conduction} 
 \input{numerical-starformation}
 
