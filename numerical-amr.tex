@@ -1,4 +1,4 @@
-\subsection{The Structured Adaptive Mesh Refinement (SAMR) Method}
+\section{The Structured Adaptive Mesh Refinement (SAMR) Method}
 \label{sec.amr}
 
 %\subsubsection{SAMR Overview}
@@ -75,7 +75,7 @@ end
 
 Each function operates on all the grids on the given level.  In the following sections, we will address each of the major elements in turn.
 
-\subsubsection{Setting the boundary values}
+\subsection{Setting the boundary values}
 \label{sec:interpolation}
 
 In order to solve the hydrodynamic equations on a patch, it is necessary to specify the boundary conditions on that patch.  There are two cases.  The first is that the boundary is external to the computational domain.  This occurs for all the boundaries of the root grid.  The second possibility is that the boundary is within the computational domain, which is true for most, but not all, subgrids.
@@ -129,7 +129,7 @@ adequately in our tests.
 
 %The same procedure can be used for face-centered quantities; however, for the velocity variable in zeus, we drop the extrema constraint.
 
-\subsubsection{Solving the hydrodynamic equations on a grid}
+\subsection{Solving the hydrodynamic equations on a grid}
 \label{sec:solve_hydro}
 
 Given the grid and its boundary conditions, the process of solving
@@ -151,7 +151,7 @@ which employ different centering for different variables
 Section~\ref{sec:interpolation}, must correctly interpolate with the
 selected centering.
 
-\subsubsection{Projection}
+\subsection{Projection}
 \label{sec:projection}
 
 Since a refined region is simulated with (at least) two different resolutions (one fine and one coarse), it has two or
@@ -162,7 +162,7 @@ q^{\rm coarse} = r^{-d} \sum q^{\rm fine}_{i, j,k}
 \end{equation}
 where $r$ is the refinement factor, $d$ the dimensionality, and the sum is over all fine cells that ``cover" the coarse cell.
 
-\subsubsection{Flux correction}
+\subsection{Flux correction}
 \label{sec:flux_correction}
 
 One of the significant advantages of flux-conservative methods is, of course, their ability to maintain conserved quantities to machine precision.  Unfortunately, the projection step upsets this flux conservation since, at the boundary of a refined region, the coarse and fine cells on either side of the border are updated with different estimates of the flux across the boundary.  In one case this comes from the coarse grid computation, and in the other from the fine grid solution.  Conservation can be restored by correcting all coarse cells that lie at the boundary of a fine region
@@ -175,7 +175,7 @@ with the difference between the coarse and fine estimates of the flux across the
 
 where $F$ is the flux of quantity $q_i$ in the $i$-direction through the cell interface.   We use $\tilde{q}$ to indicate the uncorrected quantity on the coarse grid and the sum is over the $r^{d-1}$ fine cell interfaces in the perpendicular dimensions that share a face with the coarse cell being corrected.  This correction is carried out for all coarse cells that share a face with a refined cell (and are not themselves covered with more refined cells).
 
-\subsubsection{Hierarchy reconstruction}
+\subsection{Hierarchy reconstruction}
 \label{sec:hierarchy_reconstruction}
 
 Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified.  Up to seven different criteria can be specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vesion technique as described in \red{(REF)}.  
@@ -185,7 +185,7 @@ We first find the smallest region (or ``proto-subgrid") that covers all of the r
 This algorithm is not necessarily optimal, but experience shows it does a reasonable job of generating an efficient covering of the refined cells.  Note that some cells are unnecessarily refined with the SAMR approach, resulting in wasted resources (unlike in cell-splitting AMR schemes).  However, it has a number of advantages.  First, traditional grid-based hydro method can be simply added with only minor modifications.  Second, it is easier to accommodate larger stencils (as in PPM, which requires three boundary zones), and finally it can be more efficient for some machines since there are more predictable and linear memory accesses, which more efficiently use a CPU's cache.
 
 
-\subsubsection{Refinement criteria}
+\subsection{Refinement criteria}
 \label{sec:refinement_criteria}
 
 Finally, we turn to the refinement criteria themselves.  Although generalized refinement criteria are available based on estimators for the error, such as the Richardson method \red{(REF)}, we have focused generally on methods that use physical estimators based on the assumption that the simulator has a specific quantity or quantities that indicate the need for refinement.  The flagging methods currently built into \enzo\ are:

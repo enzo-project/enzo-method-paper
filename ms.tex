@@ -16,7 +16,7 @@
 % 2.  Physical equations and overview
 %   2.1 Physical equations
 %   2.2 Overview of numerical methods
-% 3.  Numerical methods
+% 3.  Numerical methods   %%%%%% THIS IS NOW A BUNCH OF DIFFERENT SECTIONS
 %   3.1   AMR
 %   3.2.  Hydro: Godunov (PPM)
 %   3.3   Hydro: Godunov (MUSCL)
@@ -93,30 +93,50 @@ discuss the \enzo\ consortium's code development methodology.
 \input{overview}
 
 %% Section: numerical methods
-\section{Numerical Methods}
-\label{sec.methods}
+% \section{Numerical Methods}
+% \label{sec.methods}
 
-We now describe each of the numerical methods in detail.  The
-structure of this section mirrors that of Section~\ref{sec.overview},
-in which each method was briefly described.
+% We now describe each of the numerical methods in detail.  The
+% structure of this section mirrors that of Section~\ref{sec.overview},
+% in which each method was briefly described.
 
 \input{numerical-amr}
+
+\section{Fluid methods}
+\label{sec:fluids}
+
 \input{numerical-ppm}
-%\input{numerical-muscl} % new
-\input{numerical-mhd-dedner} % new (combined with muscl)
-\input{numerical-mhd-ct}  % new
+%\input{numerical-muscl} 
+\input{numerical-mhd-dedner}  % includes MUSCL and Dedner
+\input{numerical-mhd-ct}  
 \input{numerical-zeus}
+
+\section{Gravity and N-body}
+\label{sec:allgrav}
 \input{numerical-gravity}
 \input{numerical-particle}
+
+\section{Microphysics}
+\label{sec:microphysics}
 \input{numerical-chemistry}
-\input{numerical-cooling} % new
-\input{numerical-radiation-homogeneous} % new
-\input{numerical-radiation-raytracing} % new
-\input{numerical-radiation-fld} % new
-\input{numerical-conduction} % new
+\input{numerical-cooling} 
+
+\section{Radiation}
+\label{sec:allrad}
+\input{numerical-radiation-homogeneous} 
+\input{numerical-radiation-raytracing} 
+\input{numerical-radiation-fld} 
+
+\section{Other physics}
+\label{sec:otherphys}
+\input{numerical-conduction} 
 \input{numerical-starformation}
+
+% this is its own section
 \input{numerical-timestep}
-\input{numerical-analysis} % new
+
+% this is its own section
+\input{numerical-analysis}
 
 %% Section: code tests
 %%  this should probably be done with one file per test
@@ -126,14 +146,14 @@ in which each method was briefly described.
 \input{parallel}
 
 %% Section: code development methodology
-\input{development} % new
+\input{development} 
 
 %% Section: conclusions
-\input{conclusions}  % new
+\input{conclusions}  
 
 \input{acknowledgments}
 
-\input{appendix}  % new
+\input{appendix}  
 
 \bibliographystyle{apj}
 \bibliography{apj-jour,ms}  % looks in ms.bib for bibliography info
