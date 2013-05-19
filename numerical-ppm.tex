@@ -80,7 +80,8 @@ accomplished by a three-step process.  First, we compute effective
 left and right states at each grid boundary by constructing a
 piecewise parabolic description of the primary variables ($\rho$, $u$
 and $E$) and then averaging over the regions corresponding to the
-distance each characteristic wave can travel ($u$, $u-c$ and $u+c$).
+distance each characteristic wave can travel ($u$, $u-c_s$ and
+$u+c_s$, where $c_s$ is the sound speed).
 Second, a Riemann problem is solved using these effective left and
 right states, and finally the fluxes are computed based on the
 solution to this Riemann problem.  This is described in detail in
@@ -143,7 +144,7 @@ q_j(x) & = &  q_{L,j} + \tilde{x}(\Delta q_j + q_{6,j}(1-\tilde{x})), \\
              x_{j-1/2} \leq x \leq x_{j+1/2}. \nonumber
 \end{eqnarray}
 %
-This is Equation~(1.4) of CW84 (in the radial rather than mass coordinate as is appropriate for the direct rulerian approach). 
+This is Equation~(1.4) of CW84 (in the radial rather than mass coordinate as is appropriate for the direct Eulerian approach). 
 %The zones edges in the mass coordinates are $m_{j-1/2}$ and $m_{j+1/2}$ for the left and right edges, respectively.  
 The quantities $q_{L,j}$, $\Delta q_j$,
 and $q_{6,j}$ can be viewed simply as interpolation constants; however,
@@ -291,7 +292,7 @@ p = \cases{ \rho(\gamma - 1)(E - \vecv^2/2),&
 It should be stressed that as long as the parameter ${\eta}_1$ is small enough
 the dual energy method {\it will have no dynamical effect}.  We use
 ${\eta}_1 = 10^{-3}$, which is consistent with the truncation error of the
-scheme.  We are now free to select the method by which the internal energy
+scheme for grid sizes that are typically used in our simulations.  We are now free to select the method by which the internal energy
 field variable $e$ is updated so that it will not become contaminated with
 errors advected by the total energy formulation but still give the
 correct distribution in shocked regions. 
@@ -313,7 +314,7 @@ while spurious heating (via contamination) may occur if it is set too low.
 After some experimentation,
 we have chosen ${\eta}_2 = 0.08$, a somewhat conservative value.
 This scheme is optional and is generally only required in large-scale 
-cosmological simulations where the gas cools to the expansion of the universe
+cosmological simulations where the gas cools due to the expansion of the universe
 but large bulk flows develop due to the formation of structure.
 
 We note that others have independently developed a similar but

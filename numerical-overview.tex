@@ -345,8 +345,8 @@ procedure to converge, and for large networks (such as this one) an implicit
 method can be very time-consuming, making it undesirable for a large, three-dimensional
 simulation.
 
-\enzo\ solves the rate equations using a method based on a backwards differencing 
-formula (BDF) in order to provide a stable and accurate solution.  This technique is
+\enzo\ solves the rate equations using a method based on an implicit
+Euler formulation in order to provide a stable and accurate solution.  This technique is
 optimized by taking the chemical intermediaries $H^-$ and $H_2^+$, which have 
 large rate coefficients and low concentrations, and grouping them into a separate
 category of equations.  Due to their fast reactions these species are very sensitive
@@ -356,7 +356,7 @@ higher concentrations.  Therefore, reactions involving these two species can be
 decoupled from the rest of the network and treated independently.  In fact, $H^-$ 
 and $H_2^+$ are treated as being in equilibrium at all times, independent of 
 the other species and the hydrodynamic variables.  This allows a large speedup
-in solution as the BDF scheme is then applied only to the slower 7-species network
+in solution as the implicit scheme is then applied only to the slower 7-species network
 on timescales closer to those required by the hydrodynamics of the simulation.
 Even so, the accuracy and stability of the scheme is maintained by subcycling the 
 rate solver over a single hydrodynamic timestep.  These subcycle timesteps are 

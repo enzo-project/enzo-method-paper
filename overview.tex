@@ -4,7 +4,7 @@
 \label{sec.overview}
 
 We begin this section by first writing down the complete set of
-physical equations that be solved by \enzo, and then briefly describe
+physical equations that can be solved by \enzo, and then briefly describe
 the numerical algorithms that we use to solve these equations.  This
 section is intended to be an overview of the \enzo\ code's
 capabilities: thus, we gather all of the equations solved into a
@@ -218,7 +218,7 @@ Any collisionless component (e.g. dark matter, stars) is modeled by particles wh
           \label{eq:dm_velocity} 
 \end{eqnarray}
 %
-The particles also make a contribution to the potential through their contribution to Poisson's equation.
+The particles also make a contribution to the gravitational potential through their contribution to Poisson's equation.
 
 %\subsubsection{Chemistry}
 
@@ -507,10 +507,7 @@ coarser parent level and consists of entirely rebuilding the grids
 on that level and at finer resolutions.  This is done by applying the grid refinement
 criteria to the grids on that level, flagging zones that require
 extra grids.  These criteria depend on the physical problem being
-simulated.  We have implemented a number of options, including shock
-and steep gradient detectors, but in the problem described here,
-employ one based on the mass within a cell, imitating the Lagrangian
-nature of the SPH algorithm.  Once a grid has a set of flagged cells,
+simulated -- see Section~\ref{sec:refinement_criteria} for more details.  Once a grid has a set of flagged cells,
 we run a machine-vision based algorithm \citep{Berger91} to find edges
 and determine a good placement of subgrids. 
 %  These subgrids must not overlap one another, must cover all flagged
@@ -548,7 +545,7 @@ advances the hydrodynamic equations in the following steps:
 % \item 
  (i) Construct monotonic parabolic interpolation of cell average data, for each fluid quantity.
 % \item 
-(ii) Compute interface states by averaging the parabola over the domain of dependence for each interface
+(ii) Compute interface states by averaging the parabola over the domain of dependence for each interface.
 % \item 
 (iii) Use interface data to solve the Riemann problem.
  %\item 
@@ -559,8 +556,8 @@ This PPM implementation does an excellent job of capturing strong
 shocks in a few cells.  Multidimensional schemes are built up by
 directional splitting and produce a method that is formally second
 order-accurate in space and time and which explicitly conserves mass,
-linear momentum, and energy.  A variety of reconstruction methods and
-Riemann solvers have been implemented.
+linear momentum, and energy.  \red{(REF?)}  A variety of reconstruction methods and
+Riemann solvers have been implemented.  \red{(These are never described!)}
 
 As described in \citet{Bryan95}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small
@@ -576,18 +573,18 @@ and using $e$ from this equation when we expect the error to be large.
 \subsubsection{Godunov MUSCL (HD) with Dedner divergence cleaning (MHD)}
 This solver was developed by Wang \& Abel to attack problems in
 magnetic field amplification during the formation of galaxies
-\citep{Wang:2009a} and to understand the role proto-stellar jets for
+\citep{Wang:2009a} and to understand the role of proto-stellar jets for
 the theory of star formation \citep{Wang:2009b}. It combines the standard
 approach of Godunov \citep{Godunov1959} for finite volume techniques
-with the method of lines as described as e.g. by
-\cite{leveque2002finite} and \cite{toro-1997}. In addition, however,
+with the method of lines as described by
+\cite{leveque2002finite} and \cite{toro-1997}. In addition, 
 it implements the hyperbolic divergence cleaning algorithm of
 \cite{2002JCoPh.175..645D}. It supports multiple approximate Riemann
 solvers and non-ideal equations of states. Consequently,
 these suite of solvers can be used for hydro and magneto-hydrodynamic
 simulations. It is also this class of solvers as well as a version of
 the PPM hydro solver which have been ported to Nvidia's CUDA framework
-allowing \enzo to take advantage of modern graphics hardware \citep{Wang:2010}.
+allowing \enzo\ to take advantage of modern graphics hardware \citep{Wang:2010}.
 
 \subsubsection{MHD with Constrained Transport (MHD)}
 This MHD method is second order in time and space, and preserves the divergence constraint,
@@ -606,7 +603,7 @@ finite-difference algorithm used in the \zeus\ code, as given in more
 detail in \citet{Stone92a}.  For this reason, we call this the \zeus\
 method, although the code is entirely independent of the \zeus\ code,
 and only the hydrodynamical algorithm of \zeus\ is implemented in
-\enzo -- the MHD and RHD schemes are not.
+\enzo\ -- the MHD and RHD schemes are not.
 
 The ZEUS method uses a staggered mesh such that the velocities are
 face-centered, while the density and internal energy quantities are
@@ -621,13 +618,14 @@ conserved quantities (mass, momentum and energy) across the grid.
 
 The current implementation of self-gravity in \enzo\ uses a Fast
 Fourier Technique \citep{Hockney88} to solve Poisson's equation on the
-coarsest (Level 0) grid.  The advantage of using this method is that
+coarsest (Level 0) grid on each time step.  The advantage of using this method is that
 it is fast, accurate, and 
 naturally allows both periodic and isolated boundary conditions for
 the gravity, choices which are very common in astrophysics and
 cosmology.  On subgrids, we interpolate the boundary conditions from
 that grid's parent (either the level 0 grid or some other subgrid).
-The Poisson equation is then solved using a multigrid technique.  In
+The Poisson equation is then solved on every timestep using a multigrid technique on one
+subgrid at a time.  In
 \enzo, self-gravity is optional.  Aside from calculating the
 gravitational potential from the baryon fields and particles existing
 in the simulation, there are also a number of options for static gravitational fields.
@@ -637,7 +635,7 @@ in the simulation, there are also a number of options for static gravitational f
 Collisionless matter (dark matter, stars, etc.) is modeled with
 particles that interact with the baryons only via gravity.  These
 particles are advanced in a single time step using a drift-kick-drift
-algorithm to provide second-order accuracy even in the presence of
+algorithm\citep{Hockney88} to provide second-order accuracy even in the presence of
 changing timesteps.  Since the particles follow the collapse of
 structure, they are not adaptively refined.  Nor are there duplicate
 sets of particles for each level; instead, each particle is associated
@@ -660,14 +658,18 @@ and gas.
 
 \enzo\ includes the capability of following up to
 12 chemical species using a non-equilibrium solver.  The species can
-be turned on in sets, with the simplest model including just H, H$^+$,
+be turned on in sets, with the simplest model including just H, H$^+$, 
 He, He$^+$, He$^++$, and $e^-$, and more complete models adding first
 species important for gas-phase molecular hydrogen formation: $H^-$,
-H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  The
+H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  (We note
+that a reduced version of the chemistry, used only with the
+flux-limited diffusion radiation transport, includes only hydrogen
+species.)  The
 cooling and heating due to these species is also included (see the
 next section).  The solution of the rate equations is carried out
-using a time-backwards differencing which insures stability; to
-maintain accuracy we sub-cycle the rate equations with a shorter
+using one Jacobi iteration of an implicit Euler time discretization to
+ensure stability; to
+ensure accuracy we sub-cycle the rate equations with a shorter
 timestep such that the electron and neutral fractions do not change by
 more than 10\%.
 
@@ -679,8 +681,8 @@ off (i.e. set to zero), the cooling rate is computed from a simple
 temperature-dependent cooling rate, taken from \citet{SW87}.  If
 chemistry is turned on, then the code can include cooling from all
 species of Hydrogen and Helium (including H$_2$) -- this primordial cooling is
-also treated using a backwards-time differencing scheme with
-sub-cycling to maintain accuracy.  Finally, we have also recently
+also treated using 
+one Jacobi iteration of an implicit Euler time discretization to maintain accuracy.  Finally, we have also recently
 added metal cooling based on a set of multi-dimensional lookup tables
 computed with the \texttt{Cloudy} code \citep{1998PASP..110..761F} as
 described in \citet{2008MNRAS.385.1443S} and
@@ -694,7 +696,7 @@ of energy bins (see below).
 The chemical networks and heating rates described in the previous
 section can be affected by external radiation fields, and the code
 includes a number of pre-set radiation backgrounds that are uniform in
-space but can very in time.  These are generally based on the
+space but can vary in time.  These are generally based on the
 redshift-dependent rates given in \citet{1996ApJ...461...20H} and
 \citet{2012ApJ...746..125H}, but can also include a uniform H$_2$
 photo-dissociating background that is either constant in time or
@@ -716,18 +718,18 @@ main methodology section but is fully detailed and tested in
 \subsubsection{Radiation transport: Flux-limited diffusion}
 
 A second option for radiative transfer is a moment-based method that
-adds an additional field tracking the radiant energy density.
+adds an additional field tracking the radiation energy density.
 This field is evolved using the flux-limited diffusion method, which
 transitions smoothly between streaming (optically thin) and opaque
 limits and is coupled to the hydrogen ionization network.  The
 resulting set of linear equations is solved using the parallel HYPRE
-framework.  Full details for the enzo implementation can be found in
+framework.  Full details for the \enzo\ implementation can be found in
 \citet{ReynoldsHayesPaschosNorman2009}.
 
 \subsubsection{Heat Conduction}
 
 Heat conduction, both isotropic and anisotropic, can be included using
-an sub-cycled, operator-split method.  The heat fluxes are computed
+a sub-cycled, operator-split method.  The heat fluxes are computed
 with simple second-order accurate finite differences and stability is
 ensured by restricting the time step, and using flux-limiters where
 appropriate.

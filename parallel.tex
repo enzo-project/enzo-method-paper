@@ -14,15 +14,15 @@ some other meta data) is stored on each processor.  This enables each
 grid to know what grids are near it in the hierarchy, regardless of
 where the data is.  The actual Baryon data (density, velocity, energy,
 and any chemistry data) and particle data are stored on only one
-processor.  Storing the entire hierarchy on all processor does create
+processor.  Storing the entire hierarchy on all processors does create
 some overhead, but in practice this is not an issue until one reaches
-the extremely large scale.
+extremely large scales.
   The code handles load balancing 
 on a level-by-level basis such that the workload on each level is 
 distributed as uniformly as possible across all processors.  Spatial locality of 
 grids is not forced during message passing, for maximum flexibility (though not
 necessarily maximum efficiency).  
-The MPI message passing library\footnote{http://www-unix.mcs.anl.gov/mpi/}
+The MPI message passing library
  is used to transfer data between processors.
  
  

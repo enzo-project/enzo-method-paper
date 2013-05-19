@@ -23,7 +23,7 @@ zero:
 The Constrained Transport (CT) method \citep{Evans88, Balsara99} for
 magnetohydrodynamic (MHD) evolution employs this same vector property
 to evolve the magnetic field in a manner that preserves $\Divb=0$ to
-to limits of machine precision.  The electric field is computed using
+limits of machine precision.  The electric field is computed using
 the fluxes from the Riemann solver.  The curl of that electric field
 is then used to update the magnetic field.  The advantage of this
 method is that it preserves \Divb\ to machine precision.  The drawback
@@ -59,7 +59,7 @@ Divergence-free AMR is somewhat more complex than the AMR employed
 elsewhere in Enzo.  First, the interpolation must be constrained to be
 divergence free.  Thus, all three face-centered field components are
 interpolated in concert.  Second, any magnetic field information from
-previous time steps must be included in the interpolation, making the
+the previous time step must be included in the interpolation, making the
 interpolation more complex than the simple parent-child relation used
 for other fields.  Third, the flux correction involves more possible
 grid relations than traditional AMR.  In order to circumvent this last

@@ -19,13 +19,13 @@ The AMR grid patches are the primary data structure in \enzo.  Each patch is tre
 %See Figure~\ref{fig.2.amrhierdens} for an example of an \enzo\ simulation performed using this AMR scheme where both the baryon density and AMR grid hierarchy are shown together. 
 % GB: I think this figure is too application-specific
 
-Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig:amr_hierarchy}.  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} and~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
+Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig:amr_hierarchy}.  \red{(Move this figure to here?)}  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} and~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
 
 From the point of view of the hydro solver, each grid is solved as an independent CFD problem, with Dirichlet boundary conditions stored in the ghost zones.  At the end of each time step, cells on a given level fill ghost zones by interpolating from the parent and copying from neighbors on the same level.  Grids then correct the flux at the interface boundary between fine and coarse zones, and finally project their active zone data to the parent grid. 
 
-Timesteps are determined on each level as described in \ref{sec.timestepping}, and the hierarchy is advanced on
+Timesteps are determined on each level as described in Section~\ref{sec.timestepping}, and the hierarchy is advanced on
 a level-by-level basis in a W-Cycle.    Beginning with the coarsest level, $l$, all grids on that level are advanced one
-timestep.  Then one timestep is taken on all grids at the next level of refinement, $l+1$, and so on until the finest level is resolved. The finest level is then advanced, using as many steps as it takes to reach the level immediately above.  The finest level is then synched to the level above it, which then proceeds foreward in time one more step.  This is shown graphically in Figure~\ref{fig:wcycle}
+timestep.  Then one timestep is taken on all grids at the next level of refinement, $l+1$, and so on until the finest level is resolved. The finest level is then advanced, using as many steps as it takes to reach the level immediately above.  The finest level is then synched to the level above it, which then proceeds foreward in time one more step.  This is shown graphically in Figure~\ref{fig:wcycle}.
 
 \begin{figure}
 \begin{center}
@@ -63,6 +63,7 @@ begin
   begin
     dt = ComputeTimeStep(level)
     SolveHydroEquations(dt)
+    SolveOtherEquations(dt)
     Time = Time + dt
     SetBoundaryValues
     EvolveLevel(level+1, dt)
@@ -102,12 +103,12 @@ second-order schemes since they are tractable and relatively accurate.
   interpolator out of a one-dimensional interpolation function;
   however, at higher order, this would not necessarily satisfy our
   constraint regarding not introducing new extrema in interpolated quantities.}  In Appendix~\ref{app:interpolation}, we
-explicitely write down functions in one, two and three dimensions, but
+explicitly write down functions in one, two and three dimensions, but
 here we discuss the general design considerations.
 
 In two dimensions, it is relatively easy to build a linear, monotonic,
 conservative function by requiring, first, that the function at the
-center of the cell return the cell-centered quantitiy (and since it is
+center of the cell return the cell-centered quantity (and since it is
 linear, this implies that an average over the cell will also be equal
 to this value), and second, by treating the cell-diagonals as
 one-dimensional Van Leer-type functions.  The reason to focus on the
@@ -141,7 +142,7 @@ accurate estimate of the flux of conserved quantities at cell
 interfaces.  This is required in the flux-correction step (see
 \ref{sec:flux_correction}).  There is also the issue of centering,
 which refers to the position of physical quantities within a cell (the
-primary types are cell-centered, face-centered, and node-centered). We
+primary types are cell-centered, face-centered, and node-centered). In this description we 
 will employ the direct Eulerian version of the piecewise
 parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B}, which
 assumes cell-centering for all quantities (actually they are
@@ -179,11 +180,11 @@ where $F$ is the flux of quantity $q_i$ in the $i$-direction through the cell in
 \subsection{Hierarchy reconstruction}
 \label{sec:hierarchy_reconstruction}
 
-Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified. Many different criteria can be simultaneously specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vesion technique as described in \red{(REF)}.  
+Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified. Many different criteria can be simultaneously specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vision technique, as described in \red{(REF)}.  
 
-We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently larger (typically larger than 30\%), or if the grid is small enough (typically less than $4^d$ coarse cells, where d is the dimensionality of the simulation) then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicates by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest exis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
+We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently larger (typically larger than 30\%), or if the grid is small enough (typically less than $4^d$ coarse cells, where d is the dimensionality of the simulation) then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicated by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest exis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
 
-This algorithm is not necessarily optimal, but experience shows it does a reasonable job of generating an efficient covering of the refined cells.  Note that some cells are unnecessarily refined with the SAMR approach, resulting in wasted resources (unlike in cell-splitting AMR schemes).  However, it has a number of advantages.  First, traditional grid-based hydro method can be simply added with only minor modifications.  Second, it is easier to accommodate larger stencils (as in PPM, which requires three boundary zones), and third, it can be more efficient for some machines since there are more predictable and linear memory accesses, which more efficiently use a CPU's cache.
+This algorithm is not necessarily optimal, but experience shows it does a reasonable job of generating an efficient covering of the refined cells.  Note that some cells are unnecessarily refined with the SAMR approach, resulting in wasted resources (unlike in cell-splitting AMR schemes).  However, it has a number of advantages.  First, traditional grid-based hydro methods can be simply added with only minor modifications.  Second, it is easier to accommodate larger stencils (as in PPM, which requires three boundary zones), and third, it can be more efficient for some machines since there are more predictable and linear memory accesses, which more efficiently use a CPU's cache.
 
 
 \subsection{Refinement criteria}

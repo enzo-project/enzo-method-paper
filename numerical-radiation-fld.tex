@@ -12,7 +12,8 @@
 In addition to the ray-tracing approach for radiation transport
 described in Section~\ref{sec.num.raytracing}, \enzo\ currently includes
 a field-based radiation transport solver for problems posed on uniform
-(i.e.~non-AMR grids).  Detailed explanations of the model and
+(i.e.~non-AMR) grids, which has been tuned for large-scale simulations
+involving many ionizing sources.  Detailed explanations of the model and
 solution approach may be found in
 \cite{NBHBROW2007}, \cite{ReynoldsHayesPaschosNorman2009} and
 \cite{NRS2009}, the salient features of which are reproduced here. 
@@ -101,7 +102,7 @@ where we have defined the time-centered ``background'' states
 $\bar{E}_r = \left(E_r^{n}+E_r^{n+1}\right)/2$, 
 $\bar{\mathrm n}_i = \left({\mathrm n}_i^{n}+{\mathrm n}_i^{n+1}\right)/2$
 and $\bar{e}_c = \left(e_c^{n}+e_c^{n+1}\right)/2$.  These equations
-may each be solved {\em analytically} for their solution at the time
+may each be solved analytically for their solution at the time
 $t$, which we denote by
 \begin{eqnarray}
   \label{eq:fld_heating_qss_sol}
