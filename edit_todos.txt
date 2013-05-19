@@ -1,0 +1,4 @@
+EJT questions/suggestions:
+- is there a guide to how many sources the ray-tracing algorithm can cope with?  (order-of-magnitude)
+- figure 9 is very clear in color, but not B&W (I *think* this is the one-zone figure - figure numbers have changed).  Can the line styles be changed?
+

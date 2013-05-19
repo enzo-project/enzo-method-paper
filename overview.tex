@@ -21,8 +21,8 @@ components are then provided in Sections~\ref{sec.amr}-\ref{sec.num.analysis}.
 
 %\subsubsection{Magnetohydrodynamics and Gravity}
 
-The Eulerian equations of ideal magnetohydrodynamics including gravity
-in a coordinate systems comoving with the cosmological expansion are
+The Eulerian equations of ideal magnetohydrodynamics including gravity,
+in a coordinate systems comoving with the cosmological expansion, are
 given by:
 
 \begin{eqnarray} 
@@ -109,7 +109,7 @@ The equation of state is shown here for an ideal gas with a ratio of specific he
 Equation (\ref{eq:potential}) includes contributions to the
 gravitational potential $\phi$ from the total mass density $\rho_{\rm
   total}$.  Although we write the equations including both MHD and
-comoving coordinates, the code can operate both in the pure
+comoving coordinates, the code is frequently used both in the pure
 hydrodynamic limit ($\vecB = 0$) and without cosmological expansion
 ($a = 1$, $\dot{a} = 0$).
 
@@ -117,7 +117,10 @@ hydrodynamic limit ($\vecB = 0$) and without cosmological expansion
 
 %\subsubsection{Comoving Coordinates}
 
-For completeness, we note here that as part of the usual transformation to comoving coordinates, we have defined a set of comoving quantities.  See, for example, \citet{Peebles93} for more details.  Specifically, we define:
+For completeness, we note here that we have defined several key quantities
+in the comoving frame to make the previous equations more readable.
+Specifically, we define:
+
 \begin{eqnarray}
 \vecx & = & \vecr/a, \\
 \vecv & = & a \hspace{0.5mm} d\vecx/dt = 
@@ -192,7 +195,13 @@ Here, $\rho_0$ is the mean comoving mass density (including both baryonic and da
 %eq.~(\ref{eq:state}).
 This system of equations is limited to the non-relativistic regime and assumes that curvature effects are not important --- both assumptions are reasonable as long as the  size of the simulated region is small compared to the radius of curvature and the Hubble length $c/H$ ($c$ is the speed of light and $H$ is the Hubble constant).
 
-It is clear that the evolution equations are equivalent to the fixed coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.  We include the cosmological terms with the understanding that we are not restricting ourselves to cosmological applications.
+It is clear that the evolution equations are equivalent to the fixed
+coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.
+We include the cosmological terms with the understanding that \enzo\
+is not restricted to cosmological applications -- while historically
+the code was written with cosmological situations in mind (e.g.,
+galaxy clusters), in more recent years it has been used to simulate a much
+broader range of astrophysical environments.
 
 %\subsubsection{Particles}
 
@@ -365,7 +374,7 @@ that includes any point sources of radiation or diffuse radiation.
 
 In the other limit, we solve an equation derived from integrating
 the equation of radiative transfer over angles.  In particular, we use a
-flux-limited diffusion approximation for cosmological radiative
+flux-limited diffusion approximation for radiative
 transfer, with couplings to both the gas energy and chemical number
 densities. The equations solved are:
 \begin{eqnarray}
