@@ -63,7 +63,7 @@ an explicit finite difference discretization of the Euler equations.
 Effectively this condition forces the timestep to be small enough such
 that any changes in the fluid propagate less than a single grid
 spacing, $\Delta x$.  In this equation, $\kappa_{\rm hydro}$ is a
-numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 1$
+numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 0.5$
 (with a typical value of $\kappa_{\rm hydro} \sim 0.3-0.5$) that
 ensures that the CFL condition is always met, and $c_s$ and $v_x$ are
 the sound speed and peculiar baryon velocity in a given cell.

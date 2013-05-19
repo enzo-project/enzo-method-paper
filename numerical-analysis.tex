@@ -9,7 +9,7 @@ data at high time-cadence.  As simulations grow in size and complexity, storing 
 for post-processing simply becomes intractable.  To cope with this, we have
 instrumented Enzo with the ability to conduct analysis during the course of a
 simulation.  This enables analysis with extremely high time cadence (even as often
-as every subcycle of the finest refinement level), as well as without
+as every subcycle of the finest refinement level), without
 attempting to write an entire checkpoint output to disk.  The current mechanism
 for conducting analysis in Enzo during the course of the simulation utilizes
 the same compute resources as used by the simulation itself; this is often
@@ -92,8 +92,7 @@ both at the beginning of each timestep and at the half-timestep
 by linearly interpolating the cell-centered baryon velocity to the
 position of the particle ($v^{\rm interp}$), and assigning it to that value.
 
-At user-specified intervals, the tracer particles output their data
-in a streaming format into a binary file.  The data written out
+At user-specified intervals, the tracer particles output their data.  The data written out
 typically includes the tracer particle's unique ID, position, velocity, density,
 and temperature, but is easily extensible to output any grid-based
 quantity that a user requires.  This capability has been used quite

@@ -32,25 +32,19 @@ conductivity using the formalism of \citet{1988xrec.book.....S}
 
 where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 / |\nabla T|$ is the characteristic length scale of the local
-temperature gradient.  Furthermore, it is important to note that the
-overall level of thermal conductivity can be strongly affected
-by the presence of magnetic fields, which may strongly suppress heat
-flow.  The strength and distribution of magnetic fields in the
-intracluster medium is poorly understood, and it is unclear to what
-extent these magnetic fields will suppress conduction.  For the
-purposes of the work described in this paper, we assume that the
-conductivity of the plasma can be described in terms of an effective
-conductivity, which can be expressed as a fraction f$_{Sp}$ of the
-Spitzer conductivity (where f$_{Sp} \leq 1.0$ are considered physical
-values).
+temperature gradient.  We also assume that the conductivity of the
+plasma can be described in terms of an effective conductivity, which
+can be expressed as a fraction f$_{Sp}$ of the Spitzer conductivity
+(where f$_{Sp} \leq 1.0$ are considered physical values).  This takes
+into account physical processes below the resolution limit of the
+simulation (such as tangled magnetic fields) that can suppress heat
+transport.
 
-Thermal conduction in a
-plasma can be strongly affected by the presence of magnetic field
-lines, which may strongly suppress heat flow perpendicular to the
-magnetic field.  In that case, we allow for heat transport only
-parallel to
-the magnetic field lines in magnetohydrodynamic simulations.
-Mathematically, this is treated as:
+Thermal conduction in a plasma can be strongly affected by the
+presence of magnetic field lines, which may strongly suppress heat
+flow perpendicular to the magnetic field.  In that case, we allow for
+heat transport only parallel to the magnetic field lines in
+magnetohydrodynamic simulations.  Mathematically, this is treated as:
 
 \begin{equation}
 \mathbb{F} = -\kappa_{sp} \hat{b} (\hat{b} \cdot \nabla T)

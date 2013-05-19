@@ -2,3 +2,11 @@ EJT questions/suggestions:
 - is there a guide to how many sources the ray-tracing algorithm can cope with?  (order-of-magnitude)
 - figure 9 is very clear in color, but not B&W (I *think* this is the one-zone figure - figure numbers have changed).  Can the line styles be changed?
 
+Collins suggestion:
+- remove the Lagrangian Remap stuff entirely: it's not an option people can get to without signfiicant hassle (and delving into code that hasn't been built in years), and there's a lot in the paper already.
+- "above/below" terminology should be replaced by "coarser/finer" - it's confusing and non-intuitive unless you've been working on the code for a while.
+- Needs to be a consistent discussion of the treatment of cosmology b/w Dedner, CT MHD.
+- Should be a general pattern of having primary references for package in the first paragraph of each 3.x section - would help to make the paper more clear.
+- Needs a section on the variety of Riemann solvers.  This should go in Section 3.2.  Riemann solver fallback should also be described here.
+- The non-PPM reconstruction methods should be described somewhere.  While they live under HydroMethod==0 in the code, they aren't PPM so don't belong in that section.  (Or: should the non-PPM reconstruction methods be somewhere?)
+- in equations 1-4, include radiative transfer terms!

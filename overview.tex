@@ -108,7 +108,8 @@ e   & = & p / [(\gamma - 1) \rho ],
 The equation of state is shown here for an ideal gas with a ratio of specific heats $\gamma$.
 Equation (\ref{eq:potential}) includes contributions to the
 gravitational potential $\phi$ from the total mass density $\rho_{\rm
-  total}$.  Although we write the equations including both MHD and
+  total}$, which is defined as $\rho_{\rm gas} + \rho_{\rm dm} + \rho_{\rm stars}
+- \rho_{\rm average}$.  Although we write the equations including both MHD and
 comoving coordinates, the code is frequently used both in the pure
 hydrodynamic limit ($\vecB = 0$) and without cosmological expansion
 ($a = 1$, $\dot{a} = 0$).
@@ -368,11 +369,11 @@ both the cosmological redshift and dilution of radiation.  On the
 right hand side, the first term considers the absorption coefficient
 $\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$, and the second term
 $j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ is the emission coefficient
-that includes any point sources of radiation or diffuse radiation.
+that includes any sources of radiation (whether point or diffuse).
 
 %\subsubsection{Radiation transport: moment method}
 
-In the other limit, we solve an equation derived from integrating
+As an alternative to the ray-casting strategy, we solve an equation derived from integrating
 the equation of radiative transfer over angles.  In particular, we use a
 flux-limited diffusion approximation for radiative
 transfer, with couplings to both the gas energy and chemical number
@@ -386,24 +387,24 @@ densities. The equations solved are:
   \frac{\partial e_c}{\partial t} &=& -\frac{2\dot{a}}{a} e_c + \Gamma - \Lambda,
 %  \label{eq:fld_chemistry}
 %  \partial_t {\mathrm n}_i + 
-%    \frac1a \nabla\cdot\left({\mathrm n}_i \vec{v}_b\right) &=& 
+%    \frac1a \nabla\cdot\left({\mathrm n}_i \vecv_b\right) &=& 
 %    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
 %    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 \end{eqnarray}
-where $E_r$ is a grey radiation energy density and $e_c$ is the
+where $E_r = E_r(x,t)$ is a grey radiation energy density and $e_c$ is the
 internal energy correction due to photo-heating and chemical cooling.
 %and ${\mathrm n}_i$ correspond to the chemical number densities of
 %HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
 %number density.  
 Here, we define the grey radiation energy density
 through first assuming a fixed frequency spectrum, i.e.
-$E_{\nu}(\nu,\vec{x},t) = \tilde{E}_r(\vec{x},t) \chi(\nu)$, and then
+$E_{\nu}(\nu,\vecx,t) = \tilde{E}_r(\vecx,t) \chi(\nu)$, and then
 defining the integrated quantity
 \begin{equation}
 \label{eq:grey_radiation_energy}
-   E_r(\vec{x},t) \equiv \int_{\nu_0}^{\infty}
-   E_{\nu}(\nu,\vec{x},t)\,\mathrm d\nu \  = \ 
-   \tilde{E}_r(\vec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
+   E_r(\vecx,t) \equiv \int_{\nu_0}^{\infty}
+   E_{\nu}(\nu,\vecx,t)\,\mathrm d\nu \  = \ 
+   \tilde{E}_r(\vecx,t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
 \end{equation}
 In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
 square-root flux-limiter} \citep[see][]{Morel2000}, $\kappa$ is the total
@@ -474,8 +475,10 @@ become the parent grid to an even more highly resolved \emph{child grid}.
 The grid hierarchy begins with the root grid, which covers the entire
 domain of interest with a coarse, uniform, Cartesian grid. Then, as
 the solution evolves and interesting regions form, finer meshes are
-placed below these regions (we use the notation `below' to refer to
-finer grids and `above' for coarser grids).  We restrict the ratio
+placed within these coarse regions.
+% (we use the notation `below' to refer to
+% finer grids and `above' for coarser grids). 
+ We restrict the ratio
 between cell sizes to be an integer, typically 2 or 4, and refer to a
 level as all grids with the same cell size.  In order to keep
 things as simple as possible, the edges of subgrids must coincide with
@@ -493,14 +496,15 @@ advance all the grids on that level by a timestep $\Delta t_1$
 timesteps for those grids.  If there are more levels, we repeat this
 procedure until the bottom level of the hierarchy has been reached.
 Once there, we continue advancing the grids on the lowest level until
-they have `caught up' to the next highest level above (i.e. $\sum
+they have `caught up' to the coarser parent grids (i.e. $\sum
 \Delta t_l = \Delta t_{l-1}$).  This procedure repeats itself until
-all grids have been advanced by a total time of $\Delta t_0$.
+all grids have been advanced by a total time of $\Delta t_0$ (see
+Figure~\ref{fig:wcycle} for a schematic).
 
 Since interesting regions on the grid may move, the hierarchy must
 adapt itself.  We do this whenever a level has caught up to the
-coarser level above it and consists of entirely rebuilding the grids
-on that level and below.  This is done by applying the grid refinement
+coarser parent level and consists of entirely rebuilding the grids
+on that level and at finer resolutions.  This is done by applying the grid refinement
 criteria to the grids on that level, flagging zones that require
 extra grids.  These criteria depend on the physical problem being
 simulated.  We have implemented a number of options, including shock
@@ -508,18 +512,19 @@ and steep gradient detectors, but in the problem described here,
 employ one based on the mass within a cell, imitating the Lagrangian
 nature of the SPH algorithm.  Once a grid has a set of flagged cells,
 we run a machine-vision based algorithm \citep{Berger91} to find edges
-and determine a good placement of subgrids.  These subgrids must not
-overlap one another, must cover all flagged cells and their
-neighbouring cells, and be above a preset efficiency threshold, where
-the efficiency of a cell is defined as the ratio of flagged cells to
-total cells.  Once these new subgrids have been identified, the
+and determine a good placement of subgrids. 
+%  These subgrids must not overlap one another, must cover all flagged
+% cells and their neighbouring cells, and be above a preset efficiency
+% threshold, where the efficiency of a cell is defined as the ratio of
+% flagged cells to total cells. 
+Once these new subgrids have been identified, the
 solution from the next coarser grid is interpolated (see below) in
 order to initialize the values on the new grids.  Finally, any overlap
 between these new subgrids and the old ones is identified and the
 solution within the regions of overlap is copied to the new subgrids.
 The entire procedure just outlined is then repeated on the new grids
 and in this way the entire hierarchy (from the original level examined
-and below) is rebuilt.
+and continuing on to finer levels) is rebuilt.
 
 \subsubsection{Godunov PPM method (HD only)}
 
@@ -616,7 +621,8 @@ conserved quantities (mass, momentum and energy) across the grid.
 
 The current implementation of self-gravity in \enzo\ uses a Fast
 Fourier Technique \citep{Hockney88} to solve Poisson's equation on the
-top (level 0) grid.  The advantage of using this method is that it
+coarsest (Level 0) grid.  The advantage of using this method is that
+it is fast, accurate, and 
 naturally allows both periodic and isolated boundary conditions for
 the gravity, choices which are very common in astrophysics and
 cosmology.  On subgrids, we interpolate the boundary conditions from
@@ -710,7 +716,7 @@ main methodology section but is fully detailed and tested in
 \subsubsection{Radiation transport: Flux-limited diffusion}
 
 A second option for radiative transfer is a moment-based method that
-adds an additional field tracking the radiant energy density
+adds an additional field tracking the radiant energy density.
 This field is evolved using the flux-limited diffusion method, which
 transitions smoothly between streaming (optically thin) and opaque
 limits and is coupled to the hydrogen ionization network.  The
