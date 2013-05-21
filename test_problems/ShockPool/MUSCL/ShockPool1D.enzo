@@ -1,0 +1,38 @@
+#
+# AMR PROBLEM DEFINITION FILE: 2D Shock Propogation test
+#
+#  define problem
+#
+ProblemType            = 3        // Shock Pool
+TopGridRank            = 1
+TopGridDimensions      = 100
+RightFaceBoundaryCondition = 1  // set right faces to outflow
+HydroMethod            = 3
+#
+ShockPoolAngle          = 0.0    // angle relative to x-axis (in degrees)
+ShockPoolMachNumber     = 2.0 
+ShockPoolSubgridLeft    = 0.25   // start of subgrid
+ShockPoolSubgridRight   = 0.75   // end of subgrid
+#
+#  set I/O and stop/start parameters
+#
+StopTime               = 0.4
+dtDataDump             = 0.05
+#
+#  set Hydro parameters
+#
+Gamma                  = 1.4
+CourantSafetyNumber    = 0.5
+PPMDiffusionParameter  = 0       // diffusion off
+PPMFlatteningParameter = 0       // flattening on
+PPMSteepeningParameter = 0       // steepening on
+#
+#  set grid refinement parameters
+#
+StaticHierarchy           = 1    // static hierarchy
+RefineBy                  = 2    // refinement factor
+MaximumRefinementLevel    = 1
+#
+#  set some misc global parameters
+#
+
