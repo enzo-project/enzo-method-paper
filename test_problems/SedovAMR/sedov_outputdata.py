@@ -1,4 +1,4 @@
-from yt.mods import *
+:from yt.mods import *
 import matplotlib.pyplot as plt
 
 # Load the dataset.
