@@ -3,48 +3,24 @@
 
 \subsection{Parallel Strategy}
 
-% GB to work on this
-%  - expand to include better description
-%  - include load balancing options
+The current version of \enzo\ has been parallelized for distributed memory platforms using the Message Passing Interface (MPI).  This is done using a single grid object as the basic unit of parallelization.  Each grid object -- including all cell and grid data -- is fully contained in a single processor\footnote{We use the word {\it processor} to mean a basic distribution unit; this could by either a core or a node, depending on details of the system.  Note that the current version of Enzo is not threaded, although the development of a hybrid version is in process}.  Parallelization is accomplished by distributing grids amongst processors.  This is done on the root grid using a simple tiling system, where the root grid is split up into $N_{\rm root}$ tiles, where $N_{\rm root}$ is typically equal to the number of processors $N_p$.  
 
-When \enzo\ is run on a distrubuted platform, some of the data is
-replicated to all processors, while some remains on a single processor.
-A description of the entire hierarchy (the position and size of each grid, as well
-some other meta data) is stored on each processor.  This enables each
-grid to know what grids are near it in the hierarchy, regardless of
-where the data is.  The actual Baryon data (density, velocity, energy,
-and any chemistry data) and particle data are stored on only one
-processor.  Storing the entire hierarchy on all processors does create
-some overhead, but in practice this is not an issue until one reaches
-extremely large scales.
-  The code handles load balancing 
-on a level-by-level basis such that the workload on each level is 
-distributed as uniformly as possible across all processors.  Spatial locality of 
-grids is not forced during message passing, for maximum flexibility (though not
-necessarily maximum efficiency).  
-The MPI message passing library
- is used to transfer data between processors.
+Load balancing on levels other than the root level (i.e. grids for which the level $l > 0$) is different as the refined patches are not generally uniformly distributed.   Grids on refined levels are first placed on the same processor as their parent to minimize communication; however, this generally does not result in a well-balanced load.  Therefore, the code has a number of options for load balancing the grids on a given level. Each grid is assigned a load, generally equal to the number of cells in the grid.  The first load-balancing option is to move a grid from the processor with the highest load to the processor with the lowest load, with the proviso that only grids with load factors less than half the difference between the highest and lowest loaded processors will be moved.  This continues until the load ratio between the most-to-least loaded processor is below 1.05 or until no suitable grid can be found to transfer.  A second load balancing option uses a space-filling Hilbert curve to order the grids by their approximate spatial position.  Then, once the grids have a specific one-dimensional ordering, we can divide up the grids into $N_p$ groups (as equally as possible).  Load balancing is done separately for each level.  Clearly load balancing is most successful if there are significantly more grids than processors; however, small grids are less efficient (because of their ghost zones), and so the code uses a simple heuristic in order to split up grids until there are of order 10 grids per processor.  This generally results in good load-balancing while not producing grids which are wastefully small.
+
+Communication between processors is done using a non-blocking communication strategy that allows overlap of communication and computation.  This can be done efficiently because each processor retains a copy of the entire hierarchy of grids, except that grids which do not `live' on a given processor only contain meta data (essentially location and size of the grid; such grids are denoted as `ghost' grids).   Replicating the hierarchy means that all communication of data from one grid to another can be identified by each processor independently.  The metadata for `ghost' grids are quite small and so the extra memory required is generally not onerous unless very large numbers of grids are used (more than a few hundred thousand grids).   A schematic of this distribution is shown in Figure~\ref{fig.amr_hierarchy}.
+
+Data is transferred through a three-step procedure that takes advantage of MPI capabilities: (i) as the code progresses, and data is needed from another grid on another processor, the receiving processor posts an MPI non-blocking receive indicating that it is expecting data; this outstanding receive is recorded in a table , (ii) the sending processor calls the MPI non-blocking send function, and then finally (iii) the receiving processor, after it has carried out all the computation it can, waits for any MPI message to arrive.  Each message is coded so that it can be matched with appropriate receive posted in the first step, and based on that, the appropriate routine is called to processes the data.  Step (iii) is repeated until there are no outstanding receives.
+
  
- 
-
-
-%old text
-%Every processor 
-%keeps a description of the entire grid hierarchy at all times, so that 
-%each processor knows where all grids are.  However, baryon and particle 
-%data for a given grid only exists on a single processor.  See 
-%Figure~\ref{fig.2.amrhierarchy} for a schematic example of this.  
-
-
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.4\textwidth]{figures/amr_hierarchy.eps}
+\includegraphics[width=0.5\textwidth]{figures/amr_hierarchy.eps}
 \end{center}
 \caption{\emph{Left:}  Example of a simple, distributed AMR hierarchy showing real and ghost grids.
 \emph{Right:}  Example 2D \enzo\ grid showing real and ghost zones, as 
 needed for the PPM hydro stencil. }
-\label{fig:amr_hierarchy}
+\label{fig.amr_hierarchy}
 \end{figure}
 
 
@@ -54,11 +30,7 @@ needed for the PPM hydro stencil. }
 \subsection{Performance}
 \label{sec.performance}
 
-\subsubsection{Performance model \red{(Greg)}}
-
-% Maybe include Greg's text on general scaling arguments
-
-\subsubsection{Performance Measurement \& Instrumentation \red{(Sam)}}
+\subsubsection{Performance Measurement \& Instrumentation}
 
 Because of the wide variety of simulations, methods, and uses of Enzo,
 it is difficult to define exactly which routines are most costly
@@ -309,7 +281,45 @@ computational cells, strong scaling will cease at a smaller core count
 because the CPUs will become data-starved faster, and the opposite
 occurs with larger simulations.
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "ms"
-%%% End: 
+
+\subsubsection{An Approximate Time and Memory Scaling Model}
+
+In this section, we develop a simple, approximate model to estimate the compute time and memory required to complete a given calculation.  Note that we are {\it not} trying to model parallel performance (which we discussed in the previous section), but have an even simpler goal: to determine how to scale compute time estimates as we increase the resolution.  This is a straightforward thing to do in codes which use static grids, as the computational effort per time step is constant.  However, for an AMR calculation, the number of grids that will be generated during the run is not known in advance, and so the cpu time per problem time can vary drastically throughout the calculation.  
+%For example, at the beginning, when the densities are nearly uniform, only the static grid is required and the calculation progresses rapidly.  However, as structure forms and dense clumps are generated, the number of grid points swells by orders of magnitude (an increase by $10^3$ is not uncommon) and most of the cpu time is consumed at late times.  Therefore, simply performing a few steps does produce a good estimate of the cpu time.  
+
+Nevertheless, we can try to determine how the compute time scales for a given run, as we increase the resolution.  First, we neglect particles and concentrate on the time taken by the grids, which can be justified both theoretically and empirically\footnote{Since the potential is calculated on the grid, the only particle costs are: depositing mass to the grid, interpolating accelerations, and updating particle positions and velocities.  These are relatively cheap operations.}.  Second, we break the problem down slightly, and examine the scaling over a short enough period of time that the grid structure does not change significantly (i.e. the number of grids at each level).  We then assume that the whole run scales in the same way, or in other words, that changes in the resolution affect the simulation in the same way at each time step.  This is usually a good approximation as the most costly part of the calculation typically don't change their characteristics substantially.
+
+To make progress, we assume that the cost to advance a single cell by one timestep is a constant.  This can be incorrect if the chemistry solver requires many iterations, but is usually fairly accurate.  For a unigrid calculation, the time would by proportional to $N_{\rm root}^4$ since the number of cells scales as $N_{\rm root}^3$ and, assuming the Courant condition is the time limiting factor, then the number of steps to advance a given time is proportional to $N_{\rm root}.$  Therefore, to advance a hierarchy a given time, we find, accounting for all levels and using a refinement factor of 2.
+\begin{equation}
+t_{\rm SU} = C_1 \sum_l f_l N_{\rm root}^4 2^{4l}
+\end{equation}
+where $C_1$ is a constant, which can be thought of as the time taken to advance a single cell.  The factor $f_l$ is the fraction of the volume on a given level that is actually refined.  By definition $f_0 = 1$, and $f_l \le 1$.  In writing down this equation, we neglect a number of costs which are not directly proportional to cell count, including communication between processors, the $\log{N}$ factor for the root grid FFT, Cache misses, optimizations, and other costs associated with processing the hierarchy.  The first item on this list, in particular, is clearly not true for large processor counts; however, we neglect parallel considerations in this section.
+
+Note that unless $f_l/f_{l+1} < 1/16$ (i.e. if less then about 6\% of a given level is further refined), the cost per level will increase with level.  A key question therefore, is the values of $f_l$.  Unfortunately, this depends strongly on the simulation being run.  In Figure~\ref{fig:scaling}, we show the values of $f_l$ for three simulations: two cosmological runs with varying box size, and a third simulation focusing on a single disk galaxy.
+
+\begin{figure}
+\centerline{\includegraphics[width=0.7\textwidth]{figures/scaling_plot2}}
+\caption{This figure show (clockwise from upper left), the covering fraction $f_l$ of the grids on a given level $l$, the ratio of $f_{l}/f_{l+1}$, the relative memory usage of each level (normalized by the memory usage of level 0), and, in the lower-left panel, the relative cpu usage of each level, again normalized by $l=0$.  In each panel, three curves are shown: the solid black and long dashed red are two cosmological simulations with box sizes of 30 h$^{-1}$ Mpc and 80h$^{-1}$ Mpc respectively.  The dot-dashed blue line is for a non-cosmological simulation of a ram-pressure stripped galaxy.  In the top-right panel, there is a line at the critical ratio of 0.06, which determines if the next finer level ($l+1)$ takes more (above) or less (below) cpu time than level $l$.}
+\label{fig:scaling}
+\end{figure}
+
+As, the figure demonstrates, the $f_l$ values all show a sharp decline with level, dropping as power-laws with the level $l$.  Focusing first on the ``refine-everywhere" cosmological runs, which both show similar behavior despite the different box sizes and redshifts at which we collect the data.  In fact, we find the results are very typical for cosmological runs, with only slight variations depending on if we are simulating first stars or clusters of galaxies.  The top-left panel shows the ratio of $f_{l}/f_{l+1}$ which, remarkably, hovers around the critical value of 0.0625 determined earlier.  This implies that the relative cpu usage of each level, shown in the lower-left panel, is nearly flat, and that going to high levels of refinement only increases the amount of calculation by a factor of roughly $1/l_{\rm max}$.  Even in the most extreme case, the L80 run, the last level adds only 25\% to the computation time.
+
+The memory used by each level, on the other hand scales as:
+\begin{equation}
+{\rm memory} = C_2 \sum_l f_l N_{\rm root}^3 2^{3l}
+\end{equation}
+and the terms in this sum are shown in the bottom-right panel of Figure~\ref{fig:scaling}.  This demonstrates that the memory usage is dominated by the top three levels, and adding additional levels only adds minimally to the memory usage of the run.  We have empirically tested this scaling for cosmological simulations and found it to be reasonably accurate (although the increase is typically slightly larger than found here, usually 30-50\%, probably because of less-than-ideal parallel scaling).
+
+The physical reason for the $f_{l+1}/f_l$ ratios found in the cosmological simulations appears to be due to a combination of the density structure of individual clouds, and the distribution of the clouds themselves.  In particular, we note that for a $\rho \propto r^{-2}$ profile, the Lagrangian refinement criteria typically used in such simulations produces an $f_{l+1}/f_l$ ratio of 1/8 for a single, resolved cloud.  Of course, at some point we would resolve the flat density of individual clouds and the ratio would climb, making further refinement more costly; however, we are not yet in this regime in this example.
+
+These conclusions are, however, highly dependent on the type of run being performed.  We contrast this cosmological case to the simulation of a galaxy formation run, as shown by the dot-dashed curves in Figure~\ref{fig:scaling}.  Note that the levels 1 and 2 are statically refined to ensure the Lagrangian volume of the galaxy halo is resolved to at least level 2 at all times. More importantly, the $f_{l+1}/f_{l}$ ratio of the highest levels are systematically slightly larger than the critical 0.0625 value, indicating that the cpu time is dominated by the most refined levels, as shown in the bottom-left panel.  The memory usage is dominated by levels 2 and 3, the static levels, as the bottom-right panel demonstrates.  In this case, adding more levels of refinement would somewhat increase the cost of the simulation.
+
+Finally, we have so far focused on scaling when increasing $l_{\rm max}$, but without changing the refinement criteria.  However, we can also keep the levels fixed and modify the refinement criteria.  For cosmological runs, this is typically done by increasing the mass resolution (and simultaneously decreasing the dark matter particle mass), and adding additional linear small-scale modes to the initial conditions.  The effect of this is to boost the $f_l$ values at all levels (except for the root grid where $f_0$ is already 1) by a factor linearly proportional to the increase in the mass resolution.  This is because the refinement criteria typically boosts the number of refined cells on the first and subsequent levels by this factor.  Again, we have empirically demonstrated that this scaling is approximately valid (provided we keep the maximum level constant).
+
+Putting this together, we obtain an approximate scaling for cosmological simulations as 
+\begin{equation}
+t_{\rm SU} \propto M_{\rm res}^{-1} l_{\rm max}.
+\end{equation}
+which at least gives users some way to estimate compute times.
+
