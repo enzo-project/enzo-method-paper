@@ -1,6 +1,6 @@
 from yt.mods import *
 
-for n in range(300,301):
+for n in range(11,12):
     
     pf = load("DD%04i/DD%04i" % (n,n))
 
@@ -21,7 +21,5 @@ for n in range(300,301):
     #slice = SlicePlot(pf, 'z', "Temperature", width = (1.0, '1'), origin='domain', axes_unit=None)  #.save()
 
     slice.save(mpl_kwargs={'bbox_inches':'tight'})
-
-    #slice.save("testplot.png")
 
 # the end
