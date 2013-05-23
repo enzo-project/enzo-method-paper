@@ -20,8 +20,8 @@ TopGridDimensions = 3 3
 OneZoneFreefallTestInitialDensity = 1.0
 OneZoneFreefallTestMinimumEnergy = 2.0
 OneZoneFreefallTestMaximumEnergy = 2.0
-OneZoneFreefallTestMinimumMetallicity = 1.0e-2
-OneZoneFreefallTestMaximumMetallicity = 1.0e-2
+OneZoneFreefallTestMinimumMetallicity = 1.0e-4
+OneZoneFreefallTestMaximumMetallicity = 1.0e-4
 
 # Set timestep as a fraction of free-fall time
 OneZoneFreefallTimestepFraction = 1e-2
@@ -36,7 +36,6 @@ StopCycle                 = 3000
 CycleSkipDataDump         = 10
 DataDumpDir               = DD
 DataDumpName              = DD
-GlobalDir = ./Z-2
 
 #
 #  set hydro parameters
@@ -75,7 +74,7 @@ RadiativeCooling          = 1
 MultiSpecies              = 3
 H2FormationOnDust         = 0
 MetalCooling              = 3             // cloudy cooling
-CloudyCoolingGridFile     = solar_2008_3D_metals.h5 // 3D metals only
+CloudyCoolingGridFile     = ../solar_2008_3D_metals.h5 // 3D metals only
 CMBTemperatureFloor       = 0
 IncludeCloudyHeating      = 0
 SolarMetalFractionByMass  = 0.02041
