@@ -62,7 +62,7 @@ testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
             'WavePool', 'ZeldovichPancake']
 """
 #testnames = ['ZeldovichPancake',  'OneZoneFreefallTest']
-testnames =  ['GravityTest']
+testnames =  ['SelfSimilarInfall']
 
 # goes through directory dirname and its subdirs and makes list of directories that
 #   contains enzo parameter files (which end in '.enzo')
@@ -100,7 +100,7 @@ for simdir in all_sim_dirs:
     os.chdir(simdir)  # go into simulation directory
      
     if cleandata == 1:
-        os.system('rm -rf DD* Enzo_Build* Evtime *out *log *Log RunFinished')
+        os.system('rm -rf DD* Enzo_Build* Evtime *out *log *Log RunFinished SphericalInfallReport')
         
     if runsim > 0:  # now we actually run the simulation!
         dirlisting = os.listdir('.')  # get listing of all of the files in the directory
