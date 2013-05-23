@@ -20,6 +20,8 @@ for n in range(11,12):
     slice = SlicePlot(pf, 'z', "Temperature", width = (1.0, '1'), origin='domain', axes_unit=('1','1'))  #.save()
     #slice = SlicePlot(pf, 'z', "Temperature", width = (1.0, '1'), origin='domain', axes_unit=None)  #.save()
 
-    slice.save(mpl_kwargs={'bbox_inches':'tight'})
+    filename = "DD%04i" % n
+
+    slice.save(mpl_kwargs={'bbox_inches':'tight'}, name="%s_slice_Temperature_z.eps" % filename)
 
 # the end

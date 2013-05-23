@@ -39,10 +39,10 @@ cleandata = 1
 cleanfigs = 1
 
 # if runsim > 0, run simulations; if 0, don't.
-runsim = 1
+runsim = 0
 
 # if makefig > 0, make figures.  if 0, don't.  Figures require simulation data!
-makefig = 1
+makefig = 0
 
 ############ END OF USER-SET PARAMETERS #############
 
@@ -62,7 +62,7 @@ testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
             'WavePool', 'ZeldovichPancake']
 """
 #testnames = ['ZeldovichPancake',  'OneZoneFreefallTest']
-testnames =  ['DoubleMachReflection']
+testnames =  ['GravityTest']
 
 # goes through directory dirname and its subdirs and makes list of directories that
 #   contains enzo parameter files (which end in '.enzo')

@@ -1,6 +1,6 @@
 from yt.mods import *
 
-for n in range(1,2):
+for n in range(11,12):
 
     pf = load("DD%04i/DD%04i" % (n,n))
 
@@ -10,7 +10,7 @@ for n in range(1,2):
 
     slice = SlicePlot(pf, 'z', "Density", center=c, width=((4.0, '1'), (1.0, '1')), origin='domain', axes_unit=('1','1')) 
     slice.set_buff_size(buff)
-    #slice.set_window_size(4.8)
-    #slice.save()
 
-    slice.save(mpl_kwargs={'bbox_inches':'tight'})
+    filename = "DD%04i" % n
+
+    slice.save(mpl_kwargs={'bbox_inches':'tight'},name="%s_slice_Density_z.eps" % filename)
