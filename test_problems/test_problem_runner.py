@@ -62,7 +62,7 @@ testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
             'WavePool', 'ZeldovichPancake']
 """
 #testnames = ['ZeldovichPancake',  'OneZoneFreefallTest']
-testnames =  ['SelfSimilarInfall']
+testnames =  ['TestOrbit']
 
 # goes through directory dirname and its subdirs and makes list of directories that
 #   contains enzo parameter files (which end in '.enzo')
