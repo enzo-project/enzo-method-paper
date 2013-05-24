@@ -1,7 +1,8 @@
 """
 This script makes all of the figures in the 'Representative test problems' section
 of the Enzo method paper (Section 11.2).  It requires you to have built an Enzo executable,
-named enzo.exe, ***using the HYPRE library***.  If you do NOT use the HYPRE library,
+named enzo.exe, ***using the HYPRE library (http://acts.nersc.gov/hypre/)***, and also yt built
+with SciPy.  If you do NOT use the HYPRE library, or do not have SciPy installed along with yt, 
 remove the 'CosmoIFront' problem from the testnames list below.  You also need to set
 two paths (edit the variables directly below this comment block), and you can turn on
 and off some options.  

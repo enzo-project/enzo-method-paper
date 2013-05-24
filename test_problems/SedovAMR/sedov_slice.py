@@ -1,13 +1,12 @@
+# Makes slices of density for both simulations (PPM, Zeus)
+
 from yt.mods import * 
 
-#fn = "../100amr4/ppm/DD0007/sb_L2x2_amr4_0007"
-fn = "../100amr4/zeus/DD0007/sb_L2x2_amr4_zeus_0007"
+fn1 = "PPM/DD0007/DD0007"
+pf1 = load(fn1)
+slice1 = SlicePlot(pf1, 'z', "Density", center=[0.5, 0.5, 0.0]).save("PPM_Density_slice.eps")
 
-pf = load(fn)
-pc = PlotCollection(pf, center=[0.5, 0.5, 0.5])
-
-p = pc.add_slice("Density", 2)
-#p.modify["grids"]()
-
-pc.save(fn)
+fn2 = "Zeus/DD0007/DD0007"
+pf2 = load(fn2)
+slice2 = SlicePlot(pf2, 'z', "Density", center=[0.5, 0.5, 0.0]).save("Zeus_Density_slice.eps")
 
