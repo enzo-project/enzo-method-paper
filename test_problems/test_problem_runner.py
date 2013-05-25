@@ -1,17 +1,24 @@
 """
-This script makes all of the figures in the 'Representative test problems' section
-of the Enzo method paper (Section 11.2).  It requires you to have built an Enzo executable,
-named enzo.exe, ***using the HYPRE library (http://acts.nersc.gov/hypre/)***, and also yt built
-with SciPy.  If you do NOT use the HYPRE library, or do not have SciPy installed along with yt, 
-remove the 'CosmoIFront' problem from the testnames list below.  You also need to set
-two paths (edit the variables directly below this comment block), and you can turn on
-and off some options.  
+         Enzo method paper figure generator
 
-Note that running this script can take quite a bit of time - some of the simulations
-take a while to run (hours).  If you're worried that it's not doing anything, go into
-the simulation directory for the simulation that is currently running (which will be
-printed out by the script) and look to see when the file output.log was last modified.
-This file contains stdout and stderr from the simulation.
+This script makes all of the figures in the 'Representative test
+problems' section of the Enzo method paper (Section 11.2).  It
+requires you to have compiled an Enzo executable, named enzo.exe,
+***using the HYPRE library (http://acts.nersc.gov/hypre/)***, and also
+have yt (http://yt-project.org) built with SciPy, which requires a
+non-default option to be set in the install script.  If you do NOT
+compile Enzo with the HYPRE library, or do not have SciPy installed
+along with yt, remove the 'CosmoIFront' problem from the testnames
+list below.  You also need to set two paths -- the location of the
+Enzo binary and the path to the test problem directory -- and you
+can turn on and off some options.  This is all done directly below
+this comment block.
+
+Note: some of the simulations used to create the method paper figures
+can take several hours to run, or should be run on several CPUs. See
+the README file in this directory for specifics.  You can change the
+simulations that are run with this script by editing the variable
+'testnames', below.
 
     --Brian O'Shea, oshea@msu.edu, May 2013
     
@@ -20,10 +27,10 @@ import os as os
 
 ############ USER SETS THESE PARAMETERS #############
 
-# directory where the enzo.exe binary is stored
+# directory where the enzo.exe binary is stored (needs absolute path name)
 enzodir = '/Users/bwoshea/Desktop/SYNCHED/Current\ Projects/Papers/enzo-method-paper/test_problems'
 
-# directory where this file is located (need absolute path name)
+# directory where this file is located (needs absolute path name)
 topleveldir = '/Users/bwoshea/Desktop/SYNCHED/Current Projects/Papers/enzo-method-paper/test_problems'
 
 # the following options allow you to articulate whether you want the simulations to be run (runsim),
@@ -39,11 +46,11 @@ cleandata = 1
 # if cleanfigs == 1, delete all figures in the directory.  If 0, don't touch them.
 cleanfigs = 1
 
-# if runsim > 0, run simulations; if 0, don't.
-runsim = 0
+# if runsim = 1, run simulations; if 0, don't.
+runsim = 1
 
-# if makefig > 0, make figures.  if 0, don't.  Figures require simulation data!
-makefig = 0
+# if makefig = 1, make figures.  if 0, don't.  Figures require simulation data!
+makefig = 1
 
 ############ END OF USER-SET PARAMETERS #############
 
@@ -57,13 +64,20 @@ print 'Top level directory is:', topleveldir
 print '\n'
 
 """
-testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
+Complete list of test names, for convenience:
+
+all_testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
             'GravityTest', 'OneZoneFreefallTest', 'OrszagTang', 'PhotonShadowing',
             'SedovAMR', 'SelfSimilarInfall', 'ShockPool', 'ShockTube', 'TestOrbit',
             'WavePool', 'ZeldovichPancake']
 """
-#testnames = ['ZeldovichPancake',  'OneZoneFreefallTest']
-testnames =  ['OneZoneFreefallTest']
+
+testnames = ['AnisoConduction', 'CosmoIFront', 'DoubleMachReflection',
+            'GravityTest', 'OneZoneFreefallTest', 'OrszagTang', 'PhotonShadowing',
+            'SedovAMR', 'SelfSimilarInfall', 'ShockPool', 'ShockTube', 'TestOrbit',
+            'WavePool', 'ZeldovichPancake']
+
+print "The tests that will be run are: ", testnames, "\n\n"
 
 # goes through directory dirname and its subdirs and makes list of directories that
 #   contains enzo parameter files (which end in '.enzo')
@@ -91,7 +105,6 @@ for thistest in testnames:
 print 'All simulation directories:', all_sim_dirs, '\n'
 print 'All figure directories:', all_figure_dirs, '\n'
 
-
 """
  loop over all directories containing .enzo files (from list generated above)
  and run simulations.
@@ -101,7 +114,7 @@ for simdir in all_sim_dirs:
     os.chdir(simdir)  # go into simulation directory
      
     if cleandata == 1:
-        os.system('rm -rf DD* Enzo_Build* Evtime *out *log *Log RunFinished SphericalInfallReport')
+        os.system('rm -rf DD* Enzo_Build* Evtime *out *log *Log RunFinished SphericalInfallReport sedov.in sedov*dat')
         
     if runsim > 0:  # now we actually run the simulation!
         dirlisting = os.listdir('.')  # get listing of all of the files in the directory
