@@ -19,4 +19,4 @@ for i,f in enumerate(fields):
 ep = EPS.multiplot_yt(2,2,pc, margins=(0.2,0.2), bare_axes=True)
 ep.scale_line(1.0/6.6, '1 kpc')
 ep.title_box("15 Myr")
-ep.save_fig("code-test-shadowing")
+ep.save_fig("code-test-shadowing.eps")
