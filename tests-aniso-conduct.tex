@@ -8,22 +8,20 @@ and temperatures in the millions of Kelvin, the electron gyroradius is
 very small compared to the scales of interest in a typical
 cosmological simulation.  As a result, electrons can only move
 \textit{along} magnetic field lines, not perpendicular to them, which
-can result in very interesting magnetohydrodynamical instabilities
-\citep[e.g.,][]{2008ApJ...677L...9P,2008ApJ...688..905P}.  The correct
+can result in very interesting magnetohydrodynamical instabilities \protect \citep[e.g.,][]{2008ApJ...677L...9P,2008ApJ...688..905P}. The correct
 modeling of this behavior can be quite challenging, and is described
-in Section~\ref{sec.num.conductions}.  Conduction in \enzo\ is
-calculated in both an operator-split and directionally-split manner,
+in Section~\protect\ref{sec.num.conductions}. Conduction in \protect\enzo\ is calculated in both an operator-split and directionally-split manner,
 and the addition of heat transport solely along magnetic field lines
 requires computation of cross-terms in the temperature derivative at
 cell faces, which can add spurious oscillations in the temperature
 field in regions where the temperature gradient is strong in more than
-one spatial direction unless an appropriate flux-limiter \citep[such
-as that of][]{1977JCoPh..23..263V} is chosen.
+one spatial direction unless an appropriate flux-limiter \protect\citep[such as that of][]{1977JCoPh..23..263V} is chosen.
+\mqk{The previous paragraph more or less repeats what's in Section~\ref{sec.num.conductions}, I think it should be removed (or merged with that section).}
 
 Figure~\ref{fig.conduct} shows a test that demonstrates the correct
 behavior of anisotropic thermal conduction in \enzo.  We initialize a
 two-dimensional, $256 \times 256$ cell simulation having a physical
-scale of 1 kpc on a side, a uniform density of 1 proton/cc, and a
+scale of 1 kpc on a side, a uniform density of 1 proton cm$^{-3}$ and a
 background temperature of $10^6$ Kelvin.  Magnetic fields with a
 strength of B$_0 = 1$~$\mu$G are initialized such that the field lines
 form circles around the center of the simulation volume, such that
@@ -35,15 +33,16 @@ of $1/64$ of the box size.  This initial setup is shown in the left
 panel of Figure~\ref{fig.conduct}.  The simulation is then allowed to
 evolve with \textit{only} anisotropic conduction turned on (e.g., no
 hydrodynamics, radiative cooling, or cosmological expansion), and with
-a Spitzer fraction of f$_{sp} = 1$.
+a Spitzer fraction of f$_{\rm sp} = 1$.
 
 The right panel of Figure~\ref{fig.conduct} shows the state of the
-simulation after 300 Myr.  Heat has clearly been transported only along
-field lines -- there has been no diffusion perpendicular to the
+simulation after 300 Myr.  Heat has clearly been transported only
+along field lines -- there has been no diffusion perpendicular to the
 magnetic field setup, which is critical for many studies involving
 anisotropic thermal conduction.  No oscillations are seen in the
 temperature field in regions where the fields are not aligned with the
-grid, suggesting that the flux-limiter is operating as expected.
+grid, suggesting that the flux-limiter is operating as expected (see
+discussion in Section~\ref{sec.num.conductions}).
 
 \begin{figure}
 \begin{center}
@@ -51,17 +50,18 @@ grid, suggesting that the flux-limiter is operating as expected.
 \includegraphics[width=0.4\textwidth]{figures/aniso_conduction_final_output.eps}
 \caption{Two-dimensional anisotropic conduction test in a uniform,
 constant temperature background with circular magnetic fields centered
-on (0.5, 0.5) in a $256 \times 256$ grid.  The background medium has a
-density of 1 proton/cc and a temperature of $10^6$~K.  At t$ = 0$
-(left panel), a Gaussian heat pulse is injected at (0.75, 0.5) with a
-FWHM of $1/64$ (with all numbers given in units of the box size) and a
-peak temperature of $10^8$~K, and allowed to evolve without
-hydrodynamical motion (i.e., static gas) and no radiative cooling for
-300 Myr.  At t$ = 300$~Myr (right panel), heat has been transported
-along magnetic field lines with no significant diffusion perpendicular
-to field lines. Furthermore, there are no detectable oscillations in
-the temperature in regions where the magnetic field is not parallel
-with the grids.}
+on (0.5, 0.5) in a $256 \times 256$ grid. \mqk{Maybe show some field
+lines in the figure?} The background medium has a density of 1
+proton/cc and a temperature of $10^6$~K.  At t$ = 0$ (left panel), a
+Gaussian heat pulse is injected at (0.75, 0.5) with a FWHM of $1/64$
+(with all numbers given in units of the box size) and a peak
+temperature of $10^8$~K, and allowed to evolve without hydrodynamical
+motion (i.e., static gas) and no radiative cooling for 300 Myr.  At t$
+= 300$~Myr (right panel), heat has been transported along magnetic
+field lines with no significant diffusion perpendicular to field
+lines. Furthermore, there are no detectable oscillations in the
+temperature in regions where the magnetic field is not parallel with
+the grids.}
 \label{fig.conduct}
 \end{center}
 \end{figure}
