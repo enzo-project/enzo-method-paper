@@ -16,30 +16,29 @@ duration of the simulation.  Right panel: total specific energy
 simulation.  The particle's mean energy (integrated over the length of
 the simulation) is represented by a horizontal dashed line, and +/-
 one standard deviation by horizontal dotted lines.  All quantities are
-in arbitrary units.}
+in dimensionless units.}
 \label{fig.orbittest}
 \end{center}
 \end{figure}
 
 The ``orbit test'' simulates the orbit of an effectively massless
-particle around a massive primary particle, and is used to test the
+particle around a massive primary particle and is used to test the
 accuracy of both the gravity solver and particle integration.  In this
 problem (shown in Figure~\ref{fig.orbittest}), a 3D box with unit size
 and $32^3$ grid is created, and a particle with mass 1 is placed at
 the center of the box (both box length and particle mass are in
-arbitrary units).  A second ``test'' particle, with mass of $10^{-6}$,
+dimensionless units).  A second ``test'' particle, with mass of $10^{-6}$,
 is placed at a distance of 0.3 L$_{box}$ from the primary particle in
 the x-y plane (at $z=0.5$~L$_{box}$).  Both particles are given
-velocities such that they will orbit their common centers of mass in
-the x-y plane.  The gravitational potential is calculated using a fast
-Fourier Transform on the $32^3$ grid, and the simulation is integrated
-forward in time for 200 particle orbits, writing out a dataset
+velocities such that they will orbit their common center of mass in
+the x-y plane.  The simulation is run for 200 orbits, writing
+out a dataset 
 approximately once per orbit (with the particle positions being
 written out several hundred times per orbit).
 
 The left panel of Figure~\ref{fig.orbittest} shows the path of the
 test particle in the x-y plane (at z=$0.5$), plotted over the duration
-of the simulation (approximately 200 orbits).  The test particle
+of the simulation.  The test particle
 maintains a path that has effectively unnoticeable deviation from
 circularity, and with no discernable drift in either net radius or
 orbit center over time.  The right panel displays the total specific
@@ -53,4 +52,4 @@ Given that the potential is calculated on $32^3$ cells, the two
 particles are separated by between 10 and 14 cells depending on their
 relative positioning in the grid, and the particles are integrated
 using a second-order leapfrog method, this level of accuracy is
-roughly what one might expect.
+expected.
