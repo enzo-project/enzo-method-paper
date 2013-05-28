@@ -1,18 +1,18 @@
 \subsection{Radiative Cooling and Heating}
 \label{sec.num.cooling}
 
-\enzo\ has multiple methods for computing the energy change from
-radiative cooling and heating.  All of them assume the gas is totally
-optically thin.  Below we describe the methods for computing the
-cooling rates from metal-free and metal-enriched gas.  Sample cooling
-curves for each of \enzo's primary cooling methods are shown in Figure
-\ref{fig.cooling_rate}.
+\enzo\ has multiple methods for computing the energy change from radiative
+cooling and heating.  All of them assume the gas can be modeled either as
+completely optically thin or with a simple, local approximation to optical
+thickness.  Below we describe the methods for computing the cooling rates from
+metal-free and metal-enriched gas.  Sample cooling curves for each of \enzo's
+primary cooling methods are shown in Figure \ref{fig.cooling_rate}.
 
 \subsubsection{Primordial Cooling}
 
 As discussed in Section~\ref{sec.num.chemistry}, the set of reactions that
 characterize a metal-free gas is simple enough to be computed in
-non-equilibrium during the simulation.  Similarly, the radiative
+non-equilibrium during even very simulations.  Similarly, the radiative
 cooling of metal-free gas is solved by directly computing the cooling
 and heating rates from the following individual processes for atomic H
 and He: collisional excitation and ionization, recombination,
@@ -20,26 +20,26 @@ free-free emission, Compton scattering off of the cosmic microwave
 background (CMB), and photo-heating from a UV metagalactic background.
 If the H$_{2}$ chemistry network is enabled, the following H$_{2}$
 cooling processes are also considered: ro-vibrational transitions
-\citep{1998A&A...335..403G}, heating and cooling from molecular
+\citep{2008MNRAS.388.1627G,1998A&A...335..403G}, heating and cooling from molecular
 formation and destruction \citep{2009Sci...325..601T}, and
 collision-induced emission \citep{2004MNRAS.348.1019R}.  If Deuterium
 chemistry is enabled, then rotational transitions of HD
-\citep{1998A&A...335..403G} are treated as well.  The radiative
-cooling calculation is coupled to the update of the chemistry network
-such that they both occur within the same subcycling loop.  This is
-necessary in regimes where rapid cooling or change in the ionization
-state occur.  In addition to the subcycle timestepping contraints
-mentioned in Section~\ref{sec.num.chemistry}, the subcycle timestep is also not
-permitted to exceed 10\% of the cooling time, $t_{cool} = e/\dot{e}$.  A
-metagalactic background affects the gas through both photo-heating and
-photo-ionization.  These are treated by including redshift-dependent
-photo-ionization and photo-heating rate terms in the chemistry and
-cooling equations for \ion{H}{1}, \ion{He}{1}, and \ion{He}{2}.  The
-black curves in Figure \ref{fig.cooling_rate} show cooling rates for a
-metal-free gas with number density $n_{\rm H} = 10^{-4}$ cm$^{-3}$ both
-with and without a radiation background.  More detail on the specific
-UV backgrounds present in \enzo\ is presented below in
-Section~\ref{sec.num.rad-homogeneous}.
+\citep{1998A&A...335..403G, 1983ApJ...270..578L} are treated as well.  The
+radiative cooling calculation is coupled to the update of the chemistry network
+such that they both occur within the same subcycling loop.  This is necessary
+in regimes where rapid cooling or change in the ionization state occur, as this
+will influence the kinetic rate coefficients through both changes in energy and
+the equation of state of the gas.  In addition to the subcycle timestepping
+contraints mentioned in Section~\ref{sec.num.chemistry}, the subcycle timestep
+is also not permitted to exceed 10\% of the cooling time, $t_{cool} =
+e/\dot{e}$.  A metagalactic background affects the gas through both
+photo-heating and photo-ionization.  These are treated by including
+redshift-dependent photo-ionization and photo-heating rate terms in the
+chemistry and cooling equations for \ion{H}{1}, \ion{He}{1}, and \ion{He}{2}.
+The black curves in Figure \ref{fig.cooling_rate} show cooling rates for a
+metal-free gas with number density $n_{\rm H} = 10^{-4}$ cm$^{-3}$ both with
+and without a radiation background.  More detail on the specific UV backgrounds
+present in \enzo\ is presented below in Section~\ref{sec.num.rad-homogeneous}.
 
 \subsubsection{Metal Cooling}
 
