@@ -12,13 +12,13 @@ primary cooling methods are shown in Figure \ref{fig.cooling_rate}.
 
 As discussed in Section~\ref{sec.num.chemistry}, the set of reactions that
 characterize a metal-free gas is simple enough to be computed in
-non-equilibrium during even very simulations.  Similarly, the radiative
+non-equilibrium during even very large simulations.  Similarly, the radiative
 cooling of metal-free gas is solved by directly computing the cooling
 and heating rates from the following individual processes for atomic H
 and He: collisional excitation and ionization, recombination,
 free-free emission, Compton scattering off of the cosmic microwave
 background (CMB), and photo-heating from a UV metagalactic background.
-If the H$_{2}$ chemistry network is enabled, the following H$_{2}$
+If the \HH chemistry network is enabled, the following \HH
 cooling processes are also considered: ro-vibrational transitions
 \citep{2008MNRAS.388.1627G,1998A&A...335..403G}, heating and cooling from molecular
 formation and destruction \citep{2009Sci...325..601T}, and
@@ -28,11 +28,11 @@ chemistry is enabled, then rotational transitions of HD
 radiative cooling calculation is coupled to the update of the chemistry network
 such that they both occur within the same subcycling loop.  This is necessary
 in regimes where rapid cooling or change in the ionization state occur, as this
-will influence the kinetic rate coefficients through both changes in energy and
-the equation of state of the gas.  In addition to the subcycle timestepping
-contraints mentioned in Section~\ref{sec.num.chemistry}, the subcycle timestep
-is also not permitted to exceed 10\% of the cooling time, $t_{cool} =
-e/\dot{e}$.  A metagalactic background affects the gas through both
+will influence the chemical kinetic rate coefficients through both changes in
+energy and the equation of state of the gas.  In addition to the subcycle
+timestepping contraints mentioned in Section~\ref{sec.num.chemistry}, the
+subcycle timestep is also not permitted to exceed 10\% of the cooling time,
+$t_{cool} = e/\dot{e}$.  A metagalactic background affects the gas through both
 photo-heating and photo-ionization.  These are treated by including
 redshift-dependent photo-ionization and photo-heating rate terms in the
 chemistry and cooling equations for \ion{H}{1}, \ion{He}{1}, and \ion{He}{2}.
@@ -60,13 +60,13 @@ heating rate tables computed with the photo-ionization code
 \citet{2008MNRAS.385.1443S} and \citet{2011ApJ...731....6S}, works by
 using \texttt{Cloudy} to compute the cooling and heating rates from
 the metal species only.  The primary assumption made is that of
-ionization equilibrium.  The tables can have up to five dimensions,
-where those dimensions are density, metallicity, electron fraction,
+ionization equilibrium.  The tables can vary along up to five dimensions,
+of density, metallicity, electron fraction,
 redshift (for an evolving metagalactic UV background), and
 temperature.  Tables can be created for any abundance pattern for
 elements up to atomic number 30 (Zn) and for any incident radiation
-field.  The cooling from H and He is calculated by the non-equilibrium
-primordial chemistry and cooling solver.  The contribution of metals
+field.  Cooling from the standard \enzo\ non-equilibrium cooling module is
+applied on top of the metal contributions.  The contribution of metals
 to the cooling is computed within the same subcycling loop as the
 coupled primordial chemistry and cooling solver.  The blue curves in
 Figure \ref{fig.cooling_rate} show cooling rates calculated with this
