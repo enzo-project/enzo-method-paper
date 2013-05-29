@@ -1,35 +1,43 @@
+% EJT: general changes
+% Enzo to \enzo\
+% changed ``some Lagrangian fluid trajectories'' to ``a fixed number of Lagrangian fluid trajectories.'' Easier to understand.
+% changed ``some evolution'' to ``a period of evolution'' ... I basically don't like 'some'. It sounds vague.
+% rephrased to remove ``e.g.'' as they read slightly awkwardly
+% moved definition of T_1 and T_2 slightly higher in shock text to where they first appear.
+
 \section{Analysis}
 \label{sec.num.analysis}
 
 \subsection{Inline analysis with yt}
 
-Analyzing the results of simulations in detail requires both tools to ask
-sophisticated questions of data and the ability to process vast quantities of
+Detailed analsis of simualtion results requires both the tools to ask
+sophisticated questions of the data and the ability to process vast quantities of
 data at high time-cadence.  As simulations grow in size and complexity, storing data
 for post-processing simply becomes intractable.  To cope with this, we have
-instrumented Enzo with the ability to conduct analysis during the course of a
+instrumented \enzo\ with the ability to conduct analysis during the course of a
 simulation.  This enables analysis with extremely high time cadence (even as often
 as every subcycle of the finest refinement level), without
 attempting to write an entire checkpoint output to disk.  The current mechanism
-for conducting analysis in Enzo during the course of the simulation utilizes
-the same compute resources as used by the simulation itself; this is often
+for conducting analysis in \enzo\ during the course of the simulation utilizes
+the same compute resources as used by the simulation itself by transferring their usage 
+from \enzo\ to the analysis routines; this is often
 referred to as \textit{in situ} analysis or visualization.  Utilizing a
 dynamically-scheduled second set of computing resources, often referred to as
 \textit{co-scheduled} analysis or visualization, provides greater flexibility and overall
 throughput at the expense of simplicity.
 
-We expose Enzo's mesh geometry and fluid quantities to the analysis platform
+We expose \enzo\ 's mesh geometry and fluid quantities to the analysis platform
 \texttt{yt} \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  At compile time,
-Enzo is (dynamically or statically) linked against the Python and NumPy
+\enzo\ is (dynamically or statically) linked against the Python and NumPy
 libraries necessary to create proxy objects exposing the mesh geometry,
 fluid quantities and particle arrays as NumPy arrays.  This information is then
 passed to a special handler inside \texttt{yt}.  \texttt{yt} interprets the
 mesh and fluid information and, without saving data to disk except as
 explicitly requested, constructs a native representation of the in-memory state
 of the simulation that appears identical to an on-disk simulation output.
-Enzo then executes a user-provided analysis script, which is able to access the
+\enzo\ then executes a user-provided analysis script, which is able to access the
 in-memory simulation object.  Once the analysis script has returned control to
-Enzo, the simulation proceeds.  This process can occur at either the top of the
+\enzo\ , the simulation proceeds.  This process can occur at either the top of the
 main ``EvolveHierarchy'' loop or at the end of a timestep at the finest level,
 and the frequency with which it is called is adjustable by a run-time
 parameter.  During the course of conducting analysis, the simulation is halted
@@ -41,23 +49,23 @@ projections (i.e., line integrals, both on- and off-axis), slices, 1-, 2-, and
 3-D fluid phase distributions, calculation of derived quantities and arbitrary
 data selection.  As of version 2.5 of \texttt{yt},  the Rockstar phase-space
 halo finder \citep{2013ApJ...762..109B} can be executed through \texttt{yt} on
-in-memory Enzo data.  Operations that currently cannot be conducted on
+in-memory \enzo\ data.  Operations that currently cannot be conducted on
 in-memory datasets are those that require spatial decomposition of data; for
 instance, calculating marching cubes on a data object with \texttt{yt} is a
 fully local operation and can be conducted \textit{in situ}.  However,
 calculating topologically-connected sets requires a spatial decomposition of
-data and can thus not be conducted \textit{in situ}.  This prohibition extends
+data and thus cannot be conducted \textit{in situ}.  This prohibition extends
 to most halo finding operations, most multi-level parallelism operations,
 volume rendering and connected set identification.
 
 Where microphysical solvers or other operator-split physics calculations can be
 done in Python, \texttt{yt} can serve as a driver for these calculations.  A
 major feature set that is currently being developed is to pass structured
-(i.e., non-fluid) information back from \texttt{yt} into Enzo.  For instance,
+(i.e., non-fluid) information back from \texttt{yt} into \enzo\ .  For instance,
 this could be the result of semi-analytic models of the growth and evolution of
 star clusters, galaxy particle feedback parameters that have been influenced by
 merger-tree analysis, or even spectral energy distributions that are calculated
-within \texttt{yt} and provided to Enzo as input into radiative transfer
+within \texttt{yt} and provided to \enzo\ as input into radiative transfer
 calculations.  Future versions will include this, as well as the ability to
 dynamically allocate compute resources to \texttt{yt} such that the simulation
 may proceed asynchronously with analysis (\textit{co-scheduled} analysis).
@@ -98,16 +106,16 @@ and temperature, but is easily extensible to output any grid-based
 quantity that a user requires.  This capability has been used quite
 effectively in several papers, including \citet{2010ApJ...715.1575S}
 and \citet{2012ApJ...748...12S}. It is crucial to keep in mind that
-tracer particles model some Lagrangian fluid trajectories. The fluid
+tracer particles model a fixed number of Lagrangian fluid trajectories. The fluid
 on the grid, however, models the motion of all the mass and represents
-the average quantity in a grid cells volume. Consequently, after some
-evolution tracer particles, which even if they initially had the same
-density distribution as the gas, will not have the same density
-distribution as the fluid. They tend to accumulate at stagnation points
-of the flow, e.g., and care has to be taken in using these particles
-appropriately. They can be very useful, e.g. to study a variety of
+the average quantity in a grid cell's volume. Consequently, after a period of
+evolution, tracer particles --even if they initially had the same
+density distribution as the gas-- will not have the same density
+distribution as the fluid. For example, they tend to accumulate at stagnation points
+of the flow, and care has to be taken in using these particles
+appropriately. Tracer particles are very useful in studies such as the variety of
 histories of the hydrodynamic quantities in Lagrangian fluid elements
-and evaluate complex chemical and cooling models in regard to the
+and when evaluating complex chemical and cooling models in regard to the
 simpler ones used in the actual numerical evolution.  
 
 \subsection{Shock finding}
@@ -129,8 +137,9 @@ T_2 > T_1 \\
 \end{eqnarray}
 
 where $\vec{v}$ is the velocity field, $T$ is the temperature, $\rho$ is the
-density, and $S=T/\rho^{\gamma-1}$ is the entropy.  An optional temperature floor
-may be chosen, which is useful for, e.g., cosmological simulations without a radiation
+density, and $S=T/\rho^{\gamma-1}$ is the entropy.  $T_2$ and $T_1$ are the post-shock~(downstream)
+and pre-shock~(upstream) temperatures, respectively. An optional temperature floor
+may be chosen, which is useful for situations such as cosmological simulations without a radiation
 background.
 
 Once a cell is flagged, the local temperature gradient is calculated, which is 
@@ -143,8 +152,7 @@ using the Rankine-Hugoniot temperature jump conditions:
 \begin{equation}
 \frac{T_2}{T_1} = \frac{(5\Mach^2 - 1)(\Mach^2 + 3)}{16\Mach^2},
 \end{equation}
-where $T_2$ and $T_1$ are the post-shock~(downstream) and pre-shock~(upstream)
-temperatures, respectively. $\Mach$ is the upstream Mach number.  
+where $\Mach$ is the upstream Mach number.  
 
 Shock finding in the context of AMR is applied grid-by-grid.  If a search for
 pre/post-shock cells goes outside the bounds of the grid ghost zones, the
