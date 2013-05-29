@@ -14,14 +14,16 @@ final time ($t=0.25$) for three of our hydro solvers -- the spatially third-orde
 PPM, as well as the two second-order \zeus\ and MUSCL schemes.  We use
 100 cells across the domain, (which is a relatively standard choice in
 code method papers) and show solutions both with and without adaptive
-mesh refinement.  Without AMR (in the top row of the figure), it is
-clear that the PPM scheme produces by far the cleanest solution, with
+mesh refinement.  Without AMR (top row in Figure \ref{fig.sodshocktube}), it is
+clear that the PPM scheme produces by far the cleanest solution with
 all wave families crisply reproduced (in particular, the contact
 discontinuity and shock).  \zeus\ and MUSCL produce similar results,
-with MUSCL doing a slightly better job on the rarefaction fan.  In the
-figure, we also show the mean absolute deviation from the exact
-solution ($||E_\infty||$), as well as the maximum deviation
-($||E_1||$).  These numbers confirm the qualitative differences noted
+with MUSCL doing a slightly better job on the rarefaction fan.  In Figure
+\ref{fig.sodshocktube}, we also show the integrated absolute deviation from 
+the exact solution, $||E_1|| = \sum_i \Delta x_i |F(x_i)-Exact(x_i)|$ 
+, as well as the maximum deviation,
+$||E_\infty|| = \mathrm{max_i}\left\{ \Delta x_i|F(x_i)-Exact(x_i)| \right\}$.  
+These numbers confirm the qualitative differences noted
 previously.
 
 We also run the same simulation but with two levels of AMR (using a

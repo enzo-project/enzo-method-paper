@@ -1,15 +1,14 @@
 \subsection{Radiation transport: ray tracing}
 \label{sec.num.raytracing}
 
-Local radiation from stars and black holes strongly affects their
-surroundings.  Radiation transport is a well-studied problem; however,
-its treatment in multidimensional calculations is difficult because of
-the dependence on seven variables -- three spatial, two angular,
-frequency, and time.  The non-local nature of the thermal and
-hydrodynamical response to radiation sources further adds to the
-difficulty.  Here we briefly describe the ray tracing implementation \moray,
-which is presented in full detail in \citet{Wise11_Moray} with seven
-code tests and six applications.
+Stars and black holes strongly affect their surroundings through radiation.
+Radiation transport is a well-studied problem; however, its treatment in
+multidimensional calculations is difficult because of the dependence on seven
+variables -- three spatial, two angular, frequency, and time.  The non-local
+nature of the thermal and hydrodynamical response to radiation sources further
+adds to the difficulty.  Here we briefly describe \enzo's ray tracing
+implementation \moray, which is presented in full detail in
+\citet{Wise11_Moray} with seven code tests and six applications.
 
 %The radiative transfer equation in comoving coordinates
 %\citep{Gnedin97} reads
@@ -63,7 +62,7 @@ We choose to represent the source term $j_\nu$ as point sources of
 radiation (e.g. stars, quasars) that emit radial rays that are
 propagated along the direction $\hat{n}$.
 
-Ray tracing is an accurate method to propagate radiation from point
+yay tracing is an accurate method to propagate radiation from point
 sources on a computational grid, given that there are a sufficient
 number of rays passing through each cell.  Along a ray, the radiation
 transfer equation reduces to
@@ -188,9 +187,9 @@ where $V_{\rm cell}$ is the cell volume, $E_{\rm ph}$ is the photon
 energy, and $E_i$ is the ionization energy of the absorbing material.
 In each cell, the photo-ionization and photo-heating rates from each
 ray in the calculation are summed, and after the ray tracing is
-complete, these rates are used to update the ionization state and
-energy of the cells with the solver described in Section~\ref{sec.ov.chem}.
-
+complete, these rates are used as inputs to the solver described in
+Section~\ref{sec.ov.chem} to update the ionization, chemical, and energy states
+of the gas in each cell.
 
 %%% Local Variables: 
 %%% mode: latex
