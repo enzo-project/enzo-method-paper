@@ -1,28 +1,12 @@
 \subsubsection{Anisotropic Thermal conduction}
 \label{sec.tests.conduct}
 
-In a plasma, conduction takes place primarily due to electron motion.
-In astrophysical environments such as the intergalactic and
-intracluster media, with typical magnetic strengths of $\sim 1$~$\mu$G
-and temperatures in the millions of Kelvin, the electron gyroradius is
-very small compared to the scales of interest in a typical
-cosmological simulation.  As a result, electrons can only move
-\textit{along} magnetic field lines, not perpendicular to them, which
-can result in very interesting magnetohydrodynamical instabilities \protect \citep[e.g.,][]{2008ApJ...677L...9P,2008ApJ...688..905P}. The correct
-modeling of this behavior can be quite challenging, and is described
-in Section~\protect\ref{sec.num.conductions}. Conduction in \protect\enzo\ is calculated in both an operator-split and directionally-split manner,
-and the addition of heat transport solely along magnetic field lines
-requires computation of cross-terms in the temperature derivative at
-cell faces, which can add spurious oscillations in the temperature
-field in regions where the temperature gradient is strong in more than
-one spatial direction unless an appropriate flux-limiter \protect\citep[such as that of][]{1977JCoPh..23..263V} is chosen.
-\mqk{The previous paragraph more or less repeats what's in Section~\ref{sec.num.conductions}, I think it should be removed (or merged with that section).}
-
 Figure~\ref{fig.conduct} shows a test that demonstrates the correct
-behavior of anisotropic thermal conduction in \enzo.  We initialize a
+behavior of anisotropic thermal conduction (see
+Section~\ref{sec.num.conductions}) in \enzo. We initialize a
 two-dimensional, $256 \times 256$ cell simulation having a physical
-scale of 1 kpc on a side, a uniform density of 1 proton cm$^{-3}$ and a
-background temperature of $10^6$ Kelvin.  Magnetic fields with a
+scale of 1 kpc on a side, a uniform density of 1 proton cm$^{-3}$ and
+a background temperature of $10^6$ Kelvin.  Magnetic fields with a
 strength of B$_0 = 1$~$\mu$G are initialized such that the field lines
 form circles around the center of the simulation volume, such that
 B$_x = -B_0\sin(\theta)$ and B$_y = B_0\cos(\theta)$, where $\theta$
