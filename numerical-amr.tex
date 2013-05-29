@@ -27,18 +27,6 @@ Timesteps are determined on each level as described in Section~\ref{sec.timestep
 a level-by-level basis in a W-Cycle.    Beginning with the coarsest level, $l$, all grids on that level are advanced one
 timestep.  Then one timestep is taken on all grids at the next level of refinement, $l+1$, and so on until the finest level is resolved. The finest level is then advanced, using as many steps as it takes to reach the level immediately above.  The finest level is then synched to the level above it, which then proceeds forward in time one more step.  This is shown graphically in Figure~\ref{fig:wcycle}.
 
-\begin{figure}
-\begin{center}
-%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
-\includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
-\end{center}
-\caption{\emph{Left:} Example of the timesteps on a 2-level AMR
-  hierarchy.  Enzo does not restrict the timesteps on the finer levels
-  to be a factor of $1/2^n$ smaller.  \emph{Right:} The order in which
-  the AMR grids are evaulated on each level.}
-\label{fig:wcycle}
-\end{figure}
-
 At the end of every timestep on every level, each grid updates its ghost zones by exchanging information with its neighboring grid patches (if any exist) and/or by interpolating from a parent grid.  In addition, cells are examined to see where refinement is required and the entire grid hierarchy is rebuilt at that level (including all more highly refined levels).  The timestepping and hierarchy advancement/rebuilding process described here is repeated recursively on every level to the specified maximum level of refinement in the simulation. 
 
 The basic control algorithm looks very much like any used in a grid-based code of a single resolution, and can be written schematically as:

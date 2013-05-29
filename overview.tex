@@ -4,13 +4,14 @@
 \label{sec.overview}
 
 We begin this section by first writing down the complete set of
-physical equations that can be solved by \enzo, and then briefly describe
-the numerical algorithms that we use to solve these equations.  This
-section is intended to be an overview of the \enzo\ code's
-capabilities: thus, we gather all of the equations solved into a
-single place and provide a brief and high-level introduction to the
+physical equations that can be solved by \enzo, and then briefly
+describe the numerical algorithms that we use to solve these
+equations.  This section is intended to be an overview of the \enzo\
+code's capabilities: thus, we gather all of the equations solved into
+a single place and provide a brief and high-level introduction to the
 numerics of the code.  Detailed descriptions of the individual
-components are then provided in Sections~\ref{sec.amr}-\ref{sec.num.analysis}.
+components are then provided in
+Sections~\ref{sec.amr}-\ref{sec.num.analysis}.
 
 % ====================================================
 
@@ -21,41 +22,45 @@ components are then provided in Sections~\ref{sec.amr}-\ref{sec.num.analysis}.
 
 %\subsubsection{Magnetohydrodynamics and Gravity}
 
-The Eulerian equations of ideal magnetohydrodynamics including gravity,
-in a coordinate systems comoving with the cosmological expansion, are
-given by:
+The Eulerian equations of ideal magnetohydrodynamics including
+gravity, in a coordinate systems comoving with the cosmological
+expansion, are given by:
 
 \begin{eqnarray} 
-\frac{\partial \rho}{\partial t} 
-          + \frac{1}{a} \nabla \cdot (\rho \vecv) & = & 0
-        \label{eq:mass} \\
+  \frac{\partial \rho}{\partial t} 
+  + \frac{1}{a} \nabla \cdot (\rho \vecv) & = & 0
+  \label{eq:mass} \\
 %
-\frac{\partial \rho \vecv}{\partial t}  
-   + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + \myvec{I}p^* - \frac{\vecB \vecB}{a} \right) & = &
-    - \frac{\dot{a}}{a} \rho \vecv - \frac{1}{a} \rho \nabla \phi
-    %
+  \frac{\partial \rho \vecv}{\partial t}  
+  + \frac{1}{a} \nabla \cdot \left(\rho \vecv \vecv + \myvec{I}p^* - 
+    \frac{\vecB \vecB}{a} \right) & = &
+  - \frac{\dot{a}}{a} \rho \vecv - \frac{1}{a} \rho \nabla \phi
+% 
 %          + \frac{1}{a} ( \vecv \cdot \nabla ) \vecv
 %    & = & - \frac{\dot{a}}{a} \vecv 
 %          - \frac{1}{a \rho} \nabla p
 %          - \frac{1}{a \rho} (\nalba \times \vecB) \times \vecB
 %          - \frac{1}{a} \nabla \phi, 
-        \label{eq:momentum} \\
+  \label{eq:momentum} \\
 %
-\frac{\partial E}{\partial t} 
-+ \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv -  \frac{1}{a} \vecB (\vecB \cdot \vecv) \right] & = &
-     - \frac{\dot{a}}{a} \left( 2E - \frac{B^2}{2a} \right)  - \frac{1}{a} \vecv \cdot \nabla \phi 
-     - \Lambda + \Gamma + \frac{1}{a^2} \nabla \cdot \fcond
-     %
+  \frac{\partial E}{\partial t} 
+  + \frac{1}{a} \nabla \cdot \left[ (E + p^*) \vecv - 
+    \frac{1}{a} \vecB (\vecB \cdot \vecv) \right] & = &
+  - \frac{\dot{a}}{a} \left( 2E - \frac{B^2}{2a} \right) - 
+  \frac{1}{a} \vecv \cdot \nabla \phi 
+  - \Lambda + \Gamma + \frac{1}{a^2} \nabla \cdot \fcond
+% 
 %         + \frac{1}{a} \vecv \cdot \nabla E
- %  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
-  %       - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
+%  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
+%       - \frac{1}{a \rho } \nabla \cdot (p \vecv) 
 %%\nonumber   & &   %uncomment for 2-column
- %        - \frac{1}{a} \vecv \cdot \nabla \phi 
- %               + \Gamma - \Lambda.
-       \label{eq:total_energy}  \\
+%        - \frac{1}{a} \vecv \cdot \nabla \phi 
+%               + \Gamma - \Lambda.
+  \label{eq:total_energy}  \\
 %
-\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
-\vecB) & = & -\frac{\dot{a}}{2 a} \vecB \label{eq:induction}
+  \frac{\partial \vecB}{\partial t} - 
+  \frac{1}{a}  \nabla \times (\vecv \times \vecB) & = & 
+  -\frac{\dot{a}}{2 a} \vecB \label{eq:induction}
 \end{eqnarray}
 
 %\begin{eqnarray} 
@@ -82,60 +87,72 @@ In these equations, $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving
 total fluid energy, comoving baryonic density, peculiar velocity, and
 comoving magnetic field strength, respectively.  $\myvec{I}$ is the
 identity matrix, and $a$ is the cosmological expansion parameter
-(which is discussed in more detail below).
-The first equation represents conservation of mass, the second, conservation of momentum, and the third, conservation of total fluid (kinetic plus thermal) energy.  They are respectively, the first, second and third moments of the Boltzmann equation.  The fourth equation is the magnetic induction equation.   Terms representing radiative cooling ($\Lambda$) and heating ($\Gamma$) enter on the right-hand side of the energy equation (\ref{eq:total_energy}), as well as the flux due to thermal heat conduction ($\fcond$).
+(which is discussed in more detail below).  The first equation
+represents conservation of mass, the second, conservation of momentum,
+and the third, conservation of total fluid (kinetic plus thermal)
+energy.  They are respectively, the first, second and third moments of
+the Boltzmann equation.  The fourth equation is the magnetic induction
+equation.  Terms representing radiative cooling ($\Lambda$) and
+heating ($\Gamma$) enter on the right-hand side of the energy equation
+(\ref{eq:total_energy}), as well as the flux due to thermal heat
+conduction ($\fcond$).
 
 The total fluid energy $E$ is given by:
 \begin{equation}
 E =  e + \frac{\rho v^2}{2}  + \frac{B^2}{2a}
         \label{eq:total_energy_def}.
 \end{equation}
-where $e$ is the comoving thermal energy density, and the total isotropic pressure $p^*$ is given by
+where $e$ is the comoving thermal energy density, and the total
+isotropic pressure $p^*$ is given by
 \begin{equation}
-p^* = p + \frac{B^2}{2a}
+p^* = p + \frac{B^2}{2a},
 \end{equation}
-The equations are closed with the equation of state and Poisson's equation (we work in the Newtonian limit):
+where $p$ is the gas pressure.  The equations are closed with the
+equation of state and Poisson's equation (we work in the Newtonian
+limit):
 %
 \begin{eqnarray}
 %
-e   & = & p / [(\gamma - 1) \rho ],
-        \label{eq:eq_of_state} \\
+  e &=& p / [(\gamma - 1) \rho ],
+  \label{eq:eq_of_state} \\
 %
-\nabla^2 \phi & = & 4 \pi G \rho_{\rm total}
+  \nabla^2 \phi &=& 4 \pi G \rho_{\rm total}
 %                   + 3 p_{total}/c^2) - \Lambda. 
-        \label{eq:potential}
+  \label{eq:potential}
 \end{eqnarray}
 %
-The equation of state is shown here for an ideal gas with a ratio of specific heats $\gamma$.
-Equation (\ref{eq:potential}) includes contributions to the
-gravitational potential $\phi$ from the total mass density $\rho_{\rm
-  total}$, which is defined as $\rho_{\rm gas} + \rho_{\rm dm} + \rho_{\rm stars}
-- \rho_{\rm average}$.  Although we write the equations including both MHD and
-comoving coordinates, the code is frequently used both in the pure
-hydrodynamic limit ($\vecB = 0$) and without cosmological expansion
-($a = 1$, $\dot{a} = 0$).
+The equation of state is shown here for an ideal gas with a ratio of
+specific heats $\gamma$.  Equation (\ref{eq:potential}) includes
+contributions to the gravitational potential $\phi$ from the total
+mass density $\rho_{\rm total}$, which is defined as $\rho_{\rm gas} +
+\rho_{\rm dm} + \rho_{\rm stars} - \rho_{\rm average}$.  Although we
+write the equations including both MHD and comoving coordinates, the
+code is frequently used both in the pure hydrodynamic limit ($\vecB =
+0$) and without cosmological expansion ($a = 1$, $\dot{a} = 0$).
 
 % ----------------------------------------------------------------------------------------
 
 %\subsubsection{Comoving Coordinates}
 
-For completeness, we note here that we have defined several key quantities
-in the comoving frame to make the previous equations more readable.
-Specifically, we define:
+For completeness, we note here that we have defined several key
+quantities in the comoving frame to make the previous equations more
+readable.  Specifically, we define:
 
 \begin{eqnarray}
 \vecx & = & \vecr/a, \\
 \vecv & = & a \hspace{0.5mm} d\vecx/dt = 
               \vecvp - \dot{a}\vecx, \\
-\rho    & = & a^3 \rhop,   \\
-p       & = & a^3 \pp, \\
-E       & = & a^3 (\Ep - 
-              \dot{a} \vecx \cdot \vecvp - 
-              \frac{1}{2} \dot{a}^2 \vecx^2), \\
-\phi    & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2. \\
-\vecB & = & a^2 \vecB^\prime
+\rho  & = & a^3 \rhop,   \\
+p     & = & a^3 \pp, \\
+E     & = & a^3 \left(\Ep - 
+            \dot{a} \vecx \cdot \vecvp - 
+            \frac{1}{2} \dot{a}^2 \vecx^2\right), \\
+\phi  & = & \phip + \frac{1}{2} a \ddot{a} \vecx^2. \\
+\vecB & = & a^2 \vecB^\prime,
 \end{eqnarray}
-where primes indicate the usual quantities defined in a fixed frame frame, $\vecr$ is the proper distance and $\vecx$ is the comoving distance.
+where primes indicate the usual quantities defined in a fixed frame
+frame, $\vecr$ is the proper distance and $\vecx$ is the comoving
+distance.
 
 %These definitions result in the following comoving equivalents to eqs. 
 %(\ref{eq:mass})-(\ref{eq:potential}).
@@ -178,9 +195,14 @@ where primes indicate the usual quantities defined in a fixed frame frame, $\vec
 %%$$\phi \equiv \Phi + \frac{1}{2} a \ddot{a} \vecx^2. $$
 %%The density, however, is comoving:
 %%$$\rho_b \equiv \rho_{b,proper}a(t)^3, $$
-The expansion parameter $a \equiv 1/(1 + z)$ follows the expansion of a smooth, homogeneous background, where $z$, the redshift, is a function only of $t$.  All derivatives are determined with respect to the comoving position $\vecx$, which is defined simply to remove the universal expansion from the coordinate system.
+The expansion parameter $a \equiv 1/(1 + z)$ follows the expansion of
+a smooth, homogeneous background, where $z$, the redshift, is a
+function only of $t$.  All derivatives are determined with respect to
+the comoving position $\vecx$, which is defined simply to remove the
+universal expansion from the coordinate system.
 
-The evolution of $a(t)$ is governed by the formula for the expansion of an isotropic, homogeneous universe:
+The evolution of $a(t)$ is governed by the formula for the expansion
+of an isotropic, homogeneous universe:
 %
 \begin{eqnarray}
 \frac{\ddot{a}}{a} & = & 
@@ -190,24 +212,32 @@ The evolution of $a(t)$ is governed by the formula for the expansion of an isotr
       \label{eq:expansion} 
 \end{eqnarray}
 %
-Here, $\rho_0$ is the mean comoving mass density (including both baryonic and dark matter), $p_0$ is the comoving background pressure contribution, and $\Lambda_c$ is the cosmological constant.
+Here, $\rho_0$ is the mean comoving mass density (including both
+baryonic and dark matter), $p_0$ is the comoving background pressure
+contribution, and $\Lambda_c$ is the cosmological constant.
 %$\gamma$ is the ratio of specific heats, and $\Lambda$ is the cosmological constant.
 %We note that if $\gamma$ is not $5/3$ then $E$ in the first term on
 %the right side of eq.~(ref{eq:total_energy}) must be replaced with 
 %eq.~(\ref{eq:state}).
-This system of equations is limited to the non-relativistic regime and assumes that curvature effects are not important --- both assumptions are reasonable as long as the  size of the simulated region is small compared to the radius of curvature and the Hubble length $c/H$ ($c$ is the speed of light and $H$ is the Hubble constant).
+This system of equations is limited to the non-relativistic regime and
+assumes that curvature effects are not important --- both assumptions
+are reasonable as long as the size of the simulated region is small
+compared to the radius of curvature and the Hubble length $c/H$, where
+$c$ is the speed of light and $H = \dot{a}/a$ is the Hubble constant.
 
 It is clear that the evolution equations are equivalent to the fixed
 coordinate version in the limit in which $a = 1$ and $\dot{a} = 0$.
 We include the cosmological terms with the understanding that \enzo\
 is not restricted to cosmological applications -- while historically
 the code was written with cosmological situations in mind (e.g.,
-galaxy clusters), in more recent years it has been used to simulate a much
-broader range of astrophysical environments.
+galaxy clusters), in more recent years it has been used to simulate a
+much broader range of astrophysical environments.
 
 %\subsubsection{Particles}
 
-Any collisionless component (e.g. dark matter, stars) is modeled by particles which are governed by Newton's equations in comoving coordinates:
+Any collisionless component (e.g., dark matter, stars) is modeled by
+particles which are governed by Newton's equations in comoving
+coordinates:
 %
 \begin{eqnarray}
 \frac{d \vecx}{dt} 
@@ -219,26 +249,31 @@ Any collisionless component (e.g. dark matter, stars) is modeled by particles wh
           \label{eq:dm_velocity} 
 \end{eqnarray}
 %
-The particles also make a contribution to the gravitational potential through their contribution to Poisson's equation.
+The particles also make a contribution to the gravitational potential
+through their contribution to Poisson's equation (Equation
+\ref{eq:potential}).
 
 %\subsubsection{Chemistry}
 
-In addition, we can solve the mass conservation equations for a set of chemical species and reactions.  For any species $i$ with comoving number density $n_i$, these equations have the form:
+In addition, we can solve the mass conservation equations for a set of
+chemical species and reactions.  For any species $i$ with comoving
+number density $n_i$, these equations have the form:
 \begin{equation}
-\frac{\partial n_i}{\partial t} 
-          + \frac{1}{a} \nabla \cdot (n_i \vecv) = 
-        k_{ij}(T) n_i n_j 
-      + \Gamma^{ph}_j n_j 
-        \label{eq:species_evolution}
+  \frac{\partial n_i}{\partial t} 
+  + \frac{1}{a} \nabla \cdot (n_i \vecv) = 
+  k_{ij}(T) n_i n_j + \Gamma^{\rm ph}_j n_j 
+  \label{eq:species_evolution}
 \end{equation}
 where $k_{ij}$ are the rate coefficients for the two-body reactions
 and are usually functions of only the gas species (we will
 specifically note the cases where we either include three-body
-reactions or have density-dependent rates).  The $\Gamma^{ph}_j$ are
-destruction/creation rates due to photoionizations and/or
+reactions or have density-dependent rates).  The $\Gamma^{\rm ph}_j$
+are destruction/creation rates due to photoionizations and/or
 photodissociations.  Currently the species we can follow include H,
-H$^+$, He, He$^+$, He$^{++}$, and $e^-$, as well as additional options
-that add H$^-$, H$_2$, H$_2^+$, and  HD, D, and D$^+$.
+H$^+$, He, He$^+$, He$^{++}$, and e$^-$, as well as additional options
+that add H$^-$, H$_2$, H$_2^+$, and HD, D, and D$^+$.  We also can
+track the advection of a comoving metal density that may contribute to
+the radiative cooling.
 
 %\red{
 %There is some debate over whether to put in the hydro equations without cosmology, in addition
@@ -346,9 +381,13 @@ that add H$^-$, H$_2$, H$_2^+$, and  HD, D, and D$^+$.
 
 %\subsubsection{Radiation transport: ray-tracing}
 
-The code can include either a homogeneous radiation background (with possible local self-shielding corrections), or evolve an inhomogeneous radiation field either by directly solving the radiative transfer equation along rays or by solving a set of moment equations derived from the radiative transfer equation.  
+The code can include either a homogeneous radiation background (with
+possible local self-shielding corrections), or evolve an inhomogeneous
+radiation field either by directly solving the radiative transfer
+equation along rays or by solving a set of moment equations derived
+from the radiative transfer equation.
 
-The radiative transfer equation in comoving coordinates 
+The radiative transfer equation in comoving coordinates
 \citep[e.g.,][]{Gnedin97} reads
 %
 \begin{equation}
@@ -361,10 +400,9 @@ The radiative transfer equation in comoving coordinates
 %
 Here $I_\nu \equiv I(\nu, \mathbf{x}, \Omega, t)$ is the radiation
 specific intensity in units of energy per time $t$ per solid angle per
-unit area per frequency $\nu$.  $H = \dot{a}/a$ is the Hubble
-constant, where $a$ is the scale factor.  $\bar{a} = a/a_{em}$ is the
-ratio of scale factors at the current time and time of emission.  The
-second term represents the propagation of radiation, where the factor
+unit area per frequency $\nu$.  $\bar{a} = a/a_{em}$ is the ratio of
+scale factors at the current time and time of emission.  The second
+term represents the propagation of radiation, where the factor
 $1/\bar{a}$ accounts for cosmic expansion.  The third term describes
 both the cosmological redshift and dilution of radiation.  On the
 right hand side, the first term considers the absorption coefficient
@@ -374,16 +412,16 @@ that includes any sources of radiation (whether point or diffuse).
 
 %\subsubsection{Radiation transport: moment method}
 
-As an alternative to the ray-casting strategy, we solve an equation derived from integrating
-the equation of radiative transfer over angles.  In particular, we use a
-flux-limited diffusion approximation for radiative
-transfer, with couplings to both the gas energy and chemical number
-densities. The equations solved are:
+As an alternative to the ray-casting strategy, we solve an equation
+derived from integrating the equation of radiative transfer over
+angles.  In particular, we use a flux-limited diffusion approximation
+for radiative transfer, with couplings to both the gas energy and
+chemical number densities. The equations solved are:
 \begin{eqnarray}
   \label{eq:fld_radiation}
   \frac{\partial E_r}{\partial t} + \frac1a \nabla\cdot\left(E_r \vecv \right) &=& 
-    \nabla\cdot\left(D\nabla E_r\right) -
-    \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
+  \nabla\cdot\left(D\nabla E_r\right) -
+  \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
   \label{eq:fld_heating}
   \frac{\partial e_c}{\partial t} &=& -\frac{2\dot{a}}{a} e_c + \Gamma - \Lambda,
 %  \label{eq:fld_chemistry}
@@ -392,26 +430,27 @@ densities. The equations solved are:
 %    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
 %    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 \end{eqnarray}
-where $E_r = E_r(x,t)$ is a grey radiation energy density and $e_c$ is the
-internal energy correction due to photo-heating and chemical cooling.
+where $E_r = E_r(\vecx,t)$ is a grey radiation energy density and
+$e_c$ is the internal energy correction due to photo-heating and
+chemical cooling.
 %and ${\mathrm n}_i$ correspond to the chemical number densities of
 %HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
 %number density.  
-Here, we define the grey radiation energy density
-through first assuming a fixed frequency spectrum, i.e.
-$E_{\nu}(\nu,\vecx,t) = \tilde{E}_r(\vecx,t) \chi(\nu)$, and then
-defining the integrated quantity
+Here, we define the grey radiation energy density through first
+assuming a fixed frequency spectrum, i.e.  $E_{\nu}(\nu,\vecx,t) =
+\tilde{E}_r(\vecx,t) \chi(\nu)$, and then defining the integrated
+quantity
 \begin{equation}
 \label{eq:grey_radiation_energy}
    E_r(\vecx,t) \equiv \int_{\nu_0}^{\infty}
    E_{\nu}(\nu,\vecx,t)\,\mathrm d\nu \  = \ 
    \tilde{E}_r(\vecx,t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
 \end{equation}
-In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
-square-root flux-limiter} \citep[see][]{Morel2000}, $\kappa$ is the total
-opacity, $\eta$ is the field of radiation sources, $\Gamma$ provides the
-radiation induced photo-heating, and $\Lambda$ the chemical
-cooling.
+In addition, $D$ in Equation (\ref{eq:fld_radiation}) is the Larsen
+square-root flux-limiter \citep[see][]{Morel2000}; $\kappa$ is the
+total opacity; $\eta$ is the field of radiation sources; $\Gamma$
+provides the radiation induced photo-heating, and $\Lambda$ the
+chemical cooling.
 %, $\alpha_{i,j}$ are the reaction rate coefficients defining
 %the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
 %and $\Gamma_i^{ph}$ are the radiation induced photo-ionization rates. 
@@ -420,28 +459,29 @@ cooling.
 
 Enzo implements the equations of isotropic heat conduction in a manner
 similar to that of \citet{2007ApJ...664..135P}, where we model the
-flux of isotropic heat transport:
-
+flux of isotropic heat transport,
+%
 \begin{equation}
-\fcond = -\kappa_{sp} \nabla T
+\fcond = -\kappa_{sp} \nabla T.
 \end{equation}
-
-Where $\kappa_{sp}$ is the Spitzer conduction coefficient
+%
+Here $\kappa_{sp}$ is the Spitzer conduction coefficient
 \citep{1962pfig.book.....S} and T is the baryon temperature (with
-fluids explicitly assumed to be single-temperature).  Saturation of the heat flux in
-high-temperature, low-density regimes (such as the intracluster medium
-in galaxy clusters) is taken into account.  Thermal conduction in a
-plasma can be strongly affected by the presence of magnetic field
-lines, which may strongly suppress heat flow perpendicular to the
-magnetic field.  In that case, we allow for heat transport only along
-the magnetic field lines in simulations that include this physics, as follows:
+fluids explicitly assumed to be single-temperature).  Saturation of
+the heat flux in high-temperature, low-density regimes (such as the
+intracluster medium in galaxy clusters) is taken into account.
+Thermal conduction in a plasma can be strongly affected by the
+presence of magnetic field lines, which may strongly suppress heat
+flow perpendicular to the magnetic field.  In that case, we allow for
+heat transport only along the magnetic field lines in simulations that
+include this physics, as follows:
 
 \begin{equation}
 \fcond= -\kappa_{sp} \hat{\textbf{b}} (\hat{\textbf{b}} \cdot \nabla T)
 \end{equation}
 
-Where $\hat{\textbf{b}}$ is the unit vector denoting the direction of the
-magnetic field.  In both the isotropic and anisotropic limits, we
+Where $\hat{\textbf{b}}$ is the unit vector denoting the direction of
+the magnetic field.  In both the isotropic and anisotropic limits, we
 assume that conductivity can be suppressed relative to the ideal
 Spitzer conductivity, and express this as a multiplicative constant.
 
@@ -451,27 +491,28 @@ Spitzer conductivity, and express this as a multiplicative constant.
 \label{sec.method_overview}
 
 In this section, we briefly describe the numerical methods which are
-used to solve the equations outlined in Section~\ref{sec.equations}.  We
-proceed through the numerical methods in the same order as will be used in
-Sections~\ref{sec.amr} through~\ref{sec.num.analysis} so that there is a one-to-one correspondence
-between each of the following overviews and the complete description
-provided in the later sections.  The goal in this section is to introduce the reader to
-the basic principles of the methods without drowning in detail.
+used to solve the equations outlined in Section~\ref{sec.equations}.
+We proceed through the numerical methods in the same order as will be
+used in Sections~\ref{sec.amr} through~\ref{sec.num.analysis} so that
+there is a one-to-one correspondence between each of the following
+overviews and the complete description provided in the later sections.
+The goal in this section is to introduce the reader to the basic
+principles of the methods without drowning in detail.
 
 \subsubsection{Structured Adaptive Mesh Refinement}
 
-The primary purpose of the \enzo\ code is its Adaptive Mesh Refinement (AMR)
-capability, which allows it to reach extremely large dynamical ranges
-with limited computational resources, opening doors previously closed
-by finite memory and computational time. Unlike moving mesh methods
-\citep{1995ApJS..100..269P,1995ApJS...97..231G} or  
-methods that subdivide 
-individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred 
-to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid 
-patches at varying levels of resolution.  Each rectangular grid patch 
-(referred to as a ``grid'') covers some region of space in its 
-\emph{parent grid} which requires higher resolution, and can itself 
-become the parent grid to an even more highly resolved \emph{child grid}. 
+The primary purpose of the \enzo\ code is its Adaptive Mesh Refinement
+(AMR) capability, which allows it to reach extremely large dynamical
+ranges with limited computational resources, opening doors previously
+closed by finite memory and computational time. Unlike moving mesh
+methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or methods
+that subdivide individual cells \citep{Adjerid}, Berger \& Collela's
+AMR (also referred to as \emph{structured} AMR) utilizes an adaptive
+hierarchy of grid patches at varying levels of resolution.  Each
+rectangular grid patch (referred to as a ``grid'') covers some region
+of space in its \emph{parent grid} which requires higher resolution,
+and can itself become the parent grid to an even more highly resolved
+\emph{child grid}.
 
 The grid hierarchy begins with the root grid, which covers the entire
 domain of interest with a coarse, uniform, Cartesian grid. Then, as
@@ -479,13 +520,12 @@ the solution evolves and interesting regions form, finer meshes are
 placed within these coarse regions.
 % (we use the notation `below' to refer to
 % finer grids and `above' for coarser grids). 
- We restrict the ratio
-between cell sizes to be an integer, typically 2 or 4, and refer to a
-level as all grids with the same cell size.  In order to keep
-things as simple as possible, the edges of subgrids must coincide with
-the cell edge of its immediate parent (coarser) grid. Additionally,
-the hierarchy can be initialized with one or more static grids if a
-higher initial resolution is required.
+We restrict the ratio between cell sizes to be an integer, typically 2
+or 4, and refer to a level as all grids with the same cell size.  In
+order to keep things as simple as possible, the edges of subgrids must
+coincide with the cell edge of its immediate parent (coarser)
+grid. Additionally, the hierarchy can be initialized with one or more
+static grids if a higher initial resolution is required.
 
 Given the hierarchy at some time $t$, we advance the solution in the
 manner of a W-cycle in a multigrid solver.  First, we determine the
@@ -493,43 +533,57 @@ maximum time step allowed for the coarsest grid based on a variety of
 accuracy and stability criteria and advance the grid by that time
 interval, $\Delta t_0$.  We then move down to the next level and
 advance all the grids on that level by a timestep $\Delta t_1$
-($\Delta t_1 \leq \Delta t_0$), which is the minimum of all the allowed
-timesteps for those grids.  If there are more levels, we repeat this
-procedure until the bottom level of the hierarchy has been reached.
-Once there, we continue advancing the grids on the lowest level until
-they have `caught up' to the coarser parent grids (i.e. $\sum
-\Delta t_l = \Delta t_{l-1}$).  This procedure repeats itself until
-all grids have been advanced by a total time of $\Delta t_0$ (see
-Figure~\ref{fig:wcycle} for a schematic).
+($\Delta t_1 \leq \Delta t_0$), which is the minimum of all the
+allowed timesteps for those grids.  If there are more levels, we
+repeat this procedure until the bottom level of the hierarchy has been
+reached.  Once there, we continue advancing the grids on the lowest
+level until they have ``caught up'' to the coarser parent grids
+(i.e. $\sum \Delta t_l = \Delta t_{l-1}$).  This procedure repeats
+itself until all grids have been advanced by a total time of $\Delta
+t_0$ (see Figure~\ref{fig:wcycle} for a schematic).
+
+
+\begin{figure}
+\begin{center}
+%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
+\includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
+\end{center}
+\caption{\emph{Left:} Example of the timesteps on a 2-level AMR
+  hierarchy.  Enzo does not restrict the timesteps on the finer levels
+  to be a factor of $1/2^n$ smaller.  \emph{Right:} The order in which
+  the AMR grids are evaluated on each level.\vspace{1ex}}
+\label{fig:wcycle}
+\end{figure}
 
 Since interesting regions on the grid may move, the hierarchy must
 adapt itself.  We do this whenever a level has caught up to the
-coarser parent level and consists of entirely rebuilding the grids
-on that level and at finer resolutions.  This is done by applying the grid refinement
-criteria to the grids on that level, flagging zones that require
-extra grids.  These criteria depend on the physical problem being
-simulated -- see Section~\ref{sec:refinement_criteria} for more details.  Once a grid has a set of flagged cells,
-we run a machine-vision based algorithm \citep{Berger91} to find edges
-and determine a good placement of subgrids. 
+coarser parent level and consists of entirely rebuilding the grids on
+that level and at finer resolutions.  This is done by applying the
+grid refinement criteria to the grids on that level, flagging zones
+that require extra grids.  These criteria depend on the physical
+problem being simulated -- see Section~\ref{sec:refinement_criteria}
+for more details.  Once a grid has a set of flagged cells, we run a
+machine-vision based algorithm \citep{Berger91} to find edges and
+determine a good placement of subgrids.
 %  These subgrids must not overlap one another, must cover all flagged
 % cells and their neighbouring cells, and be above a preset efficiency
 % threshold, where the efficiency of a cell is defined as the ratio of
 % flagged cells to total cells. 
-Once these new subgrids have been identified, the
-solution from the next coarser grid is interpolated (see below) in
-order to initialize the values on the new grids.  Finally, any overlap
-between these new subgrids and the old ones is identified and the
-solution within the regions of overlap is copied to the new subgrids.
-The entire procedure just outlined is then repeated on the new grids
-and in this way the entire hierarchy (from the original level examined
-and continuing on to finer levels) is rebuilt.
+Once these new subgrids have been identified, the solution from the
+next coarser grid is interpolated in order to initialize the values on
+the new grids.  Finally, any overlap between these new subgrids and
+the old ones is identified, and the solution within the regions of
+overlap is copied to the new subgrids.  The entire procedure just
+outlined is then repeated on the new grids and in this way the entire
+hierarchy (from the original level examined and continuing on to finer
+levels) is rebuilt.
 
 \subsubsection{Godunov PPM method (HD only)}
 
 Four different (magneto)-hydrodynamic methods are implemented in
 \enzo: (i) the hydrodynamic-only piecewise parabolic method (PPM)
 developed by~\citet{1984JCoPh..54..174C} and extended to cosmology
-by~\citet{1995CoPhC..89..149B}; (ii) the MUSCL-like Gudonov scheme
+by~\citet{1995CoPhC..89..149B}; (ii) the MUSCL-like Godunov scheme
 \citep{MUSCL} with or without magnetic fields and Dedner-based
 divergence cleaning, described in more detail in
 \citet{WangAbelZhang08} and \citet{WangAbel09}; (iii) a constrained
@@ -544,21 +598,24 @@ interpolation and a nonlinear Riemann solver for shock capturing.  It
 advances the hydrodynamic equations in the following steps:
 %\begin{enumerate}
 % \item 
- (i) Construct monotonic parabolic interpolation of cell average data, for each fluid quantity.
+(i) Construct monotonic parabolic interpolation of cell average data,
+for each fluid quantity.
 % \item 
-(ii) Compute interface states by averaging the parabola over the domain of dependence for each interface.
+(ii) Compute interface states by averaging the parabola over the
+domain of dependence for each interface.
 % \item 
 (iii) Use interface data to solve the Riemann problem.
  %\item 
- (iv) Difference the interface fluxes to update the cell average quantities.
+(iv) Difference the interface fluxes to update the cell average
+quantities.
 %\end{enumerate}
 
 This PPM implementation does an excellent job of capturing strong
 shocks in a few cells.  Multidimensional schemes are built up by
 directional splitting and produce a method that is formally second
 order-accurate in space and time and which explicitly conserves mass,
-linear momentum, and energy.  \red{(REF?)}  A variety of 
-Riemann solvers have been implemented.  
+linear momentum, and energy.  \red{(REF?)}  A variety of Riemann
+solvers have been implemented.
 
 As described in \citet{Bryan95}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small
@@ -572,30 +629,31 @@ and using $e$ from this equation when we expect the error to be large.
 %The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
 
 \subsubsection{Godunov MUSCL (HD) with Dedner divergence cleaning (MHD)}
-This solver was developed by Wang \& Abel to attack problems in
-magnetic field amplification during the formation of galaxies
-\citep{Wang:2009a} and to understand the role of proto-stellar jets for
-the theory of star formation \citep{Wang:2009b}. It combines the standard
-approach of Godunov \citep{Godunov1959} for finite volume techniques
-with the method of lines as described by
-\cite{leveque2002finite} and \cite{toro-1997}. In addition, 
-it implements the hyperbolic divergence cleaning algorithm of
-\cite{2002JCoPh.175..645D}. It supports multiple approximate Riemann
-solvers and non-ideal equations of states. Consequently,
-these suite of solvers can be used for hydro and magneto-hydrodynamic
-simulations. It is also this class of solvers as well as a version of
-the PPM hydro solver which have been ported to Nvidia's CUDA framework
-allowing \enzo\ to take advantage of modern graphics hardware \citep{Wang:2010}.
+This solver was developed to attack problems in magnetic field
+amplification during the formation of galaxies \citep{Wang:2009a} and
+to understand the role of proto-stellar jets for the theory of star
+formation \citep{Wang:2009b}. It combines the standard approach of
+Godunov \citep{Godunov1959} for finite volume techniques with the
+method of lines as described by \cite{leveque2002finite} and
+\cite{toro-1997}. In addition, it implements the hyperbolic divergence
+cleaning algorithm of \cite{2002JCoPh.175..645D}. It supports multiple
+approximate Riemann solvers and non-ideal equations of
+states. Consequently, these suite of solvers can be used for hydro and
+magneto-hydrodynamic simulations. It is also this class of solvers as
+well as a version of the PPM hydro solver which have been ported to
+Nvidia's CUDA framework allowing \enzo\ to take advantage of modern
+graphics hardware \citep{Wang:2010}.
 
 \subsubsection{MHD with Constrained Transport (MHD)}
-This MHD method is second order in time and space, and preserves the divergence constraint,
-$\nabla \cdot \vecB = 0$, to machine precision through the Constrained Transport
-(CT) method.  CT, originally described by \citet{Evans88}, updates the
-magnetic field with the curl of an electric field, suitably formulated to
-preserve $\nabla \cdot \vecB$.  We employ the CT methods
-described by \citet{Balsara99} and \citet{Gardiner05}.  Further, we employ the
-second order hyperbolic solver of \citet{Li08a} and the divergence free AMR
-scheme of \citet{Balsara01}.
+This MHD method is second order in time and space, and preserves the
+divergence constraint, $\nabla \cdot \vecB = 0$, to machine precision
+through the Constrained Transport (CT) method.  CT, originally
+described by \citet{Evans88}, updates the magnetic field with the curl
+of an electric field, suitably formulated to preserve $\nabla \cdot
+\vecB$.  We employ the CT methods described by \citet{Balsara99} and
+\citet{Gardiner05}.  Further, we employ the second order hyperbolic
+solver of \citet{Li08a} and the divergence free AMR scheme of
+\citet{Balsara01}.
 
 \subsubsection{Second order finite difference method (HD only)}
 
@@ -606,7 +664,7 @@ method, although the code is entirely independent of the \zeus\ code,
 and only the hydrodynamical algorithm of \zeus\ is implemented in
 \enzo\ -- the MHD and RHD schemes are not.
 
-The ZEUS method uses a staggered mesh such that the velocities are
+The \zeus\ method uses a staggered mesh such that the velocities are
 face-centered, while the density and internal energy quantities are
 cell-centered.  It splits the solution up into two steps, the
 so-called source step, in which the momentum and energy values are
@@ -619,60 +677,58 @@ conserved quantities (mass, momentum and energy) across the grid.
 
 The current implementation of self-gravity in \enzo\ uses a Fast
 Fourier Technique \citep{Hockney88} to solve Poisson's equation on the
-coarsest (Level 0) grid on each time step.  The advantage of using this method is that
-it is fast, accurate, and 
-naturally allows both periodic and isolated boundary conditions for
-the gravity, choices which are very common in astrophysics and
-cosmology.  On subgrids, we interpolate the boundary conditions from
-that grid's parent (either the level 0 grid or some other subgrid).
-The Poisson equation is then solved on every timestep using a multigrid technique on one
-subgrid at a time.  In
-\enzo, self-gravity is optional.  Aside from calculating the
-gravitational potential from the baryon fields and particles existing
-in the simulation, there are also a number of options for static gravitational fields.
+coarsest (Level 0) grid on each time step.  The advantage of using
+this method is that it is fast, accurate, and naturally allows both
+periodic and isolated boundary conditions for the gravity, choices
+which are very common in astrophysics and cosmology.  On subgrids, we
+interpolate the boundary conditions from that grid's parent (either
+the level 0 grid or some other subgrid).  The Poisson equation is then
+solved on every timestep using a multigrid technique on one subgrid at
+a time.  In \enzo, self-gravity is optional.  Aside from calculating
+the gravitational potential from the baryon fields and particles
+existing in the simulation, there are also a number of options for
+static gravitational fields.
 
 \subsubsection{N-body Dynamics}
 
-Collisionless matter (dark matter, stars, etc.) is modeled with
+Collisionless matter (e.g., dark matter, stars, etc.) is modeled with
 particles that interact with the baryons only via gravity.  These
 particles are advanced in a single time step using a drift-kick-drift
-algorithm\citep{Hockney88} to provide second-order accuracy even in the presence of
-changing timesteps.  Since the particles follow the collapse of
-structure, they are not adaptively refined.  Nor are there duplicate
-sets of particles for each level; instead, each particle is associated
-with the highest refined level available at its position in space, and is
-moved as the hierarchy is rebuilt.  Thus, a particle has the same
-timestep and feels the same gravitational force as a grid at that refinement
-level.
+algorithm \citep{Hockney88} to provide second-order accuracy even in
+the presence of changing timesteps.  Since the particles follow the
+collapse of structure, they are not adaptively refined.  Nor are there
+duplicate sets of particles for each level; instead, each particle is
+associated with the highest refined level available at its position in
+space and is moved as the hierarchy is rebuilt.  Thus, a particle has
+the same timestep and feels the same gravitational force as a grid at
+that refinement level.
 
 Although the particles are fixed in mass once initialized, we can
-create them with any initial set of masses and positions.  For example, in
-many cosmological simulations, a static subgrid is included from the
-beginning in order to improve the initial baryonic mass resolution.
-On this subgrid, we also use smaller particles to improve the
-collisionless mass resolution.  One particle per initial grid point
-seems to provide approximately equal sampling between the dark matter
-and gas.
+create them with any initial set of masses and positions.  For
+example, in many cosmological simulations, a static subgrid is
+included from the beginning in order to improve the initial baryonic
+mass resolution.  On this subgrid, we also use smaller particles to
+improve the collisionless mass resolution.  One particle per initial
+grid point seems to provide approximately equal sampling between the
+dark matter and gas.
 
 \subsubsection{Chemistry}
 \label{sec.ov.chem}
 
-\enzo\ includes the capability of following up to
-12 chemical species using a non-equilibrium solver.  The species can
-be turned on in sets, with the simplest model including just H, H$^+$, 
-He, He$^+$, He$^++$, and $e^-$, and more complete models adding first
-species important for gas-phase molecular hydrogen formation: $H^-$,
-H$_2$ and H$_2^+$, and then $HD$ formation: $HD$, $D$, $D+$.  (We note
-that a reduced version of the chemistry, used only with the
-flux-limited diffusion radiation transport, includes only hydrogen
-species.)  The
-cooling and heating due to these species is also included (see the
-next section).  The solution of the rate equations is carried out
-using one Jacobi iteration of an implicit Euler time discretization to
-ensure stability; to
-ensure accuracy we sub-cycle the rate equations with a shorter
-timestep such that the electron and neutral fractions do not change by
-more than 10\%.
+\enzo\ includes the capability of following up to 12 chemical species
+using a non-equilibrium solver.  The species can be turned on in sets,
+with the simplest model including just H, H$^+$, He, He$^+$, He$^{++}$,
+and e$^-$, and more complete models adding first species important for
+gas-phase molecular hydrogen formation: H$^-$, H$_2$ and H$_2^+$, and
+then HD formation: HD, D, D$^+$.  (We note that a reduced version
+of the chemistry, used only with the flux-limited diffusion radiation
+transport, includes only hydrogen species.)  The cooling and heating
+due to these species is also included (see the next section).  The
+solution of the rate equations is carried out using one Jacobi
+iteration of an implicit Euler time discretization to ensure
+stability; to ensure accuracy we sub-cycle the rate equations with a
+shorter timestep such that the electron and neutral fractions do not
+change by more than 10\%.
 
 \subsubsection{Radiative Cooling and Heating}
 
@@ -681,16 +737,15 @@ and heating.  In the simplest mode, with the multi-species flag turned
 off (i.e. set to zero), the cooling rate is computed from a simple
 temperature-dependent cooling rate, taken from \citet{SW87}.  If
 chemistry is turned on, then the code can include cooling from all
-species of Hydrogen and Helium (including H$_2$) -- this primordial cooling is
-also treated using 
-one Jacobi iteration of an implicit Euler time discretization to maintain accuracy.  Finally, we have also recently
-added metal cooling based on a set of multi-dimensional lookup tables
-computed with the \texttt{Cloudy} code \citep{1998PASP..110..761F} as
-described in \citet{2008MNRAS.385.1443S} and
-\citet{2011ApJ...731....6S}.  Finally, we note that the cooling and
-heating is (almost always) treated in the optically-thin limit,
-although the code can also follow radiative transfer in a limited set
-of energy bins (see below).
+species of hydrogen and helium (including H$_2$) -- this primordial
+cooling is treated in the same Jacobi iteration as the chemistry.
+Finally, we have also recently added metal cooling based on a set of
+multi-dimensional lookup tables computed with the \textsc{Cloudy} code
+\citep{1998PASP..110..761F} as described in
+\citet{2008MNRAS.385.1443S} and \citet{2011ApJ...731....6S}.  Finally,
+we note that the cooling and heating is (almost always) treated in the
+optically-thin limit, although the code can also follow radiative
+transfer in a limited set of energy bins.
 
 \subsubsection{Homogeneous radiation backgrounds}
 
@@ -707,7 +762,7 @@ varying as in \citet{WiseAbel05}.
 
 The code includes a photon-conserving radiative transfer algorithm
 that is based on an adaptive ray-tracing method that utilizes the
-HEALPix pixilation of the sphere \citep{AbelWandelt02}.  Photons are
+HEALPix pixelization of a sphere \citep{AbelWandelt02}.  Photons are
 integrated outwards from sources using an adaptive time-stepping
 scheme that preserves accuracy in ionization fronts even in the
 optically-thin limit.  This has been integrated with the chemistry and
