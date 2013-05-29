@@ -4,7 +4,7 @@
 \enzo\ supports the use of a set of spatially uniform (but possibly
 time-varying) radiation fields that can interface with the chemistry
 and cooling/heating routines described elsewhere.  Many of these use
-fits to the H, He and He$^+$ ionizing and photo-ionization heating
+fits to the H, He and \Hep ionizing and photo-ionization heating
 rates that are of the form
 
 \begin{equation}
@@ -17,7 +17,7 @@ $z_1$ are fits from the literature.  For radiation field types 1-3
 (numbered as they appear in the \enzo\ source code and simulation
 parameter values), we
 give the coefficients for the photoionization (and photo-heating)
-rates of H, He, and He$^+$ in Table~\ref{table:homo_coefs}.  Radiation
+rates of H, He, and \Hep in Table~\ref{table:homo_coefs}.  Radiation
 background types 1
 and 2 are based on \citet{1996ApJ...461...20H} with two different
 intrinsic quasar spectra slopes, while Type 3 is from
@@ -32,7 +32,7 @@ adds X-ray Compton heating from \citet{MadauEfstathiou99}, using
 equations (4) and (11) of that paper.
 
 Homogeneous radiation field types 5 and 6 start with a spectral shape
-that is then integrated against the appropriate H, He, and He$^+$
+that is then integrated against the appropriate H, He, and \Hep,
 cross-sections to compute the ionization and photo-ioniziation heating
 rates (we use 400 bins logarithmically spaced from 0.74 eV to $7.24
 \times 10^9$ eV).  In particular, Type 5 has a hard, featureless
