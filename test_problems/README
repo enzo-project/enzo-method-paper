@@ -1,0 +1,69 @@
+This directory contains the parameter files and scripts required to
+generate all of the figures in the 'Representative test problems'
+section of the Enzo method paper (Section 11.2).  A script to run all
+of the simulations and create all of the figures, test_problem_runner.py, 
+is also included in this directory. Some details that you may find 
+useful are included in this text file.
+
+Note: if you do not wish to run the simulations required to generate
+the figures (some of them are somewhat computationally expensive --
+see below), you can download all of the data from [INSERT URL HERE].
+The total data size to download is [XXXX] GB.
+
+
+=== Requirements ===
+
+In order to successfully create all of the figures, you will need Enzo
+(http://enzo-project.org), compiled using the HYPRE library
+(http://acts.nersc.gov/hypre/).  You will also need the yt analysis
+package (http://yt-project.org), built with SciPy.  Including SciPy
+requires a non-default option to be set in the install script -- to
+see if you have it installed, from the python command line type
+"import scipy".  If SciPy is NOT installed, you will get the error
+"ImportError: No module named scipy".  If you do NOT compile Enzo with
+the HYPRE library, or do not have SciPy installed along with yt (and
+don't wish to go through the trouble of getting all of that to work),
+remove the 'CosmoIFront' problem from the list of test problems.
+
+
+=== Runtime ===
+
+Running test_problem_runner.py can take quite a bit of time -- some of
+the simulations take hours to run.  If you're worried that the script
+is not doing anything, go into the simulation directory for the
+simulation that is currently running (which will be printed out by the
+script) and look to see when the file output.log was last modified.
+The output.log file contains stdout and stderr from the simulation.
+
+While all of the simulations can in principle run on a single core
+(and the script is set up to do this), a few of them will take many
+hours to run, with the PhotonShadowing test requiring ~50 hours on one
+core.  You may want to consider running this calculation on 8-16 cores
+on a supercomputer or hefty workstation, and then generate the figures
+for it there.  Estimated runtimes for the various problems are listed
+in the table at the end of this file, and the simulation runner can be
+edited to run only a subset of the problems, so that the reader with
+time constraints can generate most of the figures quite rapidly.
+
+
+=== Test problem details ===
+
+Test problem name	 Est. runtime	Notes
+-----------------	 ------------	---------
+AnisoConduction		 ~3 hours	
+CosmoIFront		 ~2 hours	needs HYPRE, SciPy
+DoubleMachReflection	 ~5 min.
+GravityTest		 ~2 min.
+OneZoneFreefallTest	 ~20 min.
+OrszagTang		 ~5 min.
+PhotonShadowing		 ~50 hours	Rec. run on multi CPUs
+SedovAMR		 ~4 hours
+SelfSimilarInfall	 ~5 min.
+ShockPool		 ~1 min.
+ShockTube		 ~1 min.
+TestOrbit		 ~1 hour
+WavePool		 ~3 min.
+ZeldovichPancake	 ~1 min.
+
+Note: runtime includes both the running of simulation(s) and analysis 
+scripts.

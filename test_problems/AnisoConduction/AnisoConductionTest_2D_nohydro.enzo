@@ -25,7 +25,7 @@ MinimumSlopeForRefinement  = 0.2
 # I/O Parameters
 #dtDataDump                 = 0.005
 #StopTime                   = 0.5
-dtDataDump                 = 1.0
+dtDataDump                 = 30.0
 StopTime                   = 300.0
 StopCycle = 1000000
 DataDumpDir                = DD
@@ -41,7 +41,7 @@ TimeUnits                  = 3.15576e+13
 SelfGravity                = 0 
 
 # Hydrodynamic Parameters
-HydroMethod                = 4  # 0 = PPM, 2 = ZEUS
+HydroMethod                = 4  
 Gamma                      = 1.66666666667
 PPMDiffusionParameter      = 0
 CourantSafetyNumber        = 0.5
@@ -83,3 +83,4 @@ ConductionTestPulseBFieldX = 1.0e-6
 ConductionTestPulseBFieldY = 1.0e-6
 ConductionTestPulseBFieldZ = 0.0
 Debug1 = 0
+

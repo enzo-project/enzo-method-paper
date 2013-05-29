@@ -324,6 +324,59 @@ two variables adopted are total energy and
 entropy (rather than total energy and thermal energy), with an
 analogous scheme for choosing which variable to employ.
 
+\subsubsection{Riemann Solvers and Fallback}
+
+While most numerical hydrodynamics schemes center around finding approximate
+solutions to the hydrodynamics equations, the core of philosophy of a Godunov's
+method \citep{Godunov1959} is to find the exact solution to an
+approximation of the physical setup.  The approximate problem in this case is
+the Riemann problem, wherein two volumes are separated by a thin membrane that
+is instantaneously removed at time $t=0$.  The subsequent evolution has an exact 
+analytic solution.  This solution is
+described in detail in many texts on computational fluid dynamics
+\citep[e.g.,][]{toro-1997}.   In brief, there are three waves that propagate
+away from the initial discontinuity.  The central wave, characterized by a
+density jump but not a pressure jump, is called the contact discontinuity.  The
+waves traveling to the left and right of the contact discontinuity can be either
+shocks, if characteristics converge on the wave front, or  rarefaction fans if
+characteristics diverge.  
+
+While there exists an exact solution to this problem, finding it is expensive.  There are four
+possible combination of left- and right- traveling shocks and rarefactions,
+only one of which is fully consistent with the initial conditions.  Once the
+correct physical state is determined, the pressure in the central region can
+only be found by finding the root to an algebraic equation, which is necessarily
+an iterative process.  Thus a series of \emph{approximate} Riemann solvers are
+typically used.  There are four approximate Riemann solvers in Enzo: two-shock
+\citep{toro-1997},
+Harten-Lax-van Leer \citep[HLL,][]{toro-1997}, HLL with a contact discontinuity
+ \citep[HLLC,][]{toro-1997}, and HLL with
+multiple discontinuities \citep[HLLD,][]{Miyoshi05}.  Two-shock is used only
+with the PPM method.  HLL and HLLC are used with PPM, MUSCL (both with and
+without MHD) and MHD-CT.  HLLD is exclusively an MHD solver, and works with both
+MUSCL and MHD-CT methods.  
+
+The only approximation that two-shock makes is that both left- and right- moving
+waves are shocks.  This solution still requires an iterative method for finding
+the pressure in between the two waves.  The HLL method alleviates this iteration
+by assuming that there is no central contact discontinuity, and the signal speed
+in the central region is approximated by an average over the left- and right-
+moving waves.  This method is significantly faster than the two-shock method,
+but also quite a bit more dissipative.  The HLLC is a three-wave method that improves upon the HLL
+method by also including the third wave, the contact discontinuity.  
+
+For the MHD equations, there are seven waves, instead of three.  This makes the
+exact solution to the Riemann quite a bit more expensive.  Both the HLL and HLLC
+approximations can be formulated for the MHD equations, and are employed in both
+Dedner and CT solvers in Enzo.  The HLLD
+solver includes two of the additional waves, the rotational discontinuities,
+making it a five-wave solver.
+
+On rare occasions, high order
+solutions can cause negative densities or energies.  Both PPM and MUSCL solvers employ a Riemann
+solver fallback mechanism \citep{Lemaster09}.  If a negative density is found at
+a particular interface, the more diffusive HLL Riemann solver is used instead.  
+
 % ------------------------------------------------------------
 
 

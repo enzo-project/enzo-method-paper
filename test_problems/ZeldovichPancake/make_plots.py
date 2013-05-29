@@ -18,4 +18,4 @@ plt.plot(ray['x'], 1e-5*ray['x-velocity'], c='k', ls='-', marker='.', ms=5)
 plt.ylabel('Velocity (km/s)')
 plt.xlabel('x')
 
-plt.savefig('AMRZeldovichPancake.png')
+plt.savefig('AMRZeldovichPancake.eps')

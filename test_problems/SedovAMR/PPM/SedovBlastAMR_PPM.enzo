@@ -25,10 +25,10 @@ SedovBlastSubgridRight    = 0.6
 #
 #  set I/O and stop/start parameters
 #
-StopTime                  = 0.3
+StopTime                  = 0.07
 StopCycle                 = 10000
 dtDataDump                = 0.01
-DataDumpName              = sb_L2x2_amr4_
+DataDumpName              = DD
 #
 #  set hydro parameters
 #

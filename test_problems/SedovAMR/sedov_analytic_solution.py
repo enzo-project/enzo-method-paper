@@ -1,4 +1,6 @@
-#!/usr/bin/python
+# Calculates analytic solution for Sedov blast, creates text file sedov.in
+# (contains radius, density, pressure, velocity, temperature, and internal
+# energy)
 
 import numpy as na
 

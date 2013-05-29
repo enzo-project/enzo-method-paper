@@ -15,7 +15,7 @@ datafile_base = 'data'
 
 
 ### define some filenames
-plot_filename = './' + problem_name + '.pdf'
+plot_filename = './' + problem_name + '.eps'
 
 ### generate exact solution
 def make_exact(time):
