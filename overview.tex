@@ -54,7 +54,8 @@ given by:
  %               + \Gamma - \Lambda.
        \label{eq:total_energy}  \\
 %
-\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times \vecB) & = & 0 \label{eq:induction}
+\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
+\vecB) & = & -\frac{\dot{a}}{2 a} \vecB \label{eq:induction}
 \end{eqnarray}
 
 %\begin{eqnarray} 
@@ -556,8 +557,8 @@ This PPM implementation does an excellent job of capturing strong
 shocks in a few cells.  Multidimensional schemes are built up by
 directional splitting and produce a method that is formally second
 order-accurate in space and time and which explicitly conserves mass,
-linear momentum, and energy.  \red{(REF?)}  A variety of reconstruction methods and
-Riemann solvers have been implemented.  \red{(These are never described!)}
+linear momentum, and energy.  \red{(REF?)}  A variety of 
+Riemann solvers have been implemented.  
 
 As described in \citet{Bryan95}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small

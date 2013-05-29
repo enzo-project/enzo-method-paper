@@ -1,78 +1,90 @@
 \subsection{Chemistry}
 \label{sec.num.chemistry}
 
-While it is often safe to assume that species (both chemical and
-ionization) within a gas can be treated as being in equilibrium, in
-some regimes that are found in astrophysics this assumption leads to
-considerable error.  For example, the cooling and collapse of
-primordial gas in Population III star formation is dominated by
-molecular hydrogen, which in the absence of dust forms via an
-inefficient pair of collisional processes that depend heavily on the
-local population of free electrons.  As a result, when modeling
-primordial star formation, it is critical to follow the
-non-equilibrium evolution of the chemical species of hydrogen,
-including molecular hydrogen and deuterium.
+While it is often safe to assume that species (both chemical and ionization)
+within a gas can be treated as being in equilibrium, in some regimes that are
+found in astrophysics this assumption leads to considerable error.  For
+example, the cooling and collapse of primordial gas in Population III star
+formation is dominated by molecular hydrogen, which in the absence of dust
+forms via an inefficient pair of collisional processes that depend heavily on
+the local, highly non-equilibrium population of free electrons.  As a result,
+when modeling primordial star formation, it is critical to follow the
+non-equilibrium evolution of the chemical species of hydrogen, including
+molecular hydrogen and deuterium.
 
-The primordial non-equilibrium chemistry routines used in \enzo\ were
-first described by Abel et al. and Anninos et
-al. \citep{abel97,anninos97}, but have been extended since then with
-updated reaction rates and the inclusion of deuterium species
-\citep{2009PhDT.........5T}.  These routines follow the
-non-equilibrium chemistry of a gas of primordial composition with 12
-total species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp,
-and HD.  (A separate, but related, module follows the radiative
-heating and cooling of the gas from atomic and molecular line
-excitation, recombination, collisional excitation, free-free
-transitions, Compton scattering of the cosmic microwave background, as
-well as several models for a metagalactic UV background that heat the
-gas via photoionization and photodissociation; see
-Section~\ref{sec.num.cooling} for more details).  Depending on user
-parameters, one can follow only atomic species (H, \Hp, He, \Hep,
-\Hepp, and e$^-$), include those species relevant for molecular
-hydrogen formation (\HH, \HHp, and \Hm), and can further include
-deuterium and its species (D, \Dp, and HD).  A total of 9 kinetic
-equations are solved, including 29 kinetic and radiative processes,
-for the 12 species mentioned above.  See Table~\ref{table.collisional}
-for the collisional processes and Table~\ref{table.radiative} for the
-radiative processes solved.
+The primordial non-equilibrium chemistry routines used in \enzo\ were first
+described by Abel et al. and Anninos et al. \citep{abel97,anninos97}, but have
+been extended since then with updated reaction rates and the inclusion of
+deuterium species \citep{2009PhDT.........5T}.  These routines follow the
+non-equilibrium chemistry of a gas of primordial composition with 12 total
+species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp, and HD.  Enzo
+also computes the radiative heating and cooling of the gas from atomic and
+molecular line excitation, recombination, collisional excitation, free-free
+transitions, Compton scattering of the cosmic microwave background, as well as
+several models for a metagalactic UV background that heat the gas via
+photoionization and photodissociation; see Section~\ref{sec.num.cooling} for
+more details.  The chemical and thermal states of the gas can be updated either
+at the same hydrodynamical timestep (i.e., de-coupled and operator split) or
+through the same subcycling system (i.e., a coupled chemical and thermal
+system).  The default behavior of \enzo\ is to couple these two systems at
+subcycles of the hydrodynamic timestep; this results in updates to both the
+chemical and thermal states of the gas (which also inform the temperature, the
+reaction rate coefficients and the cooling functions of the gas) on timescales
+that faster than those of the gas dynamics.
 
-The chemical reaction equation network is technically challenging to
-solve due to the huge range of reaction timescales involved -- the
-characteristic creation and destruction timescales of the various
-species and reactions can differ by many orders of magnitude.  As a
-result, the set of rate equations is extremely stiff, and an explicit
-scheme for integration of the rate equations can be exceptionally
-costly if small enough timesteps are taken to keep the network stable.
-This makes an implicit scheme strongly preferable for such a set of
-equations.  However, an implicit scheme typically requires an iterative
-procedure to converge, and for large networks (such as this one) an
-implicit method can be very time-consuming, making it undesirable for
-a large, three-dimensional simulation.
+Input parameters to \enzo\ govern the chemical species that are updated during
+the course of the simulation.  This can include only the atomic species (H,
+\Hp, He, \Hep, \Hepp, and e$^-$), those species relevant for molecular hydrogen
+formation (\HH, \HHp, and \Hm), and can further include deuterium and its
+species (D, \Dp, and HD).  A total of 9 kinetic equations are solved, including
+29 kinetic and radiative processes, for the 12 species mentioned above.  See
+Table~\ref{table.collisional} for the collisional processes and
+Table~\ref{table.radiative} for the radiative processes solved.
 
-\enzo\ solves the rate equations using a method based on a first-order-accurate, implicit
-Euler formulation in order to provide a stable and accurate
-solution. This technique is optimized by taking the chemical
-intermediaries \Hm and \HHp, which have large rate coefficients and
-low concentrations, and grouping them into a separate category of
-equations.  Due to their fast reactions, these species are very
-sensitive to small changes in the more abundant species.  However, due
-to their low overall concentrations, they do not significantly
-influence the abundance of species with higher concentrations.
-Therefore, reactions involving these two species can be decoupled from
-the rest of the network and treated independently.  In fact, \Hm~and
-\HHp~are treated as being in equilibrium at all times, independent of
-the other species and the hydrodynamic variables.  This allows a large
-speedup in solution as the implicit Euler scheme is then applied only to the
-slower 7- or 10-species network (depending on whether deuterium is
-included or not) on timescales closer to those required by the
-hydrodynamics of the simulation.  Even so, the accuracy and stability
-of the scheme is maintained by subcycling the rate solver over a
-single hydrodynamic timestep.  These subcycle timesteps are determined
-so that the estimated fractional change in the electron concentration
-is limited to no more than $10\%$ per timestep.  Given this
-subcycling, the method is not truly implicit over an entire
-hydrodynamical timestep  -- however,
-it uses the formalism and is implicit over subcycle timesteps.
+The chemical reaction equation network is technically challenging to solve due
+to the huge range of reaction timescales involved.  The characteristic times
+for creation and destruction of the various species and reactions can differ by
+many orders of magnitude and are often very sensitive to the chemical and
+thermal state of the gas.  This makes a fully-implicit scheme, with convergence
+criteria and error tolerance, strongly preferable for such a set of equations.
+However, most implicit schemes require an iterative procedure to converge, and
+for large networks (such as this one) an iterative, fully-implicit method can
+be very time-consuming and computationally costly for a relatively small
+increase in accuracy.  At this present time, this makes fully-implicit methods
+somewhat undesirable for a large, three-dimensional simulation.
+
+\enzo\ solves the rate equations using a method based on a semi-implicit
+formulation in order to provide a stable, positive definite and first-order
+accurate solution.  The update discretization splits chemical changes into
+formation components and destruction components and updated with a mixed set of
+time states, as described in \citet{anninos97}.  The formation components of
+species $S_i$ are computed at the current subcycle time, where the contribution
+of species $S_i$ to its own destruction components are computed at the updated
+time; all other contributions to the destruction component are computed at the
+current time.  This mixed state improves accuracy and ensures species values
+are positive definite, and is equivalent to one Jacobi iteration of an implicit
+Euler solve.  This technique is optimized by taking the chemical intermediaries
+\Hm and \HHp, which have large rate coefficients and low concentrations, and
+grouping them into a separate category of equations.  Due to their fast
+reactions, these species are very sensitive to small changes in the more
+abundant species and are at all times in astrophysical calculations close to
+equilibrium values.  Attempting to resolve their formation and destruction
+times would necessitate extremely small timesteps, and while these species
+provide necessary channels to facilitate the formation of molecular hydrogen at
+low densities, they do not otherwise significantly influence the abundance of
+species with higher concentrations.  Therefore, reactions governing these two
+species can be decoupled from the rest of the network and treated independently
+through analytic solutions for equilibrium values.  This allows a large speedup
+in solution as the timestepping scheme is applied only to the slower 7- or
+10-species network (depending on whether deuterium is included or not), which
+will be much closer to the overall hydrodynamic timestep of the simulation.
+
+Even so, the accuracy and stability of the scheme is maintained by subcycling
+the rate solver within a single hydrodynamic timestep.  These subcycle
+timesteps are determined so that the estimated fractional change in the
+electron concentration is limited to no more than $10\%$ per timestep;
+additional criteria may be applied based on the expected change from radiative
+cooling, chemical heating from the formation of molecular hydrogen.
 
 It is important to note the regime in which this model is valid.
 According to \citet{abel97} and \citet{anninos97},
@@ -89,10 +101,17 @@ $n_{\rm H} \sim 10^{16} - 10^{17}$~cm$^{-3}$ in gas of primordial composition.  
 modifications to the cooling function that take into account the
 non-negligible opacity in the gas must be made, as discussed by
 \citet{2004MNRAS.348.1019R}, and was put into \enzo\ for the work
-published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  Even
-with these modifications, a completely correct description of the
-cooling of primordial gas requires some form of radiation transport,
-which will greatly increase the cost of the simulations.
+published in \citep{2009Sci...325..601T,2009PhDT.........5T}.   The formation
+of molecular hydrogen as catalyzed by dust was recently added to \enzo\ to
+enable studies of low-metallicity gas, as well as the inclusion of appropriate
+timestepping criteria to account for the input of ionizing radiation.  Even
+with these modifications, a completely correct description of the cooling of
+primordial gas at very high densities requires some form of radiation
+transport, which will greatly increase the cost of the simulations.
+Furthermore, at very high densities, the stiffness of the molecular hydrogen
+reaction rates may require better than a first-order accurate solution; as
+such, the transition to this regime will likely necessitate a fully-implicit,
+iterative solver.
 
 %---------------- table of collisional processes
 

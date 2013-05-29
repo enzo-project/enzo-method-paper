@@ -12,20 +12,20 @@ In order to simplify bookeeping, a number of restrictions are imposed on the sub
 \begin{itemize}
  \item The refinement factor $r$, or the ratio of the coarse cell width to the fine cell width, must be an integer.  In practice, \enzo\ almost always uses $r=2$, since tests have shown this typically provides the best performance.
  \item Each subgrid must begin and end on the boundary of a coarse cell.  This means that the number of cells in a patch will be a multiple of the refinement factor.
- \item A subgrid most be completely enclosed by its parent.
+ \item A subgrid must be completely enclosed by its parent.
 \end{itemize}
 
 The AMR grid patches are the primary data structure in \enzo.  Each patch is treated as an individual object that can contain both field variables and particle data.  Individual grids are organized into a  dynamic, distributed hierarchy of mesh patches.  
 %See Figure~\ref{fig.2.amrhierdens} for an example of an \enzo\ simulation performed using this AMR scheme where both the baryon density and AMR grid hierarchy are shown together. 
 % GB: I think this figure is too application-specific
 
-Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig:amr_hierarchy}.  \red{(Move this figure to here?)}  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} and~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
+Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig.amr_hierarchy}.  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} and~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
 
 From the point of view of the hydro solver, each grid is solved as an independent CFD problem, with Dirichlet boundary conditions stored in the ghost zones.  At the end of each time step, cells on a given level fill ghost zones by interpolating from the parent and copying from neighbors on the same level.  Grids then correct the flux at the interface boundary between fine and coarse zones, and finally project their active zone data to the parent grid. 
 
 Timesteps are determined on each level as described in Section~\ref{sec.timestepping}, and the hierarchy is advanced on
 a level-by-level basis in a W-Cycle.    Beginning with the coarsest level, $l$, all grids on that level are advanced one
-timestep.  Then one timestep is taken on all grids at the next level of refinement, $l+1$, and so on until the finest level is resolved. The finest level is then advanced, using as many steps as it takes to reach the level immediately above.  The finest level is then synched to the level above it, which then proceeds foreward in time one more step.  This is shown graphically in Figure~\ref{fig:wcycle}.
+timestep.  Then one timestep is taken on all grids at the next level of refinement, $l+1$, and so on until the finest level is resolved. The finest level is then advanced, using as many steps as it takes to reach the level immediately above.  The finest level is then synched to the level above it, which then proceeds forward in time one more step.  This is shown graphically in Figure~\ref{fig:wcycle}.
 
 \begin{figure}
 \begin{center}
@@ -81,11 +81,13 @@ Each function operates on all the grids on the given level.  In the following se
 
 In order to solve the hydrodynamic equations on a patch, it is necessary to specify the boundary conditions on that patch.  There are two cases.  The first is that the boundary is external to the computational domain.  This occurs for all the boundaries of the root grid.  The second possibility is that the boundary is within the computational domain, which is true for most, but not all, subgrids.
 
-In the first case, we allow for four types of boundary conditions:
+In the first case, we allow for four types of boundary conditions
+(represented here as being at $x=0$, with positive $x$ interior and
+negative $x$ exterior to the domain):
 \begin{enumerate}
   \item{\em Reflecting.} In this case, the boundary behaves like a mirror, with the solution on the boundary reflecting the solution in the computational domain ($q(-x) = q(+x)$) but with the velocity normal to the boundary reversed: $v_x(-x) = -v_x(+x)$.
   \item{\em Outflow.}  We approximate outflow boundary conditions by duplicating the solution at the edge of the computational domain: $q(-x) = q(0)$.
-  \item{\em Inflow.} In this case, the boundary values are fixed by a pre-determined function ($q(-x) = q0(x,t)$).  The code provides a simple way to set inflow values that are constant in both time and space over an entire face, or hooks are provided for special cases where the boundary must be time-varying.
+  \item{\em Inflow.} In this case, the boundary values are fixed by a pre-determined function ($q(-x) = q0(-x,t)$).  The code provides a simple way to set inflow values that are constant in both time and space over an entire face, or hooks are provided for special cases where the boundary must be time-varying.
   \item{\em Periodic.} The boundary solution is obtained from the other side of the grid: $q(-x) = q(x_{\rm{max}}-x)$.
 \end{enumerate}
 
@@ -98,11 +100,11 @@ donor cell, Van Leer and piecewise parabolic interpolation, which are
 first, second and third-order accurate respectively
 \citep[e.g.,][]{Stone92a}.  However, we require fully
 multi-dimensional interpolation functions, and so focus on
-second-order schemes since they are tractable and relatively accurate.
-\footnote{We could, in principle, build a multi-dimensional
+second-order schemes since they are tractable and relatively 
+accurate\footnote{We could, in principle, build a multi-dimensional
   interpolator out of a one-dimensional interpolation function;
   however, at higher order, this would not necessarily satisfy our
-  constraint regarding not introducing new extrema in interpolated quantities.}  In Appendix~\ref{app:interpolation}, we
+  constraint regarding not introducing new extrema in interpolated quantities.}.  In Appendix~\ref{app:interpolation}, we
 explicitly write down functions in one, two and three dimensions, but
 here we discuss the general design considerations.
 
@@ -156,33 +158,32 @@ selected centering.
 \label{sec:projection}
 
 Since a refined region is simulated with (at least) two different resolutions (one fine and one coarse), it has two or
-more ``solutions'' (i.e. values of density, velocity, etc.) that represent the same volume of space.  This is one important aspect of the SAMR method -- some physical regions are represented by grids at multiple resolutions.  To
+more ``solutions'' (i.e.~values of density, velocity, etc.) that represent the same volume of space.  This is one important aspect of the SAMR method -- some physical regions are represented by grids at multiple resolutions.  To
 maintain consistency, the coarse grid quantities are updated with the finer values, using a volume-weighted average of the conserved quantities:
 \begin{equation}
 q^{\rm coarse} = r^{-d} \sum q^{\rm fine}_{i, j,k}
 \end{equation}
-where $r$ is the refinement factor and the sum is over all fine cells that ``cover" the coarse cell. The exponent, $d$, refers to the weight of the average.  For cell-centered quantities, this is the dimensionality of the problem.  For face-centered quantities, this is one less than the dimensionality, and for edge-centered quantities this is one.
+where $r$ is the refinement factor, and the sum is over all fine cells that ``cover" the coarse cell. The exponent, $d$, refers to the weight of the average.  For cell-centered quantities, this is the dimensionality of the problem.  For face-centered quantities, this is one less than the dimensionality, and for edge-centered quantities this is one.
 
 
 \subsection{Flux correction}
 \label{sec:flux_correction}
 
 One of the significant advantages of flux-conservative methods is, of course, their ability to maintain conserved quantities to machine precision.  Unfortunately, the projection step upsets this flux conservation since, at the boundary of a refined region, the coarse and fine cells on either side of the border are updated with different estimates of the flux across the boundary.  At one refinement level this comes from the coarse grid computation, and in the other from the fine grid solution.  Conservation can be restored by correcting all coarse cells that lie outside the boundary of a fine region
-with the difference between the coarse and fine estimates of the flux across the boundary:
-
+with the difference between the coarse and fine estimates of the flux
+across the boundary:
 \begin{equation}
   q^{\rm coarse} = \tilde{q}^{\rm coarse} - \Delta t \left( F^{\rm
       coarse} - \sum_{j,k} F^{\rm fine}_{j,k} \right)
 \end{equation}
-
 where $F$ is the flux of quantity $q_i$ in the $i$-direction through the cell interface.   We use $\tilde{q}$ to indicate the uncorrected quantity on the coarse grid and the sum is over the $r^{d-1}$ fine cell interfaces in the perpendicular dimensions that share a face with the coarse cell being corrected.  This correction is carried out for all coarse cells that share a face with a refined cell (and are not themselves covered with more refined cells).
 
 \subsection{Hierarchy reconstruction}
 \label{sec:hierarchy_reconstruction}
 
-Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified. Many different criteria can be simultaneously specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vision technique, as described in \red{(REF)}.  
+Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified. Many different criteria can be simultaneously specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vision technique, as described in \cite{Berger91}.
 
-We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently larger (typically larger than 30\%), or if the grid is small enough (typically less than $4^d$ coarse cells, where d is the dimensionality of the simulation) then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicated by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest exis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
+We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently large (typically over 30\%), or if the grid is small enough (typically less than $4^d$ coarse cells) then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicated by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest axis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
 
 This algorithm is not necessarily optimal, but experience shows it does a reasonable job of generating an efficient covering of the refined cells.  Note that some cells are unnecessarily refined with the SAMR approach, resulting in wasted resources (unlike in cell-splitting AMR schemes).  However, it has a number of advantages.  First, traditional grid-based hydro methods can be simply added with only minor modifications.  Second, it is easier to accommodate larger stencils (as in PPM, which requires three boundary zones), and third, it can be more efficient for some machines since there are more predictable and linear memory accesses, which more efficiently use a CPU's cache.
 
@@ -190,35 +191,43 @@ This algorithm is not necessarily optimal, but experience shows it does a reason
 \subsection{Refinement criteria}
 \label{sec:refinement_criteria}
 
-In this section, we turn to the refinement criteria themselves.  Although generalized refinement criteria are available based on estimators for the error, such as the Richardson method \red{(REF)}, we have focused generally on methods that use physical estimators based on the assumption that the simulator has a specific quantity or quantities that indicate the need for refinement.  The flagging methods currently built into \enzo\ are:
+In this section, we turn to the refinement criteria themselves.
+Although generalized refinement criteria are available based on
+estimators for the error, such as the Richardson method \citep{AtkinsonHan2004}, we have focused generally on methods that use physical estimators based on the assumption that the simulator has a specific quantity or quantities that indicate the need for refinement.  The flagging methods currently built into \enzo\ are:
 
 \begin{enumerate}
 
-\item{\em Slope.}  If the normalized slope $(q_{i+1} - q_{i-1})/ (2 q_i)$ of baryon quantities between two adjacent cells is larger than a specified value (typically 0.3), then the cell is flagged.
+\item{\em Slope.}  If the normalized slope $(q_{i+1} - q_{i-1})/ (2 q_i)$ of baryon quantities between adjacent cells is larger than a specified value (typically 0.3), then the cell is flagged.
 
-\item{\em Baryon mass.}  This refinement criterion is designed to mimic a Lagrangian method in that it tries to keep a fixed mass resolution.  In this method, a cell is refined if the baryonic mass in the cell ($M_g = \rho \Delta_x^d$) is larger than a specified value:
+\item{\em Baryon mass.}  This refinement criterion is designed to
+  mimic a Lagrangian method in that it tries to keep a fixed mass
+  resolution.  In this method, a cell is refined if the baryonic mass
+  in the cell ($M_g = \rho\, (\Delta x)^d$) is larger than a specified value:
 \begin{equation}
-M_g > \rho_{\rm flag} {\Delta x^d_{\rm root}} r^{\epsilon_l l},
+M_g > \rho_{\rm flag}\, (\Delta x_{\rm root})^d r^{\epsilon_l l},
 \end{equation}
 where $\rho_{\rm flag}$ is the equivalent density on the root grid required for refinement, $\Delta x_{\rm root}$ is the root grid cell spacing, $r$ is the refinement factor, $l$ is the level and $\epsilon_l$ is a parameter that can be used to make the refinement more aggressive ($\epsilon_l < 0$) or less aggressive than pure Lagrangian refinement ($\epsilon_l > 0$) -- in other words, super-Lagrangian or sub-Lagrangian in refinement.
 
 \item{\em Shocks.}  In this method, we identify and refine cells that contain shocks using the following criteria:
 \begin{eqnarray}
-(p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) & > & 0.33  \nonumber \\
-u_{i-1} - u_{i+1} & > & 0 \\
-e_i / E_i & > & 0.1  \nonumber
+%% (p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) & > & 0.33,  \nonumber \\
+%% u_{i-1} - u_{i+1} & > & 0, \quad\text{and} \\
+%% e_i / E_i & > & 0.1.  \nonumber
+(p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) > 0.33,  \qquad
+u_{i-1} - u_{i+1} > 0, \quad\text{and} \qquad
+e_i / E_i > 0.1.  \nonumber
 \end{eqnarray}
-We note that the values $0.33$ and $0.1$ in the equations above were determined empirically, and can be modified by the user to refine more or less aggressively, as the situation warrants.
+We note that the parameters $0.33$ and $0.1$ in the equations above were determined empirically, and can be modified by the user to refine more or less aggressively, as the situation warrants.
 
-\item{\em Particle mass.}  This refinement criterion is precisely the same as the baryon overdensity criterion except that it uses the gridded (cloud-in-cell, or CIC) particle density.  In general, this criteria is used in cosmological simulations, and thus refines on dark matter and stellar density.
+\item{\em Particle mass.}  This refinement criterion is precisely the same as the baryon mass criterion except that it uses the gridded (cloud-in-cell, or CIC) particle density.  In general, this criteria is used in cosmological simulations, and thus refines on dark matter and stellar density.
 
-\item{\em Jeans length.}  Following \cite{Truelove98}, the code can be forced to refine the Jeans length by a fixed number of cells, or, in more specifically, whenever the following criterion is not met:
+\item{\em Jeans length.}  Following \cite{Truelove98}, the code can be forced to refine the Jeans length by a fixed number of cells, or more specifically, whenever the following criterion is not met:
 \begin{equation}
-\Delta x < \left( \frac{\pi k_B T}{J^2 G \rho \mh} \right)^{1/2}
+\Delta x < \left( \frac{\pi k_B T}{J^2 G \rho \mh} \right)^{1/2},
 \end{equation}
 where $J$ is the required number of cells per Jeans length (4 by default).
 
-\item{\em Cooling time.}  Often in cosmological simulations, cooling is a rapid process and we do not necessarily want to be limited by the cooling time.  However, in some cases it is desirable to resolve the cooling process, in which case we flag cells that have a cooling time shorter than their sound crossing time.  The cooling time is given by $t_{\rm cool} = 1.5 kT / n \Lambda(T)$ and the sound crossing time is $t_{\rm cross} = \Delta x / c_s$, where $c_s$ is the sound speed.
+\item{\em Cooling time.}  Often in cosmological simulations, cooling is a rapid process and we do not necessarily want to be limited by the cooling time.  However, in some cases it is desirable to resolve the cooling process, in which case we flag cells that have a cooling time shorter than their sound crossing time.  The cooling time is given by $t_{\rm cool} = 1.5 kT / (n\, \Lambda(T))$ and the sound crossing time is $t_{\rm cross} = \Delta x / c_s$, where $c_s$ is the sound speed.
 
 \item{\em Must-refine particles.}  In order to allow for refinement in moving regions, it is possible to generate ``must-refine" particles that ensure local refinement of the 8 nearest cells to a specific level.  The particles feel gravitational forces and their trajectories are followed as for any other collisionless particle.  This feature can be used to ensure that a specific Lagrangian region stays refined to a specified level of resolution. 
 
@@ -233,23 +242,19 @@ where $J$ is the required number of cells per Jeans length (4 by default).
 where $\epsilon_s$ is a dimensionless parameter.
 
 \item{\em Optical depth.} This refinement criterion, typically used for simulations using radiation transport, ensures that cells on the highest level of refinement have an \ion{H}{1} optical depth lower than unity.  The optical depth of a cell is estimated to be:
-
 \begin{equation}
 \tau = \sigma_{\rm HI} n_{\rm HI} \Delta x 
 \end{equation}
-
 where $\sigma_{\rm HI}$ is the neutral atomic hydrogen absorption
 cross section, $n_{\rm HI}$ is the proper \ion{H}{1} number density,
 and $\Delta x$ is the cell width (which is assumed to be the same along each axis).  If $\tau > 1$, the cell is refined
 further, up to the maximum level of refinement.
 
 \item{\em Resistive length.}  In a way similar to the Jeans length criterion described above, the code can be forced to locally resolve the resistive length scale by a minimum of a fixed number of cells.  This is done by ensuring that the resistive length scale, defined as
-
 \begin{equation}
 L_R = |B| / |\nabla \times B|
 \end{equation}
-
-is always refined by at least N cells locally (i.e., refine a given cell further if $L_R \leq N \Delta x$).
+is always refined by at least N cells locally (i.e.~we refine a given cell further if $L_R \leq N \Delta x$).
 
 \item{\em Must refine region.}  This refinement criterion is used to ensure that all cells in a given subvolume of the simulation are refined to {\it at least} some minimum level of refinement.  The subvolume is user-specified, and may evolve over time (e.g., to follow a structure of interest that is traveling through the simulation volume).
 

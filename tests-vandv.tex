@@ -103,7 +103,7 @@ matter power spectrum that are comparable to within 5\%
 Several comparisons have been made that focus specifically on
 hydrodynamics solvers and fluid behavior.  In particular, the work of
 \citet{2007MNRAS.380..963A} and \citet{Tasker2008} perform
-head-to-head comparisons between several grid- and particle-based
+direct comparisons between several grid- and particle-based
 codes for a variety of fluid-centric test problems (including shocked gas clouds,
 self-gravitating, translating clouds, and Sedov-Taylor explosions),
 and show that \enzo\ is comparable or superior in behavior to the
@@ -119,33 +119,33 @@ broadly examines Galilean invariance in grid-based codes
 implementation of the Piecewise Parabolic Method hydrodynamics solver,
 converge to the correct solution as expected, and generally provide
 less diffusive solutions than lower-order codes, including those that
-use artificial viscosity.  Finally, two code comparison projects have
-been undertaken to examine turbulence in hydro codes -- one studied
-the behavior of decaying isothermal supersonic turbulence
-\citep{2009A&A...508..541K}, and the other looked at supersonic
+use artificial viscosity.  Finally, there have been two code comparison
+projects that focus on turbulence simulations.  The first studied the
+behavior of decaying isothermal supersonic turbulence
+\citep{2009A&A...508..541K}, and the second examined supersonic
 magnetohydrodynamical turbulence \citep{2011ApJ...737...13K}.  Both
 included the \enzo\ code, with the former testing the PPM
 hydrodynamics and the latter the constrained transport MHD
 implementation of \citet{Collins10}.  In both cases, \enzo\ performed similarly to other
 grid-based codes that use Godunov-based fluid solvers, and typically
-had better effective resolution than particle-based codes using the
-same number of particles as the \enzo\ simulation used grid cells.
+had better effective resolution than particle-based codes when using the
+same number of particles as the number of grid cells in the \enzo\ simulation.
 
 Three other comparisons between the \enzo\ code and other simulation
 tools have been performed that focus on physics other than gravity and
 fluid flow.  The flux-limited diffusion radiation transport scheme was
 measured against several test problems by \citet{IlievEtAl2009},
-producing results that are similar to both expected results (i.e.,
-analytic test problems) and other methods (i.e., codes using other
-methods, written by other groups), although there are some minor
-differences (although all codes in the study exhibited differences
-from the majority of other codes on at least a subset of the tests).
+which involved tests with and without analytical solutions.  \enzo\ produced
+results similar to both the analytical solutions and results obtained by 
+other codes.  We note, however, that there were minor differences throughout
+the comparison between various codes, and the majority of the codes differred
+in at least a subset of the tests.
 \citet{2011ApJ...726...55T} shows the results of varied reaction rate
 coefficients for the formation of molecular hydrogen via the 3-body
-process in both the \enzo\ and Gadget-2 codes.  Similar trends were
-visible in both the \enzo\ and Gadget simulations, though at a
-nominally equivalent resolution (i.e., with particle and cell gas
-masses being comparable) \enzo\ simulations typically displayed a
+process in both the \enzo\ and Gadget-2 codes, observing similar trends between
+the two codes. However, at nominally equivalend resolution
+where the particle and cell gas masses are comparable, 
+\enzo\ simulations typically displayed a
 substantially higher level of gas structure.  This is unsurprising due
 to \enzo's higher-order hydro solver.  Finally,
 \citet{2012ApJ...744...52P} show the results of comparing \enzo\ in
@@ -153,5 +153,5 @@ its non-AMR mode to a smoothed-particle hydrodynamics code, SNSPH, in
 the context of common-envelope binary stellar interactions.  The
 authors show that the codes display reasonable convergence properties
 as a function of simulation resolution, and also agree quite well with
-each other -- however, the observed mass-loss rates do not agree
+each other. However, the observed mass-loss rates do not agree
 particularly well with observations.

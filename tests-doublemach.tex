@@ -2,7 +2,7 @@
 \label{sec.tests.doublemach}
 
 The double mach reflection test is a classic two-dimensional test of
-hydrodynamic algorithms, and was originally described in
+hydrodynamic algorithms originally described in
 \citet{1984JCoPh..54..115W} \citep[and more recently
 in][]{2008ApJS..178..137S}.  In this problem, shown in
 Figure~\ref{fig.doublemach}, a shock is injected at an angle to a
@@ -13,7 +13,7 @@ diffusion.  If numerical noise is present, a Kelvin-Helmholz
 instability develops along this jet and breaks the self-similarity.
 
 In the test problem shown in Figure~\ref{fig.doublemach}, a 2D
-simulation with $960 \times 240$ cells was formed with a domain of $x
+simulation with $960 \times 240$ cells was created with a domain of $x
 = [0, 4]$ and $y = [0, 1]$.  We use an ideal gas equation of state of
 $\gamma = 1.4$, a pre-shock density of 1.4, and a pre-shock specific
 internal energy of $2.5/1.4$ (all in arbitrary units).  A Mach 10
@@ -24,10 +24,9 @@ boundary is inflowing, and the upper y boundary has a time-dependent
 boundary condition that allows the shock to propagate into the domain
 as if it extends to infinity.  The simulation starts at t$ = 0$ and
 runs until t$ = 0.205$ (arbitrary units), at which point the rightmost
-extent of the shock should be at roughly x$ = 3$.  In this run, we use
-the direct Eulerian implementation of the piecewise parabolic hydro
-method, with the diffusion, flattening, and shock steepening all
-turned on.
+extent of the shock should be at roughly x$ = 3$.  In this simulation we use
+the direct Eulerian implementation of the piecewise parabolic hydrodynamic
+method with the diffusion, flattening, and shock steepening all enabled.
 
 It is instructive to compare Figure~\ref{fig.doublemach} to Figure 9
 in~\citet{1984JCoPh..54..115W}.  By the end of the simulation, a dense
