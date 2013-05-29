@@ -614,8 +614,8 @@ This PPM implementation does an excellent job of capturing strong
 shocks in a few cells.  Multidimensional schemes are built up by
 directional splitting and produce a method that is formally second
 order-accurate in space and time and which explicitly conserves mass,
-linear momentum, and energy.  \red{(REF?)}  A variety of Riemann
-solvers have been implemented.
+linear momentum, and energy \citep{Hawley84, Norman86}.  A variety of
+Riemann solvers have been implemented.
 
 As described in \citet{Bryan95}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small
@@ -641,7 +641,7 @@ approximate Riemann solvers and non-ideal equations of
 states. Consequently, these suite of solvers can be used for hydro and
 magneto-hydrodynamic simulations. It is also this class of solvers as
 well as a version of the PPM hydro solver which have been ported to
-Nvidia's CUDA framework allowing \enzo\ to take advantage of modern
+nVidia's CUDA framework allowing \enzo\ to take advantage of modern
 graphics hardware \citep{Wang:2010}.
 
 \subsubsection{MHD with Constrained Transport (MHD)}
