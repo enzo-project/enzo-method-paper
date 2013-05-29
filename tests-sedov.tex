@@ -5,7 +5,7 @@
 \begin{center}
 \includegraphics[width=0.4\textwidth]{figures/sedov-ppm-slice.eps}
 \includegraphics[width=0.4\textwidth]{figures/sedov-zeus-slice.eps}
-\caption{Density slice from the Sedov Blast test at $t = 0.07$. Left:
+\caption{Density slices from the Sedov Blast test at $t = 0.07$. Left:
 results using the Piecewise Parabolic Method hydro scheme.  Right: results using the \zeus\
 hydro method. Notably, the \zeus\ shock front has progressed less far
 than in the PPM run. This is due to energy loss when conserving only
@@ -18,7 +18,7 @@ internal, and not total, energy.}
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{figures/sedov-profiles.eps}
-\caption{Radially averaged profiles for the Sedov Blast test at $t =
+\caption{Radial profiles for the Sedov Blast test at $t =
 0.07$. Clockwise from top-left shows density, velocity, internal
 energy and pressure.  The black solid line shows the analytic
 solution.  The blue dashed line shows the simulation using the PPM
@@ -33,11 +33,12 @@ The Sedov Blast Test \citep{Sedov1959} models an intense explosion,
 initiated by depositing thermal energy into a homogenous distribution
 of gas. The result is a strong spherical shock wave centered on the
 point of energy injection.  This problem is a popular test of
-astrophysical numerical codes for three reasons: First, it is
-particularly appropriate to astrophysics since it represents the
-situation when a supernovae explosion occurs. Second, it has an
-exact analytical solution whereby the shock front's radial position is
-given by:
+astrophysical simulation codes for three reasons.  First, this problem
+is representative of the astrophysical phenomenon of a supernova
+explosion.   Second, an analytical solution to the evolution of the
+Sedov blast-wave exists, allowing for a direct test of the accuracy of
+the code.  The radius of the shock front as a function of time is
+given by
 
 \begin{equation} r(t) =
 \left(\frac{E_0}{\alpha\rho_0}\right)^{1/5}t^{2/5}
@@ -45,29 +46,28 @@ given by:
 
 \noindent where $E_0$ is the initial energy injection, $\rho_0$ is the
 background density and $\alpha = 1.0$ for cylindrical symmetry and an
-ideal gas with $\gamma = 1.4$. For the full derivation see
-\citet{Sedov1959}. This solution makes it possible to assess how well
-the code performs.  Third, the spherical shock is a challenging
-problem for numerical codes (both grid and particle) since the shock
-wave increases in size as the simulation progresses and its
-symmetrical nature highlights any directional preferences that grid
-codes can succumb to. The test presented here is the two-dimensional
+ideal gas with $\gamma = 1.4$.  For the full derivation see
+\citet{Sedov1959}.  Third, as the spherical shock expands, its
+symmetry, or lack thereof, serves to highlight any directional
+preferences of the hydrodynamics solvers.  The test presented here is
+the two-dimensional 
 version that is included in the \enzo\ distribution. The
 three-dimensional results from this test, both for \enzo\ and three
-other leading astrophysics codes, can be founds in \citet{Tasker2008}.
+other leading astrophysics codes, can be found in \citet{Tasker2008}.
 
 In the initial state, the box contains a homogenous distribution of
 gas at a density of 1 (note that, in the absense of gravity, this
 problem is scale-free and thus without units). Thermal energy is
 deposited into a single cell at the center of the box with $E_0 =
-10.0$. The problem is completed in two dimensions with reflecting
-boundary conditions (the default for \enzo) and uses a box size of side
-$1$. For this problem, we selected a top grid of $100 \times 100$
-cells and a maximum of four levels of refinement, placed based on
-shock location and the slope in density and total energy. The
-exception to this scheme is in the initial conditions, where grids are
-placed directly around the injection point. The results were assessed
-at $t = 0.07$, which corresponding to a time just before the shock
+10.0$. The problem is run in two dimensions with reflecting
+boundary conditions and a box size of side
+$1$.  We selecte a top grid of $100 \times 100$
+cells and a maximum of four levels of adaptive refinement, refining on
+shocks and the slopes of the density and total energy fields. The
+exception to this scheme is in the initial conditions, where
+additional refinement is placed directly around the injection point to
+better resolve spherical geometry. The results are assessed
+at $t = 0.07$, which corresponds to a time just before the shock
 reaches the box edge (see Figure~\ref{fig.sedov1}).
 
 Figure~\ref{fig.sedov2} shows the radial profiles for the simulation
@@ -88,7 +88,7 @@ the issue to this version of \zeus\ solving the internal, rather than
 total, energy equation. In situations with strong energy gradients,
 this choice caused an energy loss and the artificial viscosity
 produces the direction-dependent shockfront shape. In their paper,
-\citet{Clarke2010} presents results from an alternative version of
+\citet{Clarke2010} present results from an alternative version of
 \zeus\ that conserves total energy. This problem is less marked for
 smaller energy gradients and it should be noted that the \zeus\ hydro
 algorithm's stability and speed make it a highly competitive choice,
