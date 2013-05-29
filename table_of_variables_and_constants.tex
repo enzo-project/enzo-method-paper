@@ -1,0 +1,111 @@
+\begin{center}
+
+%%% Use this to change the fontsize of the table
+%\tabletypesize{\scriptsize}
+
+%%% \LongTables command may not be necessary (allowed?) outside of
+%%% emulateapj.cls...
+\LongTables
+
+\begin{deluxetable}{cl}
+  \tablecaption{Summary of symbols used in this manuscript\label{tab:variables}}
+  \tablehead{\colhead{Symbol} & \colhead{Description}}
+  
+  \startdata
+  \multicolumn{2}{l}{\underline{Fluid Quantities}} \\[5pt]
+  $E$ & comoving total fluid energy density \\
+  $e$ & comoving thermal energy density \\
+  $T$ & baryon temperature \\
+  $S$ & fluid entropy \\
+  $\rho$ & comoving baryonic density \\
+  $\rho_{\!X}$ & mass density of component $X$ (gas, dark matter, stars, metals, total, etc.) \\
+  $t$ & time \\
+  $\vecv$ & peculiar velocity \\
+  $\vecB$ & comoving magnetic field strength \\
+  $p$ & thermal pressure \\
+  $p^*$ & total (thermal + magnetic) isotropic pressure \\
+  $\gamma$ & ideal gas ratio of specific heats \\
+  $\phi$ & gravitational potential \\
+  $\Lambda$ & radiative/chemical cooling rate \\
+  $\Gamma$ & radiative heating rate \\
+  $Q$ & artificial viscosity stress tensor (only for ZEUS hydro) \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Code Quantities}} \\[5pt]
+  $\Delta x_l$ & cell size on level $l$ \\
+  $\Delta t_l$ & timestep on level $l$ \\
+  $d$ & dimensionality (rank) of the simulation \\
+  $q$ & conserved quantity \\
+  $F$ & flux of quantity $q$ \\
+  $r$ & refinement factor \\
+  $\epsilon_l$ & refinement criterion parameter \\
+  $J$ & number of cells per Jeans length (for Jeans length based refinement) \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Cosmology}} \\[5pt]
+  $a$ & cosmological expansion factor \\
+  $\Lambda_c$ & cosmological constant \\
+  $\rho_0$ & mean comoving mass density (including both baryonic and dark matter) of the universe \\
+  $p_0$ & comoving background pressure \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Chemistry}} \\[5pt]
+  $n_i$ & comoving number density of species $i$ \\
+  $k_{ij}$ & two-body reaction rate coefficient \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Ray-tracing Radiation Transfer}} \\[5pt]
+  $\Gamma_j^{ph}$ & photo-ionization/-dissociation destruction/creation rates \\
+  $I_\nu$ & specific radiation intensity (energy per time per solid angle per unit area per frequency) \\
+  $\kappa_\nu$ & radiation absorption coefficient \\
+  $j_\nu$ & radiation emission coefficient \\
+  $P$ & photon number flux along ray \\
+  $\sigma_{\rm abs}$ & absorption cross section \\
+  $n_{\rm abs}$ & number density of absorbing medium \\
+  $dt_P$ & radiative transfer timestep \\
+  $k_{ph}$ & photo-ionization rate of a single ray \\
+  $\Gamma_{ph}$ & photo-heating rate of a single ray \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Flux Limited Diffusion Radiation Transfer}} \\[5pt]
+  $E_r$ & grey radiation energy density \\
+  $e_c$ & internal energy correction due to photo-heating and chemical cooling \\
+  $D$ & Larsen square-root flux-limiter \\
+  $\kappa$ & total opacity \\
+  $\eta$ & field of radiation sources \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Heat Conduction}} \\[5pt]
+  $\fcond$ & thermal conduction heat flux \\
+  $\kappa_{sp}$ & Spitzer conduction coefficient \\
+  $f_{Sp}$ & fraction of Spitzer conductivity \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Star Formation And Feedback}} \\[5pt]
+  $t_{\rm cool}$ & cooling time \\
+  $t_{\rm dyn}$ & local dynamical time \\
+  $t_{\rm form}$ & star particle formation time \\
+  $m_b$ & baryonic mass of cell \\
+  $m_J$ & Jeans mass of cell \\
+  $m_*$ & star particle mass \\
+  $m_{\rm *min}$ & minimum star particle mass \\
+  $f_{\rm *eff}$ & star formation efficiency parameter \\
+  $f_{\rm Zb}$ & metallicity fraction of baryon gas in cell \\
+  $f_{\rm m*}$ & fraction of star particle's mass returned to cell \\
+  $f_{\rm Z*}$ & fraction of star particle's metal mass returned to cell \\
+  $f_{\rm SN}$ & fraction of stellar rest mass energy deposited as feedback \\
+  $\Delta m_{\rm sf}$ & mass of stars formed in current timestep \\
+  $E_{\rm add}$ & feedback energy added to cell \\
+  $T_{\rm dyn,min}$ & user-defined minimum dynamical time \\
+  $\eta$ & overdensity threshold for star formation \\
+  $\rho_{\rm SF}$ & constant proper density threshold for star formation \\
+  $\tau_*$ & characteristic star formation timescale (for Schmidt-Law method) \\[3pt]
+  
+  \multicolumn{2}{l}{\underline{Natural Constants}} \\[5pt]
+  $G$ & gravitational constant \\
+  $H$ & Hubble constant \\
+  $k_B$ & Boltzmann constant \\
+  $M_\odot$ & mass of Sun \\
+  $m_H$ & mass of hydrogen atom \\
+  $m_e$ & mass of electron \\
+  $c$ & speed of light \\
+  $c_s$ & sound speed \\
+  \enddata
+
+  %% \tablecomments{Optional comments}
+\end{deluxetable}
+
+\end{center}

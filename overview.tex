@@ -6,12 +6,17 @@
 We begin this section by first writing down the complete set of
 physical equations that can be solved by \enzo, and then briefly
 describe the numerical algorithms that we use to solve these
-equations.  This section is intended to be an overview of the \enzo\
-code's capabilities: thus, we gather all of the equations solved into
-a single place and provide a brief and high-level introduction to the
-numerics of the code.  Detailed descriptions of the individual
-components are then provided in
-Sections~\ref{sec.amr}-\ref{sec.num.analysis}.
+equations.  This section is intended to be an overview of the
+\enzo\ code's capabilities: thus, we gather all of the equations
+solved into a single place and provide a brief and high-level
+introduction to the numerics of the code.  Detailed descriptions of
+the individual components are then provided in
+Sections~\ref{sec.amr}-\ref{sec.num.analysis}. In
+Table~\ref{tab:variables} we provide a convenient summary of all
+variables and physical constants used throughout this manuscript.
+
+\mqk{Move this table to the Appendix?}
+\input{table_of_variables_and_constants}
 
 % ====================================================
 
@@ -84,7 +89,7 @@ expansion, are given by:
 %\end{eqnarray}
 %
 In these equations, $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving
-total fluid energy, comoving baryonic density, peculiar velocity, and
+total fluid energy density, comoving baryonic density, peculiar velocity, and
 comoving magnetic field strength, respectively.  $\myvec{I}$ is the
 identity matrix, and $a$ is the cosmological expansion parameter
 (which is discussed in more detail below).  The first equation
@@ -97,7 +102,7 @@ heating ($\Gamma$) enter on the right-hand side of the energy equation
 (\ref{eq:total_energy}), as well as the flux due to thermal heat
 conduction ($\fcond$).
 
-The total fluid energy $E$ is given by:
+The total fluid energy density $E$ is given by:
 \begin{equation}
 E =  e + \frac{\rho v^2}{2}  + \frac{B^2}{2a}
         \label{eq:total_energy_def}.

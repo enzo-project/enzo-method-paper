@@ -100,8 +100,8 @@ for the most commonly used routines (such as the hydrodynamic and
 gravity solvers) as well as refinement level timers that measure the
 time spent on each level.  Beyond this minimal set of routines, we
 have designed a simple way for the user to modify the source by adding
-\texttt{TIMER\_START(``Your\_Routine\_Name'')} and
-\texttt{TIMER\_END(``Your\_Routine\_Name'')}.  These timers are created
+\texttt{TIMER\_START("Your\_Routine\_Name")} and
+\texttt{TIMER\_END("Your\_Routine\_Name")}.  These timers are created
 and managed individually on each processor in an asynchronous fashion,
 and contribute minimal computational, memory, and IO overhead.
 
