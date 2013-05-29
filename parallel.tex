@@ -7,27 +7,27 @@ The current version of \enzo\ has been parallelized for distributed
 memory platforms using the Message Passing Interface (MPI).  This is
 done using a single grid object as the basic unit of parallelization.
 Each grid object -- including all cell and grid data -- is fully
-contained in a single processor\footnote{We use the word {\it
-processor} to mean a basic distribution unit; this could by either a
-core or a node, depending on details of the system.  Note that the
-current version of Enzo is not threaded, although the development of a
-hybrid version is in process}.  Parallelization is accomplished by
-distributing grids amongst processors.  This is done on the root grid
-using a simple tiling system, where the root grid is split up into
-$N_{\rm root}$ tiles, where $N_{\rm root}$ is typically equal to the
-number of processors $N_p$.
+contained in a single processor\footnote{In this context, we use the
+word {\it processor} to mean a basic distribution unit; this could by
+either a core or a node, depending on details of the system.  Note
+that the current version of Enzo is not threaded, although the
+development of a hybrid version is in process}.  Parallelization is
+accomplished by distributing grids amongst processors.  This is done
+on the root grid using a simple tiling system, where the root grid is
+split up into $N_{\rm root}$ tiles, with $N_{\rm root}$ typically
+equal to the number of processors $N_p$.
 
 Load balancing on levels other than the root level (i.e., grids for
-which the level $l > 0$) is different as the refined patches are not
+which the level $l > 0$) is different, as the refined patches are not
 generally uniformly distributed.  Grids on refined levels are first
 placed on the same processor as their parent to minimize
 communication; however, this generally does not result in a
-well-balanced load.  Therefore, the code has a number of options for
-load balancing the grids on a given level. Each grid is assigned a
-load, generally equal to the number of cells in the grid (which,
+well-balanced computational load.  Therefore, the code has a number of options for
+load balancing the grids on a given level. Each grid is assigned an
+estimated computational load, generally equal to the number of cells in the grid (which,
 empirically, is a good estimate of computational cost).  The first
 load-balancing option is to move a grid from the processor with the
-highest load to the processor with the lowest load, with the proviso
+highest computational load to the processor with the lowest load, with the proviso
 that only grids with load factors less than half the difference
 between the highest and lowest loaded processors will be moved.  This
 continues until the load ratio between the most-to-least loaded
@@ -93,22 +93,22 @@ showing real and ghost zones, as needed for the PPM hydro stencil. }
 \subsubsection{Performance Measurement \& Instrumentation}
 
 Because of the wide variety of simulations, methods, and uses of Enzo,
-it is difficult to state generally which routines will be most costly
-during a given simulation.  As such, we have designed a lightweight
-registering system that has been implemented for the most commonly
-used routines (such as the hydrodynamic and gravity solvers) as well
-as refinement level timers that measure the time spent on each level.
-Beyond this minimal set of routines, we have designed a simple way for
-the user to modify the source by adding \texttt{TIMER\_START(``Your
-Routine Name'')} and \texttt{TIMER\_END(``Your Routine Name'')}.
-These timers are created and managed individually on each processor in
-an asynchronous fashion, and contribute minimal computational, memory,
-and IO overhead.
+it is difficult to state in general terms which routines within the
+code will be most costly during a given simulation.  As such, we have
+designed a lightweight registering system that has been implemented
+for the most commonly used routines (such as the hydrodynamic and
+gravity solvers) as well as refinement level timers that measure the
+time spent on each level.  Beyond this minimal set of routines, we
+have designed a simple way for the user to modify the source by adding
+\texttt{TIMER\_START(``Your_Routine_Name'')} and
+\texttt{TIMER\_END(``Your_Routine_Name'')}.  These timers are created
+and managed individually on each processor in an asynchronous fashion,
+and contribute minimal computational, memory, and IO overhead.
 
 At each complete root grid time step (or less often if specified),
 each timer is then communicated to the root processor where it
 calculates the mean, standard deviation, minimum, and maximum for each
-of the timers across all processors.  For level timers, there are also
+of the timers across all processors.  For level timers, there are additional
 attributes such as the number of cell updates, the current number of
 grids, and the average cells/s/MPI process.  This information is then
 output to a logfile.  This provides a simplified interface to the user
@@ -348,22 +348,23 @@ opposite occurs with larger simulations.
 \subsubsection{An Approximate Time and Memory Scaling Model}
 
 In this section, we develop a simple, approximate model to estimate
-the compute time and memory required to complete a given calculation.
-Note that we are {\it not} trying to model parallel performance (which
-was discussed in the previous section), but have an even simpler goal:
-to determine how to scale compute time estimates as we increase the simulation
-resolution.  This is a straightforward thing to do in codes that use
-static grids, as the computational effort per time step is constant.
-However, for an AMR calculation, the number of grids that will be
-generated during the run is not known in advance, and so the CPU time
-per problem time can vary drastically throughout the calculation.
-For example, at the beginning of the simulation when the densities are nearly uniform,
-only the static grid is required and the calculation progresses
-rapidly.  However, as structure forms and dense clumps are generated,
-the number of grid points swells by orders of magnitude (an increase
-of $10^3$ is not uncommon) and most of the cpu time is consumed at
-late times.  Therefore, simply performing a few steps does produce a
-good estimate of the cpu time.
+the computational time and memory required to complete a given
+calculation.  Note that we are {\it not} trying to model parallel
+performance (which was discussed in the previous section), but have an
+even simpler goal: to determine how to scale computational time
+estimates as we increase the simulation resolution.  This is a
+straightforward thing to do in codes that use static grids, as the
+computational effort per time step is constant.  However, for an AMR
+calculation, the number of grids that will be generated during the run
+is not known in advance, and so the CPU time per problem time can vary
+drastically throughout the calculation.  For example, at the beginning
+of the simulation when the densities are nearly uniform, only the
+static grid is required and the calculation progresses rapidly.
+However, as structure forms and dense clumps are generated, the number
+of grid points swells by orders of magnitude (an increase of $10^3$ is
+not uncommon) and most of the CPU time is consumed at late times.
+Therefore, simply performing a few steps at the beginning of the
+calculation does produce a good estimate of the required CPU time.
 
 Nevertheless, we can try to determine how the compute time scales for
 a given run as we increase the resolution.  First, we neglect
@@ -387,21 +388,22 @@ single cell by one timestep is a constant.  This can be incorrect if
 the chemistry solver requires many iterations, but is usually fairly
 accurate.  For a unigrid calculation, the time would by proportional
 to $N_{\rm root}^4$ since the number of cells scales as $N_{\rm
-root}^3$ and, assuming the Courant condition is the time limiting
-factor, then the number of steps to advance a given time is
+root}^3$ and, assuming the Courant condition is the 
+factor that controls the time step, the number of steps to advance the
+calculation over a given time interval is
 proportional to $N_{\rm root}.$ Therefore, to advance a hierarchy a
-given time, we find, accounting for all levels and using a refinement
-factor of 2.
+given time interval, we find, accounting for all levels and using a refinement
+factor of 2,
 \begin{equation} t_{\rm SU} = C_1 \sum_l f_l N_{\rm root}^4 2^{4l}
 \end{equation} where $C_1$ is a constant, which can be thought of as
 the time taken to advance a single cell.  The factor $f_l$ is the
 fraction of the volume on a given level that is actually refined.  By
 definition $f_0 = 1$, and $f_l \le 1$.  In writing down this equation,
-we neglect a number of costs which are not directly proportional to
+we neglect a number of costs that are not directly proportional to
 cell count, including communication between processors, the $\log{N}$
-factor for the root grid FFT, Cache misses, optimizations, and other
+factor for the root grid FFT, cache misses, optimizations, and other
 costs associated with processing the hierarchy.  The first item on
-this list, in particular, is clearly not true for large processor
+this list, in particular, is clearly important for large processor
 counts; however, we neglect parallel considerations in this section.
 
 Note that unless $f_l/f_{l+1} < 1/16$ (i.e. if less then about 6\% of
@@ -418,14 +420,14 @@ third simulation focusing on a single disk galaxy.
 fraction $f_l$ of the grids on a given level $l$, the ratio of
 $f_{l}/f_{l+1}$, the relative memory usage of each level (normalized
 by the memory usage of level 0), and, in the lower-left panel, the
-relative cpu usage of each level, again normalized by $l=0$.  In each
+relative CPU usage of each level, again normalized by $l=0$.  In each
 panel, three curves are shown: the solid black and long dashed red are
 two cosmological simulations with box sizes of 30 h$^{-1}$ Mpc and
 80h$^{-1}$ Mpc respectively.  The dot-dashed blue line is for a
 non-cosmological simulation of a ram-pressure stripped galaxy.  In the
 top-right panel, there is a line at the critical ratio of 0.06, which
 determines if the next finer level ($l+1)$ takes more (above) or less
-(below) cpu time than level $l$.}
+(below) CPU time than level $l$.}
 \label{fig:scaling}
 \end{figure}
 
@@ -433,18 +435,18 @@ As, the figure demonstrates, the $f_l$ values all show a sharp decline
 with level, dropping as power-laws with the level $l$.  Focusing first
 on the ``refine-everywhere" cosmological runs, which both show similar
 behavior despite the different box sizes and redshifts at which we
-collect the data.  In fact, we find the results are very typical for
-cosmological runs, with only slight variations depending on if we are
-simulating first stars or clusters of galaxies.  The top-left panel
+collect the data.  In fact, we find these results are very typical for
+cosmological runs, with only slight variations depending on the exact
+system that is being simulated.  The top-left panel
 shows the ratio of $f_{l}/f_{l+1}$ which, remarkably, hovers around
 the critical value of 0.0625 determined earlier.  This implies that
-the relative cpu usage of each level, shown in the lower-left panel,
+the relative CPU usage of each level, shown in the lower-left panel,
 is nearly flat, and that going to additional levels of refinement only
 increases the amount of calculation by a factor of roughly $1/l_{\rm
 max}$.  Even in the most extreme case, the L80 run, the last level
 adds only 25\% to the computation time.
 
-The memory used by each level, on the other hand scales as:
+The memory used by each level, on the other hand, scales as
 \begin{equation}
 {\rm memory} = C_2 \sum_l f_l N_{\rm root}^3 2^{3l}
 \end{equation}
@@ -471,12 +473,12 @@ example.
 These conclusions are, however, highly dependent on the type of run
 being performed.  We contrast this cosmological case to the simulation
 of a galaxy formation run, as shown by the dot-dashed curves in
-Figure~\ref{fig:scaling}.  Note that the levels 1 and 2 are statically
-refined to ensure the Lagrangian volume of the galaxy halo is resolved
+Figure~\ref{fig:scaling}.  Note that grid levels 1 and 2 in this simulation are statically
+refined to ensure that the Lagrangian volume of the galaxy halo is resolved
 to at least level 2 at all times. More importantly, the
 $f_{l+1}/f_{l}$ ratio of the highest levels are systematically
 slightly larger than the critical 0.0625 value, indicating that the
-cpu time is dominated by the most refined levels, as shown in the
+CPU time is dominated by the most refined levels, as shown in the
 bottom-left panel.  The memory usage is dominated by levels 2 and 3,
 the static levels, as the bottom-right panel demonstrates.  In this
 case, adding more levels of refinement would somewhat increase the
@@ -502,6 +504,4 @@ computational time required for cosmological simulations:
 t_{\rm SU} \propto M_{\rm res}^{-1} l_{\rm max}.
 \end{equation}
 This is approximately accurate, and gives users some way to estimate
-compute times for cosmological calculations.  Similar scaling
-relations can be obtained for other types of \enzo\ AMR simulations.
-
+compute times for \enzo\ calculations.  
