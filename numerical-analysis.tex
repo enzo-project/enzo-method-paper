@@ -10,7 +10,7 @@
 
 \subsection{Inline analysis with yt}
 
-Detailed analsis of simualtion results requires both the tools to ask
+Detailed analysis of simulation results requires both the tools to ask
 sophisticated questions of the data and the ability to process vast quantities of
 data at high time-cadence.  As simulations grow in size and complexity, storing data
 for post-processing simply becomes intractable.  To cope with this, we have
@@ -26,7 +26,7 @@ dynamically-scheduled second set of computing resources, often referred to as
 \textit{co-scheduled} analysis or visualization, provides greater flexibility and overall
 throughput at the expense of simplicity.
 
-We expose \enzo\ 's mesh geometry and fluid quantities to the analysis platform
+We expose \enzo's mesh geometry and fluid quantities to the analysis platform
 \texttt{yt} \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  At compile time,
 \enzo\ is (dynamically or statically) linked against the Python and NumPy
 libraries necessary to create proxy objects exposing the mesh geometry,
@@ -37,7 +37,7 @@ explicitly requested, constructs a native representation of the in-memory state
 of the simulation that appears identical to an on-disk simulation output.
 \enzo\ then executes a user-provided analysis script, which is able to access the
 in-memory simulation object.  Once the analysis script has returned control to
-\enzo\ , the simulation proceeds.  This process can occur at either the top of the
+\enzo, the simulation proceeds.  This process can occur at either the top of the
 main ``EvolveHierarchy'' loop or at the end of a timestep at the finest level,
 and the frequency with which it is called is adjustable by a run-time
 parameter.  During the course of conducting analysis, the simulation is halted
@@ -61,7 +61,7 @@ volume rendering and connected set identification.
 Where microphysical solvers or other operator-split physics calculations can be
 done in Python, \texttt{yt} can serve as a driver for these calculations.  A
 major feature set that is currently being developed is to pass structured
-(i.e., non-fluid) information back from \texttt{yt} into \enzo\ .  For instance,
+(i.e., non-fluid) information back from \texttt{yt} into \enzo.  For instance,
 this could be the result of semi-analytic models of the growth and evolution of
 star clusters, galaxy particle feedback parameters that have been influenced by
 merger-tree analysis, or even spectral energy distributions that are calculated
@@ -77,7 +77,7 @@ feasible during the course of a simulation.
 
 One of the inherent drawbacks of a grid-based fluid method is the
 inability to follow the evolution of a single parcel of fluid as it
-travels through the simulation volume.  To address this, Enzo has the
+travels through the simulation volume.  To address this, \enzo\ has the
 capability to introduce Lagrangian ``tracer particles'' into a
 calculation either at the beginning of the simulation or when
 restarting the calculation.  These tracer particles are put into the
