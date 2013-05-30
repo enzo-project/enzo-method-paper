@@ -1,11 +1,11 @@
 \section{Time Stepping}
 \label{sec.timestepping}
 
-In \enzo, resolution of the equations being solved is adaptive in time 
-as well as in space.  The timestep in \enzo\ is satisfied on a level-by-level
- basis by finding the largest timestep such that multiple criteria are
-satisfied on each level.  The timestep criteria used by \enzo\ are 
-(showing the one-dimensional case for clarity):
+In \enzo, the integration of the equations being solved is generally adaptive in time 
+as well as in space.  The timestep $\Delta t$ is set on a level-by-level
+basis by finding the largest timestep such that all of the criteria listed below are
+satisfied.  The timestep criteria are given by the following expressions
+(where we show the one-dimensional case for clarity):
 
 \begin{equation}
 \Delta t_{\rm hydro} = \min \left( \kappa_{\rm hydro} \frac{a \Delta x}{c_{s} + |v_x|} \right)_L ,
@@ -53,46 +53,46 @@ satisfied on each level.  The timestep criteria used by \enzo\ are
 % \label{eqn:dt}
 % \end{equation}
 
-In Equations~\ref{eqn:dthydro}-\ref{eqn:dtcond}, the $\min ( \ldots
-)_L$ formalism means that this value is calculated for all cells or
-particles on a
-given level L and the minimum overall value is taken as the timestep.
-Equation~\ref{eqn:dthydro} ensures that all cells satisfy the
+In equations~(\ref{eqn:dthydro})-(\ref{eqn:dtcond}), the $\min ( \ldots)_L$ 
+formalism means that this value is calculated for all cells or
+particles on a given level l and the minimum overall value is taken as the timestep.
+
+Equation~(\ref{eqn:dthydro}) ensures that all cells satisfy the
 Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of
 an explicit finite difference discretization of the Euler equations.
-Effectively this condition forces the timestep to be small enough such
-that any changes in the fluid propagate less than a single grid
-spacing, $\Delta x$.  In this equation, $\kappa_{\rm hydro}$ is a
-numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 0.5$
+%Effectively this condition forces the timestep to be small enough such
+%that any changes in the fluid propagate less than a single grid
+%spacing, $\Delta x$.  
+In this equation, $\kappa_{\rm hydro}$ is a
+numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 1$
 (with a typical value of $\kappa_{\rm hydro} \sim 0.3-0.5$) that
 ensures that the CFL condition is always met, and $c_s$ and $v_x$ are
 the sound speed and peculiar baryon velocity in a given cell.
 
-Equation~\ref{eqn:dthydro} is valid for one dimension.  For 2 or 3
+Equation~(\ref{eqn:dthydro}) is valid for one dimension.  For 2 or 3
 dimensions, it was shown by \cite{Godunov1959}  that using the
 harmonic average of the timestep found along each of the coordinate
 axes yields a maximum $\kappa_{\rm hydro} = 0.8$.  So letting $\Delta
 t_x$, $\Delta t_y$, and $\Delta t_z$ be the analogues of
-Equation \ref{eqn:dthydro} along the $x,y$ and $z$ axes, 
+equation~(\ref{eqn:dthydro}) along the $x,y$ and $z$ axes, 
 \begin{equation}
   \Delta t_{\rm hydro} = \min \left( \frac{\kappa_{\rm hydro}} {1/\Delta t_x
   +1/\Delta t_y + 1/\Delta t_z} \right)_L
 \end{equation}
 
-For all other criteria except for Equation~\ref{eqn:dtMHD}, multiple dimensions are accounted for by
-repeating the one dimensional criterion along each axis, and taking
-the minimum.
+For all other criteria except for equation~(\ref{eqn:dtMHD}), multiple dimensions are accounted for by
+repeating the one dimensional criterion along each axis, and taking the minimum.
 
-Equation~\ref{eqn:dtMHD} is only enforced when the equations of
+Equation~(\ref{eqn:dtMHD}) is only enforced when the equations of
 magnetohydrodynamics are being solved, and is directly analogous to
-Equation~\ref{eqn:dthydro} in that it ensures that the CFL condition
+equation~(\ref{eqn:dthydro}) in that it ensures that the CFL condition
 is being enforced at all times.  In this equation, $\kappa_{\rm MHD}$ is a
 numerical constant with a value of $0 < \kappa_{\rm MHD} \leq 1$ (with a
 typical value of $\kappa_{\rm MHD} \sim 0.5$) that ensures that the CFL
 condition is always met, and $v_f$ and $v_x$ are the ``fast wave
 speed'' and peculiar baryon velocity in a given cell.  The fast wave
 speed comes from a stability analysis of the MHD equations, and is
-expressed as:
+given by:
 %
 \begin{equation}
 v_f = \sqrt{ \frac{1}{2} \left(  v_A^2 + c_s^2 + \sqrt{(v_A^2 +
@@ -103,38 +103,37 @@ v_f = \sqrt{ \frac{1}{2} \left(  v_A^2 + c_s^2 + \sqrt{(v_A^2 +
 where $c_s$ is the sound speed and $v_A$ is the Alfven speed, calculated
 as $v_A = \sqrt{B^2/\rho_B}$ in units where $\mu_0 = 1$.
 
-Equation~\ref{eqn:dtdarkmatter} is analogous to
-Equation~\ref{eqn:dthydro} and ensures accuracy in the N-body solver
-by requiring that no dark matter particle travels more than one cell
-width.  The parameter $\kappa_{\rm dm}$ is analogous to $\kappa_{\rm
-  hydro}$, with an identical range of values.
+Equation~(\ref{eqn:dtdarkmatter}) is analogous to
+equation~(\ref{eqn:dthydro}) and helps to ensure accuracy in the N-body solver
+by requiring that no particle travels more than one cell
+width.  The parameter $\kappa_{\rm dm}$ is like $\kappa_{\rm
+hydro}$, with a similar range of values.
 
-Equations~\ref{eqn:dtaccel} and~\ref{eqn:dtrad} are supplementary to Equation~\ref{eqn:dthydro} in that they
+Equations~(\ref{eqn:dtaccel}) and~(\ref{eqn:dtrad}) are supplementary to equation~(\ref{eqn:dthydro}) in that they
 take into account the possibility of large accelerations due to either
-gravity (Equation~\ref{eqn:dtaccel} or radiation pressure
-(Equation~\ref{eqn:dtrad}), which may cause numerical 
-instabilities by violating the Courant condition.  In Equation~\ref{eqn:dtaccel}, $\vec{g}$ is the
-gravitational acceleration in each cell on level L.  In
-Equation~\ref{eqn:dtrad}, $\vec{a}_{\rm rad}$ is the estimated
-acceleration due to radiation pressure in each cell on level L,
+gravity (equation~\ref{eqn:dtaccel}) or radiation pressure
+(equation~\ref{eqn:dtrad}).  In equation~(\ref{eqn:dtaccel}), $\vec{g}$ is the
+gravitational acceleration in each cell on level l.  In
+equation~(\ref{eqn:dtrad}), $\vec{a}_{\rm rad}$ is the estimated
+acceleration due to radiation pressure in each cell on level l,
 defined as
-
 \begin{equation}
 \vec{a}_{rad} = \frac{ \sum_i \frac{\dot{E_i}}{c} \hat{r_i} }{m_b} 
 \end{equation}
-
 where the sum calculates the energy deposited in a cell during the
 previous timestep due to \textit{all photon packets} that crossed that
 cell, with $\hat{r_i}$ being a unit vector that accounts for the
 packet direction.
 
-Equation~\ref{eqn:dtcond} is the CFL condition for an explicit
+Equation~(\ref{eqn:dtcond}) is the stability condition for an explicit
 solution to the equation of heat conduction.  In this expression,
-$n_b$ is the baryon number density, defined as $n_b = \rho_b / \mu
-m_p$, where $\mu$ is the mean molecular weight, $\kappa(T)$ is the
-Spitzer thermal conductivity, and f$_{Sp}$ is a user-defined
-conduction suppression factor whose value must be f$_{Sp} \leq 1$.  Both are defined in
-Section~\ref{sec.num.conductions}.  $\kappa_{\rm cond}$ is a prefactor whose
+$n_b$ is the baryon number density. 
+%defined as $n_b = \rho_b / \mu
+%m_p$, where $\mu$ is the mean molecular weight, 
+$\kappa(T)$ is the Spitzer thermal conductivity, and f$_{Sp}$ is a user-defined
+conduction suppression factor whose value must be f$_{Sp} \leq 1$.  
+%Both are defined in Section~\ref{sec.num.conductions}.  
+$\kappa_{\rm cond}$ is a prefactor whose
 value must be $0 < \kappa_{\rm cond}  < 0.5$, and is exactly 0.5 for the
 implemention in \enzo.
 From a practical
@@ -144,7 +143,7 @@ the timestep criterion due to thermal conduction scales as $\Delta x^2
 / T^{2.5}$, which can result in a rapid decrease in timestep in
 regions of high resolution and/or temperature.
 
-Finally, Equation~\ref{eqn:dtexpand} is a cosmological constraint that
+Finally, equation~(\ref{eqn:dtexpand}) is a cosmological constraint that
 limits the timestep so that the simulated universe only expands by
 some fractional amount, f$_{\rm exp}$, during a single step.  In this
 equation, $a$ and $\dot{a}$ refer to the scale factor of the universe
@@ -153,7 +152,7 @@ because the expansion of the universe and its first derivative with
 respect to time both appear in the equations of cosmological
 (magneto)hydrodynamics and particle motion, and some limit is required
 for the stability of the PPM algorithm in comoving coordinates.  This
-criterion typically limits the timestep (moreso than other criteria)
+criterion typically limits the timestep
 only at high redshifts, when densities are relatively homogeneous.
 
 %%% Local Variables: 
