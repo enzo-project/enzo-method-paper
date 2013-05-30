@@ -48,8 +48,9 @@ Due to the computationally unfeasible number of stars in a galaxy
 ($10^{11}$) and the lack of detailed understanding of star formation, a
 number of phenomenological star formation models are included in
 \enzo.
-The \enzo\ code includes approximately ten models for star formation
-and feedback.  Broadly speaking, these methods all work in similar
+%The \enzo\ code includes approximately ten models for star formation
+%and feedback.  
+Broadly speaking, these methods all work in similar
 ways: At a specified time interval, all grid cells that are at the
 highest local level of refinement (i.e., that have no child cells) are
 examined to see if they meet a set of criteria for star formation.
@@ -59,7 +60,7 @@ time scales, molecular hydrogen fraction, metallicity, and converging
 gas flows.  If the star formation criteria are met, some mass of gas
 is taken away from the cell in question and a ``star particle'' with
 the same mass is placed in the center of that cell, with the same
-momentum vector as the removed gas.  This star particle is then
+velocity as the removed gas.  This star particle is then
 allowed to inject mass, momentum, thermal energy, metals, and possibly
 magnetic fields and/or cosmic ray populations into its local
 environment.  In general, the particle is treated as an ensemble of
@@ -87,32 +88,31 @@ gravitationally unstable gas.  Algorithmically, every cell at the
 locally highest level of refinement are examined at every timestep to
 see if they meet the critiera for star formation, and star particles
 are allowed to form in a cell if the following criteria are met:
-
-\begin{equation}
-\rho_b/\bar{\rho}_b \geq \eta
+\begin{eqnarray}
+\rho_b/\bar{\rho}_b & \geq & \eta,  \\[2mm]
 \label{cendens}
-\end{equation} 
-
-\begin{equation}
-\nabla \cdot \vec{v}_b < 0,
+%\end{equation} 
+%\begin{equation}
+\nabla \cdot \vec{v}_b & < & 0, \\
 \label{cencont}
-\end{equation}
-
-\begin{equation}
-t_{\rm cool} < t_{\rm dyn} \equiv \sqrt{3 \pi / 32G \rho_{\rm tot}},
-\end{equation}
-
-\begin{equation}
-m_{b} > m_{J} \equiv G^{-3/2} \rho_{b}^{-1/2}C^{3}
+%\end{equation}
+%\begin{equation}
+t_{\rm cool} & < & t_{\rm dyn} \equiv \sqrt{3 \pi / 32G \rho_{\rm tot}}, \\
+%\end{equation}
+%\begin{equation}
+m_{b} & > & m_{J} \equiv G^{-3/2} \rho_{b}^{-1/2}c^{3} 
 \left[ 1 + \frac{\delta\rho_{d}}{\delta\rho_{b}} \right]^{-3/2}
-\end{equation}
-
-Where $\rho_b$ is the baryon density in that cell, $\bar{\rho_b}$ is
-the mean baryon density in the simulation, $\eta$ is the user-defined
-overdensity threshold, $\vec{v}$ is the velocity of the gas in the
-cell, $\rho_{d}$ is the dark matter density, $\rho_{\rm tot} =
-\rho_{b} + \rho_{d}$, $m_{b}$ and $m_{j}$ are the baryonic mass in the
-cell and jeans mass of the cell, and C is the isothermal sound speed
+\end{eqnarray}
+where 
+%$\rho_b$ is the baryon density in that cell, $\bar{\rho_b}$ is
+%the mean baryon density in the simulation, 
+$\eta$ is the user-defined
+overdensity threshold, 
+%$\vec{v}$ is the velocity of the gas in the
+%cell, $\rho_{d}$ is the dark matter density, $\rho_{\rm tot} =
+%\rho_{b} + \rho_{d}$, 
+and $m_{b}$ and $m_{j}$ are the baryonic mass in the
+cell and the Jeans mass of the cell, and c is the isothermal sound speed
 in the cell.  If all of these criteria are met, the mass of a star
 particle is calculated as \(m_{*} = m_{b} \frac{ \Delta t}{ t_{\rm
     dyn} } f_{\rm *eff} \), where $f_{\rm *eff}$ is the star formation
@@ -144,45 +144,49 @@ significant timescale, as all of the stars contained within the ``star
 particle'' would in reality form (and massive stars would die) over a
 substantial period of time.  Therefore, we assume that for the
 purposes of feedback that the mass of stars formed at a time $t$ with
-finite timestep $\Delta t$ is:
+timestep $\Delta t$ is:
+\begin{equation}
+\Delta m_{\rm sf} = \int_t^{t+\Delta t} \frac{dM}{dt} dt =
+ \int_{\tau_0}^{\tau_1} m_* \tau e^{-\tau} d\tau =
+ m_* \left[(1+\tau_0) e^{-\tau_0} - (1 + \tau_1) e^{-\tau_1} \right]
+ \end{equation}
+where $\tau_0 = (t-t_{\rm form})/t_{\rm dyn}$ and $\tau_1 = (t+\Delta t-t_{\rm form})/t_{\rm dyn}$.
 
-\begin{eqnarray}  
-\Delta m_{\rm sf} =  m_{*} \left[ \left(1 + \frac{t-t_{\rm
-        form}}{t_{\rm dyn}}  \right)
-%\nonumber \times \\ % uncomment for 2-column
-		   \exp{\left( \frac{-(t-t_{\rm form})}{t_{\rm dyn}} \right) }
-%                    \nonumber \\ 
-	       - \left( 1 + \frac{t+ \Delta t-t_{\rm form}}{t_{\rm dyn}} \right) 
-%	       \nonumber \\ 
-                    \exp{ \left( \frac{-(t+\Delta t-t_{\rm
-                            form})}{t_{\rm dyn}} \right)  }
-                   \right]
-\end{eqnarray}
+%\begin{eqnarray}  
+%\Delta m_{\rm sf} =  m_{*} \left[ \left(1 + \frac{t-t_{\rm
+%        form}}{t_{\rm dyn}}  \right)
+%%\nonumber \times \\ % uncomment for 2-column
+%		   \exp{\left( \frac{-(t-t_{\rm form})}{t_{\rm dyn}} \right) }
+%%                    \nonumber \\ 
+%	       - \left( 1 + \frac{t+ \Delta t-t_{\rm form}}{t_{\rm dyn}} \right) 
+%%	       \nonumber \\ 
+%                    \exp{ \left( \frac{-(t+\Delta t-t_{\rm
+%                            form})}{t_{\rm dyn}} \right)  }
+%                   \right]
+%\end{eqnarray}
+%which can be represented more clearly in integral form:
+%
+%\begin{eqnarray}
+%\int_{t}^{t+Dt} \frac{dM}{dt} dt = \int_{t}^{t+Dt} m_{*} 
+%\frac{dt}{t_{\rm dyn}} \left( \frac{t-t_{\rm form}}{t_{\rm dyn}} \right) 
+%%\nonumber \times \\ 
+%\exp{ \left( - ~ \frac{t-t_{\rm form}}{t_{\rm dyn}} \right) }
+%\end{eqnarray}
 
-which can be represented more clearly in integral form:
-
-\begin{eqnarray}
-\int_{t}^{t+Dt} \frac{dM}{dt} dt = \int_{t}^{t+Dt} m_{*} 
-\frac{dt}{t_{\rm dyn}} \left( \frac{t-t_{\rm form}}{t_{\rm dyn}} \right) 
-%\nonumber \times \\ 
-\exp{ \left( - ~ \frac{t-t_{\rm form}}{t_{\rm dyn}} \right) }
-\end{eqnarray}
-
-During this timestep, we assume that the star particle feeds back
+During this timestep, the star particle returns
 metal-enriched gas and thermal energy from supernovae and from stellar
 winds.  Since massive stars have very short lifetimes, we assume that
 there is an immediate feedback of some fraction $f_{\rm SN}$ of the rest
-energy from the stars created that timestep into the baryon gas, such
+energy from the stars into the baryon gas, such
 that $E_{\rm add} = f_{\rm SN} \Delta m_{\rm sf} c^2$, where c is the speed of
-light.  In addition, a fraction $f_{Z*}$ of the metal from the star
-particle is fed back into the baryon gas, which takes into account the
-effects of metal recycling.  Finally, a fraction of the mass $f_{m*}$
-from all stars (rather than just supernovae) is fed back into the gas
+light.  In addition, a fraction $f_{Z*}$ of the stellar mass is fed back 
+in the form of metals.  Finally, a fraction of the mass $f_{m*}$
+is added back into the gas
 along with momentum in order to simulate the mass ejection from
-non-exploding stars via stellar winds.
+all stars (not just supernovae).
 
 There are six user-defined parameters in this algorithm: three deal
-with the star formation ($\eta$, $m_{\rm *min}$ and $T_{\rm
+with the star formation ($\eta$, $m_{\rm *min}$ and $t_{\rm
   dyn,min}$), and three deal with feedback ($f_{\rm SN}$, $f_{Z*}$ and
 $f_{m*}$).  Some of these parameters are completely free, while others
 can be guided by observation or theory.  For example, the supernova
@@ -199,7 +203,7 @@ The metal yield $f_{Z*}$, defined as the mass in metals produced per
 unit mass of stars created, can be constrained by, e.g., the
 theoretical model of \citet{1995ApJS..101..181W}.  This model suggests
 that $f_{Z*} = 0.02$ is an appropriate number.  The minimum dynamical
-time is set to be $T_{\rm dyn,min} = 10^7$ ~years to agree with timescales
+time is set to be $t_{\rm dyn,min} = 10^7$~years to agree with the SN timescales
 seen in nearby OB associations.
 
 The other parameters, such as the overdensity threshold $\eta$,
@@ -213,22 +217,25 @@ formation must occur on a very short timescale in a self-gravitating
 cloud); however, in the vast majority of simulations the densities
 that are reachable are nowhere near the densities of protostellar
 clouds, and thus this parameter becomes a rough proxy for finding the
-densest environments in a given simulation.  Given the
-simulation-dependent nature of these parameters, it is critical to set
-them carefully, and with some sensitivity testing.
+densest environments in a given simulation.  
+%Given the
+%simulation-dependent nature of these parameters, it is critical to set
+%them carefully, and with some sensitivity testing.
 
 % Specific example: Kravtsov
 \subsubsection{Schmidt-Law method}
 \label{sec:starform_kravtsov}
 
-The Kravtsov method of star particle creation is designed to reproduce
+This method of star particle creation is designed to reproduce
 the global Schmidt law of star formation~\citep{2003ApJ...590L...1K,
   1959ApJ...129..243S}.  This algorithm is deliberately minimal, and
 is explicitly geared towards modeling star formation in a
 phenomenological way on kiloparsec scales.  Stars are assumed to form
 with a characteristic gas timescale $\tau_*$ such that $\dot{\rho}_* =
-\rho_{\rm gas}/\tau_*$ where $\rho_{\rm gas}$ and $\rho_*$ are the
-baryon gas and stellar densities, respectively.  This ``constant
+\rho_{\rm gas}/\tau_*$. 
+%where $\rho_{\rm gas}$ and $\rho_*$ are the
+%baryon gas and stellar densities, respectively.  
+This ``constant
 efficiency'' model on the scale of star formation regions is well
 motivated observationally
 \citep{1996AJ....112.1903Y,2002ApJ...569..157W}.  Star formation is
@@ -242,7 +249,7 @@ observationally-determined normalization of the Schmidt law, and the
 density threshold is determined by observations of star forming
 regions on $\sim 100$ pc scales.
 
-Algorithmically, the star formation events in the Scmidt-law algorithm are
+Algorithmically, the star formation events in the Schmidt-law algorithm are
 assumed to occur once every global time step (with the constraint $\Delta t_0 \leq
 10^7$ years).
 In cells where star formation is determined to occur (i.e. $\rho_{\rm
@@ -302,16 +309,14 @@ the formation of molecular hydrogen is followed directly, and stars
 are allowed to form at the highest level of refinement when the local
 H$_2$ fraction exceeds a pre-determined threshold.  Cells are examined
 every root grid timestep, $\Delta t_0$, and cells at the highest level
-that exceed the H$_2$ fraction limit form star particles with masses
+that exceed the H$_2$ limit form star particles with masses
 proportional to the inferred mass of molecular hydrogen in the
 star-forming region
 \citep{2008ApJ...689..865K,2009ApJ...693..216K,2010ApJ...709..308M}.
 The mass of the particle is calculated as:
-
 \begin{equation} 
 m_p = \epsilon \rho_{\rm gas} (\Delta x_{m})^3 \frac{\Delta t_0}{t_*}
 \end{equation}
-
 where $\Delta x_{m}$ is the resolution of the maximum level of
 refinement, $\epsilon$ is an efficiency parameter with a standard
 value of 0.01 \citep[as motivated by][]{2007ApJ...654..304K}, and
