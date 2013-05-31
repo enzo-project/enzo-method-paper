@@ -43,20 +43,21 @@ and the frequency with which it is called is adjustable by a run-time
 parameter.  During the course of conducting analysis, the simulation is halted
 until the conclusion of the analysis.
 
-Most analysis operations that can be performed on simulations that reside on
-disk can be performed on in-memory simulations in \texttt{yt}.  This includes
+Most analysis operations that can be performed on data sets that reside on
+disk can be performed on in-memory data sets in \texttt{yt}.  This includes
 projections (i.e., line integrals, both on- and off-axis), slices, 1-, 2-, and
 3-D fluid phase distributions, calculation of derived quantities and arbitrary
 data selection.  As of version 2.5 of \texttt{yt},  the Rockstar phase-space
 halo finder \citep{2013ApJ...762..109B} can be executed through \texttt{yt} on
 in-memory \enzo\ data.  Operations that currently cannot be conducted on
-in-memory datasets are those that require spatial decomposition of data; for
+in-memory datasets are those that require spatial decomposition of
+data.  For 
 instance, calculating marching cubes on a data object with \texttt{yt} is a
 fully local operation and can be conducted \textit{in situ}.  However,
 calculating topologically-connected sets requires a spatial decomposition of
 data and thus cannot be conducted \textit{in situ}.  This prohibition extends
-to most halo finding operations, most multi-level parallelism operations,
-volume rendering and connected set identification.
+to halo finding operations other than Rockstar, most multi-level
+parallelism operations, and volume rendering.
 
 Where microphysical solvers or other operator-split physics calculations can be
 done in Python, \texttt{yt} can serve as a driver for these calculations.  A
@@ -100,7 +101,8 @@ both at the beginning of each timestep and at the half-timestep
 by linearly interpolating the cell-centered baryon velocity to the
 position of the particle ($v^{\rm interp}$), and assigning it to that value.
 
-At user-specified intervals, the tracer particles output their data.  The data written out
+\enzo saves tracer particle data at user-specified intervals,
+independent of the intervals at which regular data sets are written.  The data written out
 typically includes the tracer particle's unique ID, position, velocity, density,
 and temperature, but is easily extensible to output any grid-based
 quantity that a user requires.  This capability has been used quite
@@ -130,9 +132,9 @@ For every cell, we first determine whether it satisfies the following conditions
 necessary to be flagged as a shock:
 
 \begin{eqnarray}
-\nabla \cdot \vec{v} < 0 \\
-\nabla T \cdot \nabla S > 0\\
-T_2 > T_1 \\
+\nabla \cdot \vec{v} < 0,\\
+\nabla T \cdot \nabla S > 0,\\
+T_2 > T_1,\\
 \rho_2 > \rho_1,
 \end{eqnarray}
 
@@ -140,7 +142,8 @@ where $\vec{v}$ is the velocity field, $T$ is the temperature, $\rho$ is the
 density, and $S=T/\rho^{\gamma-1}$ is the entropy.  $T_2$ and $T_1$ are the post-shock~(downstream)
 and pre-shock~(upstream) temperatures, respectively. An optional temperature floor
 may be chosen, which is useful for situations such as cosmological simulations without a radiation
-background.
+background where underdense gas in the intergalactic medium (IGM) can cool adiabatically to
+very low temperatures.
 
 Once a cell is flagged, the local temperature gradient is calculated, which is 
 then used to traverse cells parallel to the gradient to search for the first
