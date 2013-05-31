@@ -12,7 +12,7 @@ results.  At the opposite end are problems that exercise a large
 portion of \enzo's machinery in concert.  Together, the available
 problem types fully cover all of \enzo's functionality.  This enables
 them to serve as a vehicle for verifying that the code's behavior
-remains stable over time and after modifcation of the codebase.
+remains stable over time and after modification of the codebase.
 
 \enzo\ uses an automated testing framework that allows a user to run,
 with a single command, a set of test problems and compare the results
@@ -45,7 +45,7 @@ running the test problem simulations, the test runner then performs a
 series of basic analysis tasks using the \texttt{yt} analysis toolkit
 \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  The default
 analysis performed on all test problems includes calculation of
-various statistics, such as extrema; mean; and variance, on the fields
+various statistics, such as extrema, mean and variance, on the fields
 present in the output data.  Custom analysis provided by scripts that
 accompany the test problem parameter files is run for special cases,
 such as when an analytical solution exists that can be compared
@@ -59,7 +59,7 @@ problems that are used to verify proper behavior.  All of these test
 problems, as well as the scripts to generate the figures from them,
 are available in the \enzo\ test suite, allowing the interested reader
 to regenerate all of the figures in Section~\ref{sec.tests.compare}
-using the \textit{'methodpaper'} suite of test problems.
+using the \textit{`methodpaper'} suite of test problems.
 
 \subsubsection{Code comparisons}
 \label{sec.tests.compare}
@@ -73,11 +73,11 @@ grid-based (and particularly AMR-based) codes, as we will summarize below.
 including the Santa Barbara Cluster code comparison project
 \citep{SantaBarbara}, a large comparison of N-body simulations
 \citep{2008CS&D....1a5003H}, as well as several direct comparisons
-between \enzo\ and the GADGET SPH code under a variety of
-circumstances, including N-body and adiabatic hydrodynamics
+between \enzo\ and the GADGET SPH code in a variety of
+set-ups, including N-body and adiabatic hydrodynamics
 \citep{2005ApJS..160....1O,2005MNRAS.364..909V, 2011MNRAS.418..960V}
 and simulations of the Lyman-alpha forest \citep{2007MNRAS.374..196R}.
-The \enzo\ code typically has a more difficult time resolving
+Compared to the other codes involved in these projects, the \enzo\ code typically has a more difficult time resolving
 small-scale self-gravitating structures (for an equivalent dark matter
 particle count and nominally equivalent force resolution), but does
 comparably well as a tree-based code for larger structure, and is
@@ -91,7 +91,7 @@ systematically differed from particle-based codes using SPH in this
 code comparison.  Similarly, in galaxy cluster simulations that look
 specifically at the properties of cosmological shocks
 \citep[e.g.][]{2011MNRAS.418..960V}, \enzo\ produces results that are
-similar to other high-order grid-based hydrodynamics codes, and far
+similar to other high-order grid-based hydrodynamics codes, and a far
 superior performance of \enzo\ is observed (in terms of resolution of
 fluid features and shock detection) in low-density regions when
 compared to a particle-based code.  In tests of the Lyman-alpha forest
@@ -138,12 +138,12 @@ measured against several test problems by \citet{IlievEtAl2009},
 which involved tests with and without analytical solutions.  \enzo\ produced
 results similar to both the analytical solutions and results obtained by 
 other codes.  We note, however, that there were minor differences throughout
-the comparison between various codes, and the majority of the codes differred
+the comparison between various codes, and the majority of the codes differed
 in at least a subset of the tests.
 \citet{2011ApJ...726...55T} shows the results of varied reaction rate
 coefficients for the formation of molecular hydrogen via the 3-body
 process in both the \enzo\ and Gadget-2 codes, observing similar trends between
-the two codes. However, at nominally equivalend resolution
+the two codes. However, at nominally equivalent resolution
 where the particle and cell gas masses are comparable, 
 \enzo\ simulations typically displayed a
 substantially higher level of gas structure.  This is unsurprising due

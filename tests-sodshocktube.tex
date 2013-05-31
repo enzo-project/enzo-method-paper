@@ -1,10 +1,10 @@
 \subsubsection{Sod Shock Tube}
 \label{sec.tests.sodshock}
 
-We begin the paper test suite with the classic Sod shock tube problem
+We begin the paper test suite with the classic one-dimensional Sod shock tube problem
 \citep{Sod78}, which provides a good test of a hydrodynamical solver's
 ability to resolve a clean Riemann problem with clear separation
-between the three waves.  These waves include a rarefaction fan, a
+between the three resultant waves.  These waves consist of a rarefaction fan, a
 contact discontinuity, and a moderate shock.  The initial state is 
 $\rho_{\rm L}, P_{\rm L} = 1.0, 1.0$ on the left of the boundary at 
 $x=0.5$ and $\rho_{\rm R}, P_{\rm R} = 0.125, 0.1$ on the right.
@@ -20,9 +20,9 @@ all wave families crisply reproduced (in particular, the contact
 discontinuity and shock).  \zeus\ and MUSCL produce similar results,
 with MUSCL doing a slightly better job on the rarefaction fan.  In Figure
 \ref{fig.sodshocktube}, we also show the integrated absolute deviation from 
-the exact solution, $||E_1|| = \sum_i \Delta x_i |F(x_i)-Exact(x_i)|$ 
+the exact solution, $||E_1|| = \sum_i \Delta x_i |F(x_i)-{\rm Exact}(x_i)|$ 
 , as well as the maximum deviation,
-$||E_\infty|| = \mathrm{max_i}\left\{ \Delta x_i|F(x_i)-Exact(x_i)| \right\}$.  
+$||E_\infty|| = \mathrm{max_i}\left\{ \Delta x_i|F(x_i)-{\rm Exact}(x_i)| \right\}$.  
 These numbers confirm the qualitative differences noted
 previously.
 
