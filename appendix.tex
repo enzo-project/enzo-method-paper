@@ -4,17 +4,16 @@
 
 In this appendix, we provide details for the various interpolation
 methods available in the code.  We assume throughout that we are
-dealing with Cartesian coordinates and equally spaced cells, although
-we allow for arbitrary refinement factor $r$.
+dealing with Cartesian coordinates and cells of equal sizes, although
+we allow for arbitrary an refinement factor $r$ between cells at
+different levels.
 
 
 \vspace{0.5cm}\noindent
 {\bf SecondOrderA} 
 
-This interpolation algorithm is generally second-order but has
+This interpolation algorithm is generally second-order, but has
 monotonicity constraints as described below.
-
-
 In one dimension, we define the parent values as $Q_{-1}$, $Q_0$, and
 $Q_{+1}$, where the central parent cell has a left edge at $x_0$ and
 width $\Delta x$. We first linearly interpolate the parent values to
@@ -84,14 +83,13 @@ otherwise).  These weights are used to determine which slopes to
 modify to match the $\Delta Q_0$ constraint.  We then compute the
 amount of adjustment required:
 
-
 \begin{equation}
 f = - \frac{\Delta Q_0 s^\prime + \sum_n (1-\chi_n) \Delta Q_n}{\sum \chi_n \Delta Q_n + \epsilon}
 \end{equation}
 
 where $s^\prime = \min(\max(s,0), 1)$ and $\epsilon$ is a small number
 to prevent numerical errors. We then use this adjustment fraction to
-compute the new adjusted $\Delta Q_n$ (for $n = 1, 2, 3$) that match
+compute the new, adjusted $\Delta Q_n$ (for $n = 1, 2, 3$) that match
 the $\Delta Q_0$ constraint as closely as possible with
 
 \begin{equation}
@@ -100,7 +98,7 @@ the $\Delta Q_0$ constraint as closely as possible with
 
 Finally, these are converted to the grid axes with $f_x = \Delta Q_2 +
 \Delta Q_3$, $f_y = \Delta Q_1 + \Delta Q_3$, $f_z = \Delta Q_1 +
-\Delta Q_2$ and then we do the interpolation itself with,
+\Delta Q_2$.  We then do the interpolation itself with
 
 \begin{equation}
 q_{i,j,k} = Q_0 + \frac{i+(1-r)/2}{r} f_x + \frac{j+(1-r)/2}{r} f_y + \frac{k+(1-r)/2}{r} f_z
@@ -117,9 +115,9 @@ are computed directly rather than with the minmod limiter
 (e.g. $\Delta Q_0 = (Q_{1/2,1/2,1/2} - Q_{-1/2,-1/2,-1/2})/2$).  To
 ensure positivity in the resulting interpolation when applied to
 positive conserved quantities, the slopes are limited so that the
-smallest corner value is 0.2 the cell center value.  The same
-procedure as described above is then applied to turn these four slopes
-into a linear interpolation.
+smallest corner value is 0.2 the cell center value.  The procedure
+described above is then applied to turn these four slopes into a
+linear interpolation.
 
 % --------------
 
@@ -131,7 +129,7 @@ which is based on Cloud-In-Cell (CIC) interpolation \citep{Hockney88}.
 In one dimension, we define the parent values as $Q_0$, and $Q_{+1}$,
 where the left parent cell has a cell center at $x_0$ and width
 $\Delta x$.  Then, the interpolated value for a subgrid cell $q_i$
-with a cell left edges at $x_i = x_0 + i \Delta x^p/r$ where $i$ runs
+with a cell left edges at $x_i = x_0 + i \Delta x^p/r$, where $i$ runs
 from 0 to $r-1$ for refinement factor $r$, is given by:
 
 \begin{equation}
@@ -141,8 +139,8 @@ q_i =  \frac{2r - 1 - 2i}{2r} Q_0 + \frac{1+2i}{2r} Q_{+1}
 The extension to two and three dimensions is straightforward, with
 weights in the other dimensions computed in the same way and then
 multiplied to get a total of 4 and 8 weights for the 2 and 3
-dimensional cases, respectively.  This scheme is monotonicity
-preserving, but is not conservative.
+dimensional cases, respectively.  This scheme preserves monotonicity,
+but is not conservative.
 
 % --------------
 
