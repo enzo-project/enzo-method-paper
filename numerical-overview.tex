@@ -146,8 +146,8 @@ avoid this problem, \enzo\ also solves the internal energy equation in
 comoving coordinates:
 
 \begin{equation}
-\frac{\partial e}{\partial t} + \frac{1}{a} \vec{v}_b \cdot \nabla e = 
-- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \nabla \cdot \vec{v}_b
+\frac{\partial e}{\partial t} + \frac{1}{a} \vec{v}_b \cdot \grad e = 
+- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \div \vec{v}_b
 \label{enzointenergy}
 \end{equation}
 
@@ -196,9 +196,9 @@ appear in fluid flows and can cause a break-down of finite-difference
 equations.  The artificial viscosity term is added in the source terms
 as
 \begin{eqnarray}
-\rho \frac{\partial\textbf{v}}{\partial t} &=& - \nabla p - \rho \nabla \phi 
-- \nabla \cdot \textbf{Q} \\
-\frac{\partial e}{\partial t} &=& -p \nabla \cdot \textbf{v} - \textbf{Q} : \nabla \textbf{v}, 
+\rho \frac{\partial\textbf{v}}{\partial t} &=& - \grad p - \rho \grad \phi 
+- \div \textbf{Q} \\
+\frac{\partial e}{\partial t} &=& -p \div \textbf{v} - \textbf{Q} : \grad \textbf{v}, 
 \end{eqnarray}
 where \textbf{v} is the baryon velocity, $\rho$ is the mass density,
 $p$ is the pressure, $e$ is the internal energy density of the gas and \textbf{Q}
@@ -304,7 +304,7 @@ radiative processes solved.
 (19) & H$_2^+$ & + & H$^-$ & $\rightarrow$ & H$_2$ & + & H  \\
 (20) & 3H & & & $\rightarrow$ & H$_2$ & + & H
 \end{tabular}
-\caption[]{Collisional processes solved in the Enzo nonequilibrium
+\caption[]{Collisional processes solved in the \enzo\ nonequilibrium
 primordial chemistry routines.}
 \label{table.collisional}
 \end{center}
@@ -326,7 +326,7 @@ primordial chemistry routines.}
 (28) & H$_2$ & + & $\gamma$ & $\rightarrow$ & H$_2^*$ & $\rightarrow$ & 2H \\
 (29) & H$_2$ & + & $\gamma$ & $\rightarrow$ & 2H &  & 
 \end{tabular}
-\caption[]{Radiative processes solved in the Enzo nonequilibrium
+\caption[]{Radiative processes solved in the \enzo\ nonequilibrium
 primordial chemistry routines.}
 \label{table.radiative}
 \end{center}
@@ -540,7 +540,7 @@ Additionally, the gas in the cells must be contracting,
 cooling rapidly, and gravitationally unstable, e.g.:
 
 \begin{equation}
-\nabla \cdot \vec{v}_b < 0,
+\div \vec{v}_b < 0,
 \label{cencont}
 \end{equation}
 
@@ -807,7 +807,7 @@ criteria as needed.}
 In \enzo, resolution of the equations being solved is adaptive in time 
 as well as in space.  The timestep in \enzo\ is satisfied on a level-by-level
  basis by finding the largest timestep such that multiple criteria are
-satisfied on each level.  The timestep criteria used by Enzo are 
+satisfied on each level.  The timestep criteria used by \enzo\ are 
 (showing the one-dimensional case for clarity):
 
 \begin{equation}

@@ -10,7 +10,7 @@ Each grid object -- including all cell and grid data -- is fully
 contained on a single processor\footnote{In this context, we use the
 word {\it processor} to mean a basic distribution unit; this could be
 either a core or a node, depending on details of the system.  Note
-that the current version of Enzo is not threaded, although a hybrid
+that the current version of \enzo\ is not threaded, although a hybrid
 MPI + OpenMP version is currently under development.}.  
 Parallelization is
 accomplished by distributing grids amongst processors.  This is done
@@ -93,7 +93,7 @@ showing real and ghost zones, as needed for the PPM hydro stencil. }
 
 \subsubsection{Performance Measurement \& Instrumentation}
 
-Because of the wide variety of simulations, methods, and uses of Enzo,
+Because of the wide variety of simulations, methods, and uses of \enzo,
 it is difficult to state in general terms which routines within the
 code will be most costly during a given simulation.  As such, we have
 designed a lightweight registering system that has been implemented
@@ -239,7 +239,7 @@ provide strict guidelines here.
 \end{center}
 \caption{\emph{Left:} Strong scaling test of a 512$^3$ AMR
 cosmological calculation.  The root grid scaling is not representative
-of the true strong scaling of Enzo because the root grid tiles are not
+of the true strong scaling of \enzo\ because the root grid tiles are not
 repartitioned when a simulation is restarted with additional cores.
 The weak scaling test in Figure \ref{fig.uniscale} is more
 representative of the scaling on the root level.  The performance in
@@ -254,7 +254,7 @@ Many astrophysical problems, such as cosmological galaxy formation
 \citep{2011ApJ...738...54K}, high-redshift \citep{2009Sci...325..601T}, and present-day
 star formation \citep{Collins12a}, involve multi-scale physics that
 span several orders of magnitude in both space and time.  In these
-situations, using Enzo in its adaptive mesh refinement mode is
+situations, using \enzo\ in its adaptive mesh refinement mode is
 beneficial.  Because the adaptive grid hierarchy is dynamic, grid
 boundaries and, thus, communication patterns can be unpredictable,
 hindering strong scaling to high core counts.
@@ -328,10 +328,10 @@ dramatically decreases at higher core counts.  This occurs because the
 root grid is not re-partitioned into $N_{\rm core}$ tiles when the
 simulation is restarted with a different core count.  This feature can
 be easily implemented and is planned in the next major release of
-Enzo, where scaling results would be similar to the weak scaling shown
+\enzo, where scaling results would be similar to the weak scaling shown
 in \S\ref{sec:weak_scaling}.  The right panel in Figure
 \ref{fig:strong_scaling} shows the time spent in some representative
-major routines in Enzo.  The local physics routines, for example
+major routines in \enzo.  The local physics routines, for example
 \texttt{SolveHydroEquations}, exhibit perfect strong scaling because
 they involve no communication.  By investigating the scaling behavior
 in each routine, it is clear that the communication in the

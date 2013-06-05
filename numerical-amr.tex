@@ -240,7 +240,7 @@ further, up to the maximum level of refinement.
 
 \item{\em Resistive length.}  In a way similar to the Jeans length criterion described above, the code can be forced to locally resolve the resistive length scale by a minimum of a fixed number of cells.  This is done by ensuring that the resistive length scale, defined as
 \begin{equation}
-L_R = |B| / |\nabla \times B|
+L_R = |B| / |\curl B|
 \end{equation}
 is always refined by at least N cells locally (i.e.~we refine a given cell further if $L_R \leq N \Delta x$).
 

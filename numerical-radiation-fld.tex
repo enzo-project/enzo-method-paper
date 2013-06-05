@@ -20,20 +20,20 @@ solution approach may be found in
 In addition, comparisons of this solver with other astrophysical
 radiation transport solvers may be found in \cite{IlievEtAl2009}.  
 
-Enzo's field-based radiation solver focuses on
+\enzo's field-based radiation solver focuses on
 a flux-limited diffusion approximation for cosmological radiative
 transfer, with couplings to both the gas energy and chemical number
 densities.
 %\begin{eqnarray}
 %  \label{eq:fld_radiation}
-%  \partial_t E_r + \frac1a \nabla\cdot\left(E_r \vec{v}_b\right) &=& 
-%    \nabla\cdot\left(D\nabla E_r\right) -
+%  \partial_t E_r + \frac1a \div \left(E_r \vec{v}_b\right) &=& 
+%    \div\left(D\grad E_r\right) -
 %    \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
 %  \label{eq:fld_heating}
 %  \partial_t e_c &=& -\frac{2\dot{a}}{a} e_c + G - \Lambda, \\
 %  \label{eq:fld_chemistry}
 %  \partial_t {\mathrm n}_i + 
-%    \frac1a \nabla\cdot\left({\mathrm n}_i \vec{v}_b\right) &=& 
+%    \frac1a \div\left({\mathrm n}_i \vec{v}_b\right) &=& 
 %    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
 %    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 %\end{eqnarray}
@@ -62,7 +62,7 @@ densities.
 The system of equations
 (\ref{eq:fld_radiation}-\ref{eq:fld_heating}) along with the chemical network 
 (Equation~\ref{eq:species_evolution}) is solved
-independently of Enzo's hydrodynamics, gravity and dark-matter solvers
+independently of \enzo's hydrodynamics, gravity and dark-matter solvers
 (Sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
 the advective portions of Equations (\ref{eq:fld_radiation}) and
 (\ref{eq:species_evolution}) to be taken care of by the fluid solvers.

@@ -239,10 +239,10 @@ if the temperature distribution is required for other reasons
 To overcome this, we also solve the internal energy equation:
 \begin{equation}
  \frac{\partial e}{\partial t} 
-           + \frac{1}{a} \vecv \cdot \nabla e
+           + \frac{1}{a} \vecv \cdot \grad e
 %         = - \frac{3(\gamma -1)\dot{a}}{a} e
          = - 3 \frac{\dot{a}}{a} \frac{p}{\rho}
-           - \frac{p}{a\rho} \nabla \cdot \vecv
+           - \frac{p}{a\rho} \div \vecv
 \end{equation}
 in comoving coordinates.  The structure is similar to the total energy
 equation; the second term on the left hand side represents transport, while
@@ -347,7 +347,7 @@ only one of which is fully consistent with the initial conditions.  Once the
 correct physical state is determined, the pressure in the central region can
 only be found by finding the root to an algebraic equation, which is necessarily
 an iterative process.  Thus a series of \emph{approximate} Riemann solvers are
-typically used.  There are four approximate Riemann solvers in Enzo: two-shock
+typically used.  There are four approximate Riemann solvers in \enzo: two-shock
 \citep{toro-1997},
 Harten-Lax-van Leer \citep[HLL,][]{toro-1997}, HLL with a contact discontinuity
  \citep[HLLC,][]{toro-1997}, and HLL with
@@ -368,7 +368,7 @@ method by also including the third wave, the contact discontinuity.
 For the MHD equations, there are seven waves, instead of three.  This makes the
 exact solution to the Riemann quite a bit more expensive.  Both the HLL and HLLC
 approximations can be formulated for the MHD equations, and are employed in both
-Dedner and CT solvers in Enzo.  The HLLD
+Dedner and CT solvers in \enzo.  The HLLD
 solver includes two of the additional waves, the rotational discontinuities,
 making it a five-wave solver.
 
@@ -434,8 +434,8 @@ a particular interface, the more diffusive HLL Riemann solver is used instead.
 %comoving coordinates:
 
 %\begin{equation}
-%\frac{\partial e}{\partial t} + \frac{1}{a} \vecv_b \cdot \nabla e = 
-%- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \nabla \cdot \vecv_b
+%\frac{\partial e}{\partial t} + \frac{1}{a} \vecv_b \cdot \grad e = 
+%- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \div \vecv_b
 %\label{enzointenergy}
 %\end{equation}
 

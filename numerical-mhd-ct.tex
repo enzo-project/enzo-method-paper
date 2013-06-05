@@ -4,7 +4,7 @@
 \def\Bf{Bf}
 \def\Bc{Bc}
 \def\Evec{{\bf E}}
-\def\Divb{\ensuremath{\nabla \cdot \Bvec}}
+\def\Divb{\ensuremath{\div \Bvec}}
 
 This MHD method was developed by \citet{Collins10} in order to study Population
 III stars \citep{Xu08}, molecular clouds \citep{Collins12a}, and galaxy clusters
@@ -16,7 +16,7 @@ identically zero due to the fact that the evolution of the magnetic field is the
 curl of a vector, and the divergence of the curl of a vector is identically
 zero:
 \begin{eqnarray}
-\partial \Bvec/\partial t & =& \frac{1}{a} \nabla \times \Evec\\
+\partial \Bvec/\partial t & =& \frac{1}{a} \curl \Evec\\
 \Divb & =& 0.
 \end{eqnarray}
 
@@ -32,7 +32,7 @@ this section; and since only the update of the magnetic field is
 divergence free, any monopoles created by other numerical sources
 persist.
 
-Enzo MHD-CT has been described in great detail in \citet{Collins10},
+\enzo\ MHD-CT has been described in great detail in \citet{Collins10},
 and we direct the interested reader to that reference.  The base
 Godunov method, described in \citet{Li08a}, uses spatially and
 temporally second order reconstruction (both MUSCL-Hancock and
@@ -44,7 +44,7 @@ machinery is described by \citet{Balsara01} and \citet{Collins10}.
 
 The increased complexity of the constrained transport scheme comes in
 the form of area-averaged face and length-averaged edge-centered
-variables, while the rest of Enzo employs predominantly
+variables, while the rest of \enzo\ employs predominantly
 volume-averaged cell centered variables.  The magnetic field is
 represented by both a face centered field, B$_f$, and a cell centered
 field, B$_c$.  The electric field is edge centered.  The magnetic
@@ -56,7 +56,7 @@ update the face centered field; finally, the cell centered magnetic
 field is updated with an average of the face centered field.
 
 Divergence-free AMR is somewhat more complex than the AMR employed
-elsewhere in Enzo.  First, the interpolation must be constrained to be
+elsewhere in \enzo.  First, the interpolation must be constrained to be
 divergence free.  Thus, all three face-centered field components are
 interpolated in concert.  Second, any magnetic field information from
 the previous time step must be included in the interpolation, making the
@@ -72,7 +72,7 @@ Cosmological MHD can be treated in a number of ways.  As described in Section
 \red{reference}, the MUSCL with Dedner treats the cosmological dilution of
 $\vecB$ with a source term, 
 $$ 
-\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
+\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \curl (\vecv \times
 \vecB)  =  -\frac{\dot{a}}{2 a} \vecB. \label{eq:induction_cosmo_source}
 $$
 However, one can eliminate the right hand side of Equation 
@@ -80,7 +80,7 @@ However, one can eliminate the right hand side of Equation
 $\vecB^\prime = \vecB / \sqrt{a}.$
 Then Equation \ref{eq:induction_cosmo_source} becomes
 $$ 
-\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \nabla \times (\vecv \times
+\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \curl (\vecv \times
 \vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
 $$
 and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
@@ -93,17 +93,17 @@ uses entropy.  The additional equations are
 \begin{eqnarray}
 \end{eqnarray}
 \begin{eqnarray}
-  \frac{\partial S}{\partial t} +\frac{1}{a} \nabla \cdot (S \vecv) & = &  -
+  \frac{\partial S}{\partial t} +\frac{1}{a} \div (S \vecv) & = &  -
   \frac{ 3 (\gamma - 1) \dot{a}}{a} S \\
-  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \nabla \cdot (\rho e \vecv) &
-  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \nabla \cdot \vecv,
+  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \div (\rho e \vecv) &
+  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \div \vecv,
 \end{eqnarray}
 where $e$ is the internal energy and $S=p/\rho^{\gamma-1}$ is the entropy.  If
 the ratio of thermal to kinetic energy, $\eta$, is below a certain value, the
 alternative energy is used.  As in \citet{Li08a}, we use $\eta=0.008$.
 
 
-Enzo's MHD-CT has been used in a variety of contexts, from galaxy
+\enzo's MHD-CT has been used in a variety of contexts, from galaxy
 cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
 halos \citep{Skillman13}, primordial star formation \citep{Xu08}, and
 present-day star formation \citep{Collins11, Collins12a}.

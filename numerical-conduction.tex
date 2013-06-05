@@ -5,9 +5,9 @@
 similar to that of \citet{2007ApJ...664..135P}.  
 The isotropic flux of heat is given by:
 \begin{equation}
-\myvec{F} = -\kappa_{sp} \nabla T
+\myvec{F} = -\kappa_{\rm sp} \grad T
 \end{equation}
-where $\kappa_{sp}$ is the Spitzer conduction coefficient, $4.6 \times 10^{-7}$~T$^{5/2}$ erg
+where $\kappa_{\rm sp}$ is the Spitzer conduction coefficient, $4.6 \times 10^{-7}$~T$^{5/2}$ erg
 s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}, here we are using a
 value for the Coulomb logarithm, $\log \Lambda = 37.8$, that is
 appropriate for the intracluster medium \citep{1988xrec.book.....S}.
@@ -23,14 +23,14 @@ To ensure a smooth transition between
 the Spitzer and saturated regimes, we define an effective
 conductivity using the formalism of \citet{1988xrec.book.....S}
 \begin{equation}
-\kappa_{eff} = \frac{\kappa_{sp}}{1 + 4.2 \lambda_e / \ell_T} \; ,
+\kappa_{eff} = \frac{\kappa_{\rm sp}}{1 + 4.2 \lambda_e / \ell_T} \; ,
 \end{equation}
 where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
-/ |\nabla T|$ is the characteristic length scale of the local
+/ |\grad T|$ is the characteristic length scale of the local
 temperature gradient.  We also assume that the conductivity of the
 plasma can be described in terms of an effective conductivity, which
-can be expressed as a fraction f$_{Sp}$ of the Spitzer conductivity
-(where f$_{Sp} \leq 1.0$ are considered physical values).  This takes
+can be expressed as a fraction f$_{\rm sp}$ of the Spitzer conductivity
+(where f$_{\rm sp} \leq 1.0$ are considered physical values).  This takes
 into account physical processes below the resolution limit of the
 simulation (such as tangled magnetic fields) that can suppress heat
 transport.
@@ -41,11 +41,11 @@ flow perpendicular to the magnetic field.  In that case, we allow for
 heat transport only parallel to the magnetic field lines in
 magnetohydrodynamic simulations.  Mathematically, this is treated as:
 \begin{equation}
-\myvec{F} = -\kappa_{sp} \hat{b} (\hat{b} \cdot \nabla T)
+\myvec{F} = -\kappa_{\rm sp} \hat{b} (\hat{b} \cdot \grad T)
 \end{equation}
 where $\hat{b}$ is the unit vector denoting the direction of the
 magnetic field.  As with the isotropic thermal conduction, we allow a
-multiplicative factor f$_{Sp}$ to take into account the possible
+multiplicative factor f$_{\rm sp}$ to take into account the possible
 behavior of magnetic fields below the resolution limit of the
 simulation.
 
