@@ -12,14 +12,11 @@ such as the collapse of gas onto a cosmological halo or filament.
 The initial conditions are simple, and we follow the prescription of
 \citet{Anninos94}.  Assuming a geometrically flat cosmology, the density
 perturbation is given by
-
 \begin{equation}
-\rho(x_l) = \rho_0 \big[ 1 - \frac{1+z_c}{1+z} \cos(k x_l) \big]
+\rho(x_l) = \rho_0 \left[ 1 - \frac{1+z_c}{1+z} \cos(k x_l) \right]
 \end{equation}
-
 with the internal energy of the gas set so that the entropy 
 is constant throughout.  The velocity perturbation is given by
-
 \begin{equation}
 v(x_l) = -H_0 \frac{1 + z_c}{(1+z)^{1/2}} \frac{\sin(k x_l)}{k}
 \end{equation}
@@ -32,7 +29,6 @@ the perturbation wavelength), and H$_0$ is the value of the Hubble
 constant at $z = 0$.  Note that this solution is expressed in terms of 
 Lagrangian positions, so one needs to convert this into the Eulerian
 coordinates, x$_e$, that are more useful to \enzo:
-
 \begin{equation}
 x_e = x_l - \frac{1 + z_c}{1 + z} \frac{\sin(k x_l)}{k}
 \end{equation}
@@ -46,10 +42,10 @@ of 100~K, $\rho_0 = \rho_c$.  The simulation is initialized with 64
 grid cells, refining by factors of four using criteria based on cell
 mass and the presence of shocks, for a maximum of 2 levels (i.e., an
 equivalent maximum resolution of 1024 grid cells).  The simulation is
-evolved to z$ = 0$ using the PPM hydro method, with the final output
-of the calculation shown in Figure~\ref{fig.pancake}.
+evolved to z$ = 0$ using the PPM hydro method.
 
-Figure~\ref{fig.pancake} shows the key features of this test problem.
+The final output of the calculation, with the key features of this
+test problem, is shown in Figure~\ref{fig.pancake}.
 The strong shocks and large density gradients are well-resolved, with
 density and velocity jumps being well-delineated and at the correct
 locations.  The key features of 
