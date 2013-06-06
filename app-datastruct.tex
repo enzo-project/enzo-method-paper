@@ -95,7 +95,7 @@ Creation and destruction of grids happens in the routine
 At the end of every timestep, the Hierarchy is rebuilt.
 Rebuilding starts at the coarsest level at the point in time (note
 that coarser levels may be further ahead in their integration, due to
-their larger time step and the W-cycle)  Beginning with this coarsest level, each
+their larger timestep and the W-cycle)  Beginning with this coarsest level, each
 grid on each level is examined for refinement.  Cells are first flagged
 based on a variety of criterion, described in section
 \ref{sec.flagging}.  The set of flagged cells, stored in the \grid\ memeber

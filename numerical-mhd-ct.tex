@@ -59,7 +59,7 @@ Divergence-free AMR is somewhat more complex than the AMR employed
 elsewhere in \enzo.  First, the interpolation must be constrained to be
 divergence free.  Thus, all three face-centered field components are
 interpolated in concert.  Second, any magnetic field information from
-the previous time step must be included in the interpolation, making the
+the previous timestep must be included in the interpolation, making the
 interpolation more complex than the simple parent-child relation used
 for other fields.  Third, the flux correction involves more possible
 grid relations than traditional AMR.  In order to circumvent this last

@@ -68,7 +68,7 @@ the advective portions of Equations (\ref{eq:fld_radiation}) and
 (\ref{eq:species_evolution}) to be taken care of by the fluid solvers.
 Due to the disparate time scales between radiation transport and chemical
 ionization and heating, the remainder of these equations is solved
-using an operator-split algorithm.  Within a given time step to evolve
+using an operator-split algorithm.  Within a given timestep to evolve
 $(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1}, {\mathrm
 n}_i^{n+1})$, we first evolve equation (\ref{eq:fld_radiation}):
 $(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n}, {\mathrm

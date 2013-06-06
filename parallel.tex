@@ -106,7 +106,7 @@ have designed a simple way for the user to modify the source by adding
 and managed individually on each processor in an asynchronous fashion,
 and contribute minimal computational, memory, and IO overhead.
 
-At each complete root grid time step (or less often if specified),
+At each complete root grid timestep (or less often if specified),
 each timer is then communicated to the root processor where it
 calculates the mean, standard deviation, minimum, and maximum for each
 of the timers across all processors.  For level timers, there are additional
@@ -357,7 +357,7 @@ performance (which was discussed in the previous section), but have an
 even simpler goal: to determine how to scale computational time
 estimates as we increase the simulation resolution.  This is a
 straightforward thing to do in codes that use static grids, as the
-computational effort per time step is constant.  However, for an AMR
+computational effort per timestep is constant.  However, for an AMR
 calculation, the number of grids that will be generated during the run
 is not known in advance, and so the CPU time per problem time can vary
 drastically throughout the calculation.  For example, at the beginning
@@ -382,7 +382,7 @@ period of time that the grid structure does not change significantly
 (i.e. the number of grids at each level remains approximately
 constant).  We then assume that the whole run scales in the same way,
 or in other words, that changes in the resolution affect the
-simulation in the same way at each time step.  This is usually a good
+simulation in the same way at each timestep.  This is usually a good
 approximation, as the most costly parts of the calculation typically
 don't change their characteristics substantially between timesteps.
 
@@ -392,7 +392,7 @@ the chemistry solver requires many iterations, but is usually fairly
 accurate.  For a unigrid calculation, the time would by proportional
 to $N_{\rm root}^4$ since the number of cells scales as $N_{\rm
 root}^3$ and, assuming the Courant condition is the 
-factor that controls the time step, the number of steps to advance the
+factor that controls the timestep, the number of steps to advance the
 calculation over a given time interval is
 proportional to $N_{\rm root}.$ Therefore, to advance a hierarchy a
 given time interval, we find, accounting for all levels and using a refinement

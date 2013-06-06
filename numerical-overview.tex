@@ -472,7 +472,7 @@ of star forming regions on $\sim 100$ pc scales.  Note that the density
 threshold is in proper, not comoving, units.
 
 Algorithmically, the star formation events in Kravtsov's code
-are assumed to occur once every global time step 
+are assumed to occur once every global timestep 
 $\Delta t_0 \leq 10^7$.  In cells where star formation is
 determined to occur (i.e. $\rho_{gas} \geq \rho_{SF}$) a
 collisionless ``star particle'' is assumed to form, with a 
@@ -485,8 +485,8 @@ star particle.  This particle is then given the velocity
 of the gas in the cell, and thereafter treated as a 
 collisionless particle.  The \enzo\ implementation
 of this algorithm is similar, except that instead of 
-forming stars only at the root grid time step, we allow 
-stars to form at the time step of the highest level of
+forming stars only at the root grid timestep, we allow 
+stars to form at the timestep of the highest level of
 resolution at any particular point in space.  As can be seen
 from the equation for $m_*$ above, this can result in very 
 small stellar masses.  To avoid memory and processor time
@@ -742,7 +742,7 @@ zones can be found in the appendix.
 
 From the point of view of the hydro solver, each grid is solved as an
 independent CFD problem, with Dirichlet boundary conditions stored in
-the ghost zones.  At the end of each time step, cells on a given level
+the ghost zones.  At the end of each timestep, cells on a given level
 fill ghost zones by interpolating from the parent and copying from
 neighbors on the same level.  Grids then correct the flux at the interface boundary between
 fine and coarse zones, and finally project their real zone data to the
@@ -799,7 +799,7 @@ dark matter overdensities as our refinement criteria, though
 for some higher-resolution simulations we also refine on other
 criteria as needed.} 
 
-\subsection{Time Stepping}\label{sec.timestepping}
+\subsection{Timestepping}\label{sec.timestepping}
 \dcc{Made this its own section (not really part of the AMR, it's more
   general than that.)  Added stuff on harmonic average for 3d. See
   note below on acceleration timestep criterion being crap. Moved
@@ -858,7 +858,7 @@ takes into account the possibility of large accelerations causing numerical
 instabilities by violating the Courant condition.  In this equation, $\vec{g}$ is the
 gravitational acceleration in each cell on level L.  \blue{ \emph{It should be
   noted that the timestep is computed before the acceleration field is computed,
-  and the acceleration field is deleted at the end of each time step.
+  and the acceleration field is deleted at the end of each timestep.
   So this condition isn't ever actually enforced.  We should either
   fix this problem, or not discuss it.
  -dcollins.} }

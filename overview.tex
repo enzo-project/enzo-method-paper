@@ -505,7 +505,7 @@ that subdivide individual cells \citep{Adjerid}, Berger \& Collela's
 AMR (also referred to as \emph{structured} AMR) utilizes an adaptive
 hierarchy of grid patches at varying levels of resolution.  Each
 rectangular grid patch (referred to as a ``grid'') covers some region
-of space in its \emph{parent grid} that requires higher resolution,
+of space in its \emph{parent grid} requiring higher resolution,
 and can itself become the parent grid to an even more highly resolved
 \emph{child grid}.
 
@@ -524,18 +524,18 @@ static grids if a higher initial resolution is required.
 
 Given the hierarchy at some time $t$, we advance the solution in the
 manner of a W-cycle in a multigrid solver.  First, we determine the
-maximum time step allowed for the coarsest grid based on a variety of
+maximum timestep allowed for the coarsest grid based on a variety of
 accuracy and stability criteria and advance the grid by that time
 interval, $\Delta t_0$.  We then move down to the next level and
-advance all the grids on that level by a timestep $\Delta t_1$
-($\Delta t_1 \leq \Delta t_0$), which is the minimum of all the
-allowed timesteps for those grids.  If there are more levels, we
-repeat this procedure until the bottom level of the hierarchy has been
-reached.  Once there, we continue advancing the grids on the lowest
-level until they have ``caught up'' to the coarser parent grids
-(i.e. $\sum \Delta t_l = \Delta t_{l-1}$).  This procedure repeats
-itself until all grids have been advanced by a total time of $\Delta
-t_0$ (see Figure~\ref{fig:wcycle} for a schematic).
+advance all the grids on that level by a timestep $\Delta t_1 \leq
+\Delta t_0$, which is the minimum of all the allowed timesteps for
+those grids.  If there are more levels, we repeat this procedure until
+the bottom level of the hierarchy has been reached.  Once there, we
+continue advancing the grids on the lowest level until they have
+``caught up'' to the coarser parent grids (i.e. $\sum \Delta t_l =
+\Delta t_{l-1}$).  This procedure repeats itself until all grids have
+been advanced by a total time of $\Delta t_0$ (see
+Figure~\ref{fig:wcycle} for a schematic).
 
 
 \begin{figure}
@@ -556,7 +556,7 @@ parent level, by entirely rebuilding the grids on that level and at
 finer resolutions. Rebuilding is achieved by applying the grid
 refinement criteria to the grids on that level, flagging zones that
 require extra grids.  These criteria depend on the physical problem
-being simulated -- see Section~\ref{sec:refinement_criteria} for more
+being simulated; see Section~\ref{sec:refinement_criteria} for more
 details.  Once a grid has a set of flagged cells, we apply a
 machine-vision based algorithm \citep{Berger91} to find edges and
 determine a good placement of subgrids.
@@ -638,7 +638,7 @@ method of lines as described by \cite{leveque2002finite} and
 \cite{toro-1997}. In addition, it implements the hyperbolic divergence
 cleaning algorithm of \cite{2002JCoPh.175..645D}. It supports multiple
 approximate Riemann solvers and non-ideal equations of
-states. Consequently, these suite of solvers can be used for hydro and
+states. Consequently, this suite of solvers can be used for hydro and
 magneto-hydrodynamic simulations. This class of solvers, as
 well as a version of the PPM hydro solver, has been ported to
 nVidia's CUDA framework, allowing \enzo\ to take advantage of modern
@@ -660,45 +660,45 @@ solver of \citet{Li08a} and the divergence free AMR scheme of
 Lastly, we briefly describe the \zeus\ method, a finite-difference
 algorithm originally used in the \zeus\ code \citep{Stone92a}. Note
 that \enzo\ is entirely independent of the \zeus\ code, and only the
-hydrodynamical algorithm of \zeus\ has been implemented in \enzo\ --
-the MHD and RHD schemes have not. The \zeus\ method uses a staggered
-mesh such that the velocities are face-centered, while the density and
-internal energy quantities are cell-centered.  It splits the solution
+hydrodynamical algorithm of \zeus\ has been implemented in \enzo; the
+MHD and radiation-hydrodynamics schemes have not. The \zeus\ method
+uses a staggered mesh such that velocities are face-centered, while
+density and internal energy are cell-centered.  It splits the solution
 up into two steps. The first is the so-called source step, in which
 the momentum and energy values are updated to reflect the pressure and
 gravity forces, including an artificial viscosity required for
 stability. The second step, known as the transport step, accounts for
-the advection of conserved quantities (mass, momentum and energy)
+the advection of conserved quantities (mass, momentum, and energy)
 across the grid.
 
 \subsubsection{Gravity}
 
 The current implementation of self-gravity in \enzo\ uses a Fast
 Fourier Technique \citep{Hockney88} to solve Poisson's equation on the
-coarsest (level 0) grid on each time step.  The advantage of using
-this method is that it is fast, accurate, and naturally allows both
-periodic and isolated boundary conditions for the gravity, choices
-which are very common in astrophysics and cosmology.  On subgrids, we
-interpolate the boundary conditions from the parent grid (either the
-level 0 grid or some other subgrid). The Poisson equation is then
-solved on every timestep using a multigrid technique on one subgrid at
-a time. Aside from calculating the gravitational potential arising
-from the baryon fields and particles in the simulation, there are also
-a number of options for specifying static gravitational fields, and in
+root grid on each timestep.  The advantage of using this method is
+that it is fast, accurate, and naturally allows both periodic and
+isolated boundary conditions for the gravity, choices which are very
+common in astrophysics and cosmology.  On subgrids, we interpolate the
+boundary conditions from the parent grid (either the root grid or some
+other subgrid). The Poisson equation is then solved on every timestep
+using a multigrid technique on one subgrid at a time. Aside from
+self-consistently calculating the gravitational potential arising from
+the baryon fields and particles in the simulation, there are also a
+number of options for specifying static gravitational fields, and in
 fact including self-gravity is optional.
 
 \subsubsection{N-body Dynamics}
 
-Collisionless matter (e.g., dark matter, stars, etc.) is modeled with
+Collisionless matter (e.g. dark matter, stars, etc.) is modeled with
 particles that interact with the baryons only via gravity.  These
-particles are advanced in a single time step using a drift-kick-drift
+particles are advanced through a single timestep using a drift-kick-drift
 algorithm \citep{Hockney88} to provide second-order accuracy even in
-the presence of changing timesteps.  Since the particles follow the
+the presence of varying timesteps.  Since the particles follow the
 collapse of structure, they are not adaptively refined.  Nor are there
 duplicate sets of particles for each level; instead, each particle is
 associated with the highest refined level available at its position in
 the domain and particles are moved between grids as the hierarchy is
-rebuilt. Thus, a particle has the same timestep and feels the same
+rebuilt. Thus a particle has the same timestep and feels the same
 gravitational force as a grid at that refinement level.
 
 Although the particles are fixed in mass once initialized (with the
@@ -707,8 +707,8 @@ process), we can create them with any initial set of masses and
 positions.  For example, in many cosmological simulations static
 subgrids are included from the beginning in order to improve the
 initial spatial and baryonic mass resolution, and these subgrid are
-populated with lower mass particles in order to also improve the
-collisionless mass resolution. 
+populated with lower mass particles to correspondingly improve the
+collisionless mass resolution.
 %% One particle per initial grid point seems to provide approximately
 %% equal sampling between the dark matter and gas. \mqk{This
 %% contradicts the conclusions of O'Shea et al. 2005 that an initial
@@ -718,12 +718,13 @@ collisionless mass resolution.
 \subsubsection{Chemistry}
 \label{sec.ov.chem}
 
-\enzo\ includes the capability of following up to 12 chemical species
-using a non-equilibrium solver.  The species can be turned on in sets,
-with the simplest model including just H, H$^+$, He, He$^+$, He$^{++}$,
-and e$^-$, and more complete models adding first species important for
-gas-phase molecular hydrogen formation, H$^-$, H$_2$ and H$_2^+$, and
-then HD formation, HD, D, D$^+$. 
+\enzo\ includes the capability of following up to 12 particle species
+using a non-equilibrium chemical network.  The species can be turned
+on in sets, with the simplest model including just atomic hydrogen and
+helium (H, H$^+$, He, He$^+$, He$^{++}$, e$^-$), and more complete
+models adding first species important for gas-phase molecular hydrogen
+formation (H$^-$, H$_2$ and H$_2^+$), and then HD formation (HD, D,
+D$^+$).
 %(We note that a reduced version
 %of the chemistry, used only with the flux-limited diffusion radiation
 %transport, includes only hydrogen species.)
@@ -756,19 +757,19 @@ set of energy bins.
 
 The chemical networks and heating rates described in the previous
 sections can be affected by external radiation fields, and the code
-includes a number of pre-set radiation backgrounds that are uniform in
-space but can vary in time.  These are generally based on the
-redshift-dependent rates given in \citet{1996ApJ...461...20H} and
-\citet{2012ApJ...746..125H}, but can also include a uniform H$_2$
-photo-dissociating background that is either constant in time or
-varying as in \citet{WiseAbel05}.
+includes a number of pre-calculated meta-galactic UV radiation
+backgrounds that are uniform in space but can vary in time.  These are
+generally based on the redshift-dependent rates given in
+\citet{1996ApJ...461...20H} and \citet{2012ApJ...746..125H}, but can
+also include a uniform H$_2$ photo-dissociating background that is
+either constant in time or varying as in \citet{WiseAbel05}.
 
 \subsubsection{Radiation transport: ray tracing}
 
 \enzo\ includes a photon-conserving radiative transfer algorithm that
 is based on an adaptive ray-tracing method utilizing the HEALPix
 pixelization of a sphere \citep{AbelWandelt02}. Photons are integrated
-outwards from sources using an adaptive time-stepping scheme that
+outwards from sources using an adaptive timestepping scheme that
 preserves accuracy in ionization fronts even in the optically-thin
 limit. This has been coupled to the chemistry and cooling network to
 provide ionization and heating rates on a cell-by-cell basis. The
@@ -791,7 +792,7 @@ can be found in \citet{ReynoldsHayesPaschosNorman2009}.
 Heat conduction, both isotropic and anisotropic, can be included using
 a sub-cycled, operator-split method.  The heat fluxes are computed
 with simple second-order accurate finite differences, and stability is
-ensured by restricting the time step and using flux-limiters where
+ensured by restricting the timestep and using flux-limiters where
 appropriate.
 
 \subsubsection{Star Formation and Feedback}
@@ -812,9 +813,10 @@ star particle.
 
 All grids on a given level are advanced with the same timestep,
 determined by calculating, for each cell and for each physical process
-(except for the chemistry step, which is sub-cycled) separately, the
-minimum $\Delta t$ allowed for stability. The level is advanced with a
-timestep equal to the minimum over all of these $\Delta t$.
+(except for chemistry and heat conduction, which are sub-cycled)
+separately, the largest $\Delta t$ allowed for stability. The level is
+advanced with a timestep equal to the minimum over all of these
+$\Delta t$.
 
 %%% Local Variables:
 %%% mode: latex
