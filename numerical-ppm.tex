@@ -1,57 +1,59 @@
 \subsection{Hydrodynamics: The PPM hydro method}
 \label{sec.hydro.ppm}
 
-The primary hydrodynamic method used in \enzo\ is based on the
+One (purely) hydrodynamic method used in \enzo\ is closely based on the
 piecewise parabolic method (PPM) of
 \citet{1984JCoPh..54..174C}, which has been
 modified for the study of cosmological fluid flows.  
-\citet{1984JCoPh..54..174C} describe two variants on this method: a
-Lagrangian Remap variant and a Direct Eulerian variant.  Both have
-been adapted for \enzo, and the Lagrangian Remap 
-variant is described in \citet{1995CoPhC..89..149B}.  Because of its
-conservative formulation, however, the Direct Eulerian variant is
-preferred for \enzo\ AMR simulations.  We will describe the Direct
-Eulerian (PPM-DE) variant here.
+\citet{1984JCoPh..54..174C} describe two variants on this method:
+Lagrangian Remap and Direct Eulerian; here we use the Direct Eulerian
+version which is better suited for AMR simulations.  The Lagrangian
+Remap version has previously been adapted for cosmological use
+as described in \citet{1995CoPhC..89..149B} and the implementation
+we use here is closely based on that work.
 
-We can examine the structure of Equations~(\ref{eq:mass})-(\ref{eq:total_energy})
-to obtain a better understanding of the effect of each term.
-The derivatives are first order in time
-and provide us with the dependent variables that will be evaluated each
-timestep: $\rhob$, $\vecvb$, and $E$.
+%We can examine the structure of Equations~(\ref{eq:mass})-(\ref{eq:total_energy})
+%to obtain a better understanding of the effect of each term.
+%The derivatives are first order in time
+%and provide us with the dependent variables that will be evaluated each
+%timestep: $\rhob$, $\vecvb$, and $E$.
+%
+%The second term on the left hand side of each relation
+%is due to our choice of Eulerian coordinates and corresponds to
+%advection, the flow of conserved quantities 
+%($\rhob$, $\rhob \vecvb$, and $\rhob E$) 
+%across the mesh.  These will be termed the transport terms.
 
-The second term on the left hand side of each relation
-is due to our choice of Eulerian coordinates and corresponds to
-advection, the flow of conserved quantities 
-($\rhob$, $\rhob \vecvb$, and $\rhob E$) 
-across the mesh.  These will be termed the transport terms.
-
-The first term on the right hand side of Equations~(\ref{eq:momentum}) and
-(\ref{eq:total_energy}) comes from our choice of comoving coordinates
-(a similar term also appears in Equation~(\ref{eq:dm_velocity}), the velocity 
-relation for the dark matter particles).  It does not
+The first term on the right hand side of equations~(\ref{eq:momentum}) and
+(\ref{eq:total_energy}) come from our choice of comoving coordinates
+(a similar term also appears in equation~(\ref{eq:dm_velocity}), the velocity 
+relation for the dark matter particles).  A similar term does not
 appear in the mass conservation equation (\ref{eq:mass}) because
 of the comoving density definition.   
 We note that these expansion terms could be
 eliminated entirely by the proper choice of variables (including time),
 although we have not done so here, as they do not constitute a major
-source of error.
+source of error.  
+We solve these terms (for all hydro methods)
+using the same technique -- they are split from the rest of the terms and
+solved using an (implicit) time-centered method, which is straightforward
+as there are no spatial gradients.
 
-The remainder of the terms (due to pressure and gravity) are denoted as
-source terms.  They drive instabilities and discontinuities in the flow.
-We make these distinctions because each of the three
-groups of terms have different numerical behaviour and are therefore
-treated differently.  The source and transport steps will be solved in
-a self-consistent fashion by the PPM scheme while the expansion terms,
-which are spatially localized, are split off and solved in a separate step
-(as are radiative cooling and heating, if present).  
+%
+%The remainder of the right-hand side terms (due to pressure and gravity) are denoted as
+%source terms.  We make these distinctions because the 
+%source and transport steps will be solved in
+%a self-consistent fashion by the PPM scheme while the expansion terms,
+%which are spatially localized, are split off and solved in a separate step
+%(as are radiative cooling, heating and other processes, if present).  
 
-The remainder of the terms (transport and source) in the fluid equations
+The remainder of the terms in the fluid equations
 involve derivatives.  
 Because we are interested in phenomena with no special geometry, we will
 restrict discussion to Cartesian coordinates.
 Once again we use the concept of operator splitting,
 but now apply it spatially.   We can rewrite the one-dimensional (Eulerian) 
-versions of Equations~(\ref{eq:mass})--(\ref{eq:total_energy}) without expansion terms
+versions of equations~(\ref{eq:mass})--(\ref{eq:total_energy}) without expansion terms
 in conservative form as,
 \begin{eqnarray}
 \frac{\partial \rho}{\partial t}  + \frac{1}{a} \frac{\partial \rho v }{\partial x}    & = &  
@@ -71,14 +73,14 @@ These equations are now in a form that can be solved by the split PPM scheme.
 
 % ------------------------------------------------------------
 
-\subsubsection{The piecewise parabolic method in one dimension} % 2.2
+%\subsubsection{The piecewise parabolic method in one dimension} % 2.2
 
-We now restrict ourselves to the solution of Equations
-(\ref{eq:mass1d})--(\ref{eq:total_energy1d}), plus transport, in one
+We now restrict ourselves to the solution of equations
+(\ref{eq:mass1d})--(\ref{eq:total_energy1d}), in one
 dimension.  In the Direct Eulerian version of PPM, this is
 accomplished by a three-step process.  First, we compute effective
 left and right states at each grid boundary by constructing a
-piecewise parabolic description of the primary variables ($\rho$, $u$
+piecewise parabolic description of the primative variables ($\rho$, $u$
 and $E$) and then averaging over the regions corresponding to the
 distance each characteristic wave can travel ($u$, $u-c_s$ and
 $u+c_s$, where $c_s$ is the sound speed).
@@ -118,7 +120,6 @@ The Eulerian difference equations are:
      \label{eq:energy_diff}
 \end{eqnarray}
 
-
 We have used subscripts to indicate zone-centered ($j$)
 and face-centered ($j+1/2$) quantities, while superscripts refer to
 position in time.  The cell width is $\Delta x_j$.
@@ -129,12 +130,11 @@ This in turn depends on our ability to compute the time-averaged
 values of $p$, $\rho$ and $v$ at the cell interfaces, denoted here
 by $\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm 1/2}$, and $\overline{v}_{j\pm 1/2}$.  We now
 describe the steps required to compute these quantities.
-%Note that these difference equations are conservative.
 
 We first construct monotonic piecewise 
 parabolic (third order) interpolations in one dimension
-for each of $p$, $\rho$, and $v$  The pressure is determined from
-Equation~(\ref{eq:eq_of_state}), the equation of state.
+for each of $p$, $\rho$, and $v$.  The pressure is determined from
+equation~(\ref{eq:eq_of_state}), the equation of state.
 %We have dropped the subscript b in this and the following two sections because we will be referring solely to baryonic quantities.  
 The interpolation formula for some quantity $q$ is given by:
 %
@@ -144,7 +144,7 @@ q_j(x) & = &  q_{L,j} + \tilde{x}(\Delta q_j + q_{6,j}(1-\tilde{x})), \\
              x_{j-1/2} \leq x \leq x_{j+1/2}. \nonumber
 \end{eqnarray}
 %
-This is Equation~(1.4) of CW84 (in the radial rather than mass coordinate as is appropriate for the direct Eulerian approach). 
+This is Equation~(1.4) of CW84 (in the spatial rather than mass coordinate as is appropriate for the direct Eulerian approach). 
 %The zones edges in the mass coordinates are $m_{j-1/2}$ and $m_{j+1/2}$ for the left and right edges, respectively.  
 The quantities $q_{L,j}$, $\Delta q_j$,
 and $q_{6,j}$ can be viewed simply as interpolation constants; however,
@@ -161,29 +161,19 @@ these values be of sufficient accuracy and that the resulting distribution
 be monotonic.  That is, no new maxima or minima are introduced.
 The resulting formulae are straightforward but complicated and are not
 reproduced here, but see Equations 1.7 to 1.10 of \citet{1984JCoPh..54..174C}.
-We also optionally allow steepening as described in this reference.
+We also optionally allow steepening as described in that reference.
 
-In the Lagrangian case, once we have the interpolation constants we compute the characteristic domain for each zone edge.  This is simply the farthest a sound wave could travel in order to reach the interface by the end of a timestep. The characteristic domain encompasses all of the information that can reach the (Lagrangian) zone edge during the current timestep.  This information would then be fed into the Riemann solver to find the flux at each Lagrangian cell boundary.
-
-In the Eulerian approach, this is more complex because the Eulerian
-zone boundary does not naturally correspond to one the three characteristic waves and so a more complicated approach is required.  First, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$ or $u+c$ (where $c$ is the sound speed in a cell):
+Once we have the reconstruction, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$ or $u+c$ (where $c$ is the sound speed in a cell):
 \begin{eqnarray}
-      q^{C+}_{j+1/2} & = & f_{j+1/2,L}(\Delta t C^n_j), \\
-      q^{C-}_{j+1/2} & = & f_{j+1/2,R}(-\Delta t C^n_{j+1}), \nonumber
+      q^{C+}_{j+1/2} & = &
+          {1 \over \Delta t C^n_j} \int^{x_{j+1/2}}_{x_{j+1/2}-\Delta t C^n_j} q_j(x) dx, \\
+      q^{C-}_{j+1/2} & = & 
+         {1 \over -\Delta t C^n_{j+1}} \int^{x_{j+1/2}+\Delta t C^n_{j+1}}_{x_{j+1/2}} q_{j+1}(x) dx \nonumber
 \end{eqnarray}
-where $q^{C+}$ ($q^{C-}$) refers to the left (right) characteristic $C$.  The functions $f$ are just integrals
-over the parabolic interpolation formula:
-%
-\begin{eqnarray}
-f_{j+1/2,L}(y) & = &
-       {1 \over y} \int^{x_{j+1/2}}_{x_{j+1/2}-y} q_j(x) dx, \\
-f_{j+1/2,R}(y) & = &
-       {1 \over y} \int^{x_{j+1/2}+y}_{x_{j+1/2}} q_{j+1}(x) dx. \nonumber
-\end{eqnarray}
-The linearized gas dynamics equations are then used to compute second-order correct left and right states that take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
+where $q^{C+}$ ($q^{C-}$) refers to the left (right) characteristic $C$.  The linearized gas dynamics equations are then used to compute second-order accurate left and right states that take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
 
 With these effective states, an approximation to the Riemann problem is found
-with an iterative approach \citep[see][]{Woodward86}, producing estimates for 
+with an iterative approach \citep[see][and section~\ref{sec.riemann}]{Woodward86}, producing estimates for 
 $\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm1/2}$, and $\overline{v}_{j\pm 1/2}$ that are third order
 accurate in space and second order accurate in time.  These are then
 used to solve the difference Equations (\ref{eq:mass_diff})--(\ref{eq:energy_diff}) for $\rho^{n+1}$, $v^{n+1}$, and $E^{n+1}$.
@@ -263,8 +253,8 @@ Note that because of the structure of this equation, it is not in
 flux-conservative form.  In particular, the pressure is evaluated at
 the cell center.  Unfortunately, time-centering of this pressure has
 proved difficult to do without generating large errors in the internal
-energy and so we conservatively leave the pressure at the old time in
-this difference equation.  This leads to spreading of shocks; however,
+energy and so we leave the pressure at the old time in
+this difference equation.  This leads to some spreading of shocks; however,
 we note that this equation is only used in hypersonic flows.
 
 It is necessary, however, to conserve the total energy so that the conversion
@@ -312,7 +302,7 @@ Thus, ${\eta}_2$ determines when the synchronization (of $e$ with $E$) occurs.
 Too high a value may mask relatively weak shocks, 
 while spurious heating (via contamination) may occur if it is set too low.
 After some experimentation,
-we have chosen ${\eta}_2 = 0.08$, a somewhat conservative value.
+we have chosen ${\eta}_2 = 0.1$, a somewhat conservative value.
 This scheme is optional and is generally only required in large-scale 
 cosmological simulations where the gas cools due to the expansion of the universe
 but large bulk flows develop due to the formation of structure.
@@ -325,9 +315,10 @@ entropy (rather than total energy and thermal energy), with an
 analogous scheme for choosing which variable to employ.
 
 \subsubsection{Riemann Solvers and Fallback}
+\label{sec.riemann}
 
 While most numerical hydrodynamics schemes center around finding approximate
-solutions to the hydrodynamics equations, the core of philosophy of a Godunov's
+solutions to the hydrodynamics equations, the core philosophy of a Godunov
 method \citep{Godunov1959} is to find the exact solution to an
 approximation of the physical setup.  The approximate problem in this case is
 the Riemann problem, wherein two volumes are separated by a thin membrane that
@@ -368,89 +359,14 @@ method by also including the third wave, the contact discontinuity.
 For the MHD equations, there are seven waves, instead of three.  This makes the
 exact solution to the Riemann quite a bit more expensive.  Both the HLL and HLLC
 approximations can be formulated for the MHD equations, and are employed in both
-Dedner and CT solvers in \enzo.  The HLLD
+the Dedner and CT solvers in \enzo.  The HLLD
 solver includes two of the additional waves, the rotational discontinuities,
 making it a five-wave solver.
 
 On rare occasions, high order
 solutions can cause negative densities or energies.  Both PPM and MUSCL solvers employ a Riemann
 solver fallback mechanism \citep{Lemaster09}.  If a negative density is found at
-a particular interface, the more diffusive HLL Riemann solver is used instead.  
+a particular interface, the more diffusive HLL Riemann solver is used to compute the fluxes associated with that cell.
 
-% ------------------------------------------------------------
-
-
-% GB: I commented the following out because it has been incorporated into the above
-%
-%PPM is an explicit, higher order-accurate version of
-%Godunov's method for ideal gas dynamics with third order-accurate piecewise parabolic
-%monotonic interpolation and a nonlinear Riemann solver for shock
-%capturing.  It advances the hydrodynamic equations in the following
-%steps:
-%\begin{enumerate}
-% \item Construct monotonic parabolic interpolation of cell average
-% data, for each fluid quantity.
-% \item Compute interface states by averaging the parabola for over the domain of dependence for
-% each interface
-% \item Use interface data to solve the Riemann problem.
-% \item Difference the interface fluxes to update the cell average quantities.
-%\end{enumerate}
-%It does an excellent job of capturing strong shocks in at
-%most two cells.  Multidimensional schemes are built up by directional
-%splitting and produce a method that is formally second order-accurate
-%in space and time which explicitly conserves mass, linear momentum, and energy.  
-
-%To use the above algorithm for cosmological simulations, the
-%conservation laws for fluid mass, momentum and energy 
-%density are written in comoving coordinates for a
-%Friedman-Robertson-Walker space-time, as described previously 
-%in Equations~\ref{enzoconserve} 
-%through~\ref{enzoenergy}.  Both the conservation laws and
-%the Riemann solver are modified to include gravity, which is solved
-%using an adaptive particle-mesh (PM) technique (see Section~\ref{sec.ov.nbody}).  
-%The terms due to cosmological expansion, as well as primordial chemistry and
-%radiative heating and cooling, are solved in a separate step because they have
-%different numerical behavior, and therefore must be treated differently to ensure
-%stability.  Note that unlike the \zeus\ hydro scheme, PPM does not need to use 
-%artificial viscosity to resolve shocks.
-
-%The system of equations described above works well for systems with
-%relatively low Mach numbers, as long as these systems are well resolved.  
-%However, cosmology is replete with situations where there are bulk hypersonic
-%flows.  In these situations, the ratio of kinetic to thermal energy can be
-%very high -- in some situations up to $10^6 - 10^8$.  This implies that the
-%thermal energy is an extremely tiny fraction of the kinetic energy, which can 
-%cause numerical problems when one is interested in just the thermal energy of the gas, since
-% Equation~\ref{enzoenergy} solves for the total energy.  In this system of
-%equations, the
-% thermal energy $E_{therm}$ is calculated as $E - E_{kin}$, 
-%where E is the total specific energy as
-%calculated in equation~\ref{enzoenergy} and $E_{kin}$ is the specific kinetic energy,
-%$0.5 \vecv_b^2$.  
-%In hypersonic flows $E$ and $E_{kin}$ are nearly the same, and any 
-%number calculated as 
-%the difference of these is going to be strongly affected by numerical error.  To 
-%avoid this problem, \enzo\ also solves the internal energy equation in
-%comoving coordinates:
-
-%\begin{equation}
-%\frac{\partial e}{\partial t} + \frac{1}{a} \vecv_b \cdot \grad e = 
-%- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \div \vecv_b
-%\label{enzointenergy}
-%\end{equation}
-
-%In this equation $e$ is the internal energy (defined as $P/\rho (\gamma-1)$ and the other terms are as described
-%previously.  The code still conserves total energy ($E$) as well.  In order
-%to maintain consistency, both equations are solved at all times in all cells,
-%with the equation for the total energy (eqtn.~\ref{enzoenergy}) being used
-%for hydrodynamics routines and the internal energy $e$ being used when 
-%temperature is required.  When pressure is required for dynamic purposes,
-%the total energy is used if the ratio of thermal energy to total energy
-%is less than some threshold value $\eta$, and the internal energy is used
-%for values of the ratio larger than $\eta$.  A typical value of this parameter
-%is $10^{-3}$.  This \emph{dual energy formulation} ensures that the
-%method produces the correct entropy jump at strong shocks and also
-%yields accurate pressures and temperatures in cosmological hypersonic
-%flows.
 
 
