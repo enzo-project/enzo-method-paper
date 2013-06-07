@@ -40,7 +40,7 @@ We can make some appropriate approximations to reduce the complexity
 of this equation in order to include radiation transport
 in numerical calculations.  Typically timesteps in dynamic
 calculations are small enough so that $\Delta a/a \ll 1$, therefore
-$\bar{a} = 1$ in any given timestep, reducing the second term to
+$a_{em}/a \approx 1$ in any given timestep, reducing the second term to
 $\hat{n} \partial I_\nu/\partial \mathbf{x}$.  To determine the
 importance of the third term, we evaluate the ratio of the third term
 to the second term.  This is $HL/c$, where $L$ is the simulation box
@@ -62,8 +62,8 @@ We choose to represent the source term $j_\nu$ as point sources of
 radiation (e.g. stars, quasars) that emit radial rays that are
 propagated along the direction $\hat{n}$.
 
-yay tracing is an accurate method to propagate radiation from point
-sources on a computational grid, given that there are a sufficient
+Ray tracing is an accurate method to propagate radiation from point
+sources on a computational grid as long as there are a sufficient
 number of rays passing through each cell.  Along a ray, the radiation
 transfer equation reduces to
 %
@@ -72,7 +72,6 @@ transfer equation reduces to
 \frac{1}{c} \frac{\partial P}{\partial t} + \frac{\partial P}{\partial
   r} = -\kappa P,
 \end{equation}
-
 where $P$ is the photon number flux along the ray.  To sample the
 radiation field at large radii, ray tracing requires at least $N_{ray}
 = 4\pi R^2 / (\Delta x)^2$ rays to sample each cell with one ray,
@@ -84,11 +83,11 @@ rays per cell  are required to provide an accurate calculation
 of the radiation field (as we will show later).
 
 We avoid this inefficiency by utilizing adaptive ray tracing
-\citep{Abel02_RT}, which progressively splits rays when the sampling
-becomes too coarse and is based on Hierarchical Equal Area isoLatitude
-Pixelation \citep[HEALPix;][]{HEALPix}.  In this scheme, the rays are
-traced along normal directions of the centers of HEALPix pixels, which
-evenly divides a sphere into equal areas.  The rays are initialized at
+\citep{Abel02_RT}, which is based on Hierarchical Equal Area isoLatitude
+Pixelation \citep[HEALPix;][]{HEALPix} and progressively splits rays when the sampling
+becomes too coarse.  In this approach, the rays are
+traced along normal directions of the centers of the HEALPix pixels that 
+evenly divide a sphere into equal areas.  The rays are initialized at
 each point source with the photon luminosity (photon s$^{-1}$) equally
 spread across $N_{\rm pix} = 12 \times 4^l$ rays, where $l$ is the
 initial HEALPix level.  We usually find $l$ = 0 or 1 is sufficient
@@ -136,7 +135,6 @@ volume filling fraction is small; (3) the photon leaves the
 computational domain with isolated boundary conditions; or (4) the
 photon travels $\sqrt{3}$ of the simulation box length with periodic
 boundary conditions.
-
 In the first case, the photon is halted at that position and saved,
 where it will be considered in the solution of $I_\nu$ at the next
 timestep.  In the next timestep, the photon will encounter a different
@@ -145,9 +143,9 @@ Furthermore any time variations of the luminosities will be retained
 in the radiation field.  This is how this method retains the time
 derivative of the radiative transfer equation.  The last restriction
 prevents our method from considering sources external to the
-computational domain, but a uniform radiation background can be used
-in conjunction with ray tracing that adds the local radiation field to
-the background intensity.
+computational domain. However, a uniform radiation background can be used
+in conjunction with ray tracing that adds the background intensity to the
+local radiation field. 
 
 The radiation field is calculated by integrating Equation
 (\ref{eqn:rtray}) along each ray, which is done by considering the
@@ -186,7 +184,7 @@ $\Gamma_{\rm ph}$, respectively)  are
 where $V_{\rm cell}$ is the cell volume, $E_{\rm ph}$ is the photon
 energy, and $E_i$ is the ionization energy of the absorbing material.
 In each cell, the photo-ionization and photo-heating rates from each
-ray in the calculation are summed, and after the ray tracing is
+ray in the calculation are summed. After the ray tracing is
 complete, these rates are used as inputs to the solver described in
 Section~\ref{sec.ov.chem} to update the ionization, chemical, and energy states
 of the gas in each cell.

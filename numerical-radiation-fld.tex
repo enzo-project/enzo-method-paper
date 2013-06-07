@@ -19,7 +19,6 @@ solution approach may be found in
 \cite{NRS2009}, the salient features of which are reproduced here. 
 In addition, comparisons of this solver with other astrophysical
 radiation transport solvers may be found in \cite{IlievEtAl2009}.  
-
 \enzo's field-based radiation solver focuses on
 a flux-limited diffusion approximation for cosmological radiative
 transfer, with couplings to both the gas energy and chemical number
@@ -132,6 +131,6 @@ fixed point iteration,
 \]
 where $U$ is a vector containing the solutions to equations
 (\ref{eq:fld_heating_qss_fe}-\ref{eq:fld_chemistry_qss_fn}).  In this
-iteration, for the first 50 sweeps we use $\lambda=1$, and for more
-challenging problems if that does not suffice we switch to a damping
+iteration, for the first 50 sweeps we use $\lambda=1$. For more 
+challenging problems where this does not converge, we switch to a damping
 parameter of $\lambda=0.1$.

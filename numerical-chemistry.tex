@@ -8,13 +8,13 @@ example, the cooling and collapse of primordial gas in Population III star
 formation is dominated by molecular hydrogen, which in the absence of dust
 forms via an inefficient pair of collisional processes that depend heavily on
 the local, highly non-equilibrium population of free electrons.  As a result,
-when modeling primordial star formation, it is critical to follow the
+when modeling primordial star formation it is critical to follow the
 non-equilibrium evolution of the chemical species of hydrogen, including
 molecular hydrogen and deuterium.
 
 The primordial non-equilibrium chemistry routines used in \enzo\ were first
-described by Abel et al. and Anninos et al. \citep{abel97,anninos97}, but have
-been extended since then with updated reaction rates and the inclusion of
+described by \citet{abel97} and \citet{anninos97}, but have
+since been extended with updated reaction rates and the inclusion of
 deuterium species \citep{2009PhDT.........5T}.  These routines follow the
 non-equilibrium chemistry of a gas of primordial composition with 12 total
 species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp, and HD.  \enzo\
@@ -30,14 +30,15 @@ system).  The default behavior of \enzo\ is to couple these two systems at
 subcycles of the hydrodynamic timestep; this results in updates to both the
 chemical and thermal states of the gas (which also inform the temperature, the
 reaction rate coefficients and the cooling functions of the gas) on timescales
-that faster than those of the gas dynamics.
+that are faster than those of the gas dynamics.
 
 Input parameters to \enzo\ govern the chemical species that are updated during
 the course of the simulation.  This can include only the atomic species (H,
 \Hp, He, \Hep, \Hepp, and e$^-$), those species relevant for molecular hydrogen
 formation (\HH, \HHp, and \Hm), and can further include deuterium and its
-species (D, \Dp, and HD).  A total of 9 kinetic equations are solved, including
-29 kinetic and radiative processes, for the 12 species mentioned above.  See
+species (D, \Dp, and HD).  A total of 9 kinetic equations are solved for the
+12 species mentioned above, including
+29 kinetic and radiative processes.  See
 Table~\ref{table.collisional} for the collisional processes and
 Table~\ref{table.radiative} for the radiative processes solved.
 
@@ -50,8 +51,8 @@ criteria and error tolerance, strongly preferable for such a set of equations.
 However, most implicit schemes require an iterative procedure to converge, and
 for large networks (such as this one) an iterative, fully-implicit method can
 be very time-consuming and computationally costly for a relatively small
-increase in accuracy.  At this present time, this makes fully-implicit methods
-somewhat undesirable for a large, three-dimensional simulation.
+increase in accuracy.  At the present time, this makes fully-implicit methods
+somewhat undesirable for large, three-dimensional simulations.
 
 \enzo\ solves the rate equations using a method based on a semi-implicit
 formulation in order to provide a stable, positive definite and first-order
@@ -61,7 +62,7 @@ time states, as described in \citet{anninos97}.  The formation components of
 species $S_i$ are computed at the current subcycle time, where the contribution
 of species $S_i$ to its own destruction components are computed at the updated
 time; all other contributions to the destruction component are computed at the
-current time.  This mixed state improves accuracy and ensures species values
+current time.  This mixed state improves accuracy, ensures species values
 are positive definite, and is equivalent to one Jacobi iteration of an implicit
 Euler solve.  This technique is optimized by taking the chemical intermediaries
 \Hm and \HHp, which have large rate coefficients and low concentrations, and
