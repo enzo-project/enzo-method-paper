@@ -43,4 +43,7 @@ resolution, coarser, or finer than the grid patch that the particles
 are moved from.  This takes place in a communication process at the
 end of each timestep on a level.
 
-
+To avoid unphysical point-mass effects, \enzo\ provides a parameter that
+governs the maximum level at which particles will be regarded at point masses.
+At higher levels, contributions from particles to the gravitating mass field
+will be smoothed over a spherical region centered at each particle's center.
