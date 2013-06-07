@@ -5,7 +5,7 @@ The one-zone collapse test simulates the collapse of a
 self-gravitating gas cloud using a semi-analytic model for the
 evolution of gas density and adiabatic heat input as a function of
 time.  It is designed to test the chemistry and cooling modules over a
-wide range in densities and over physically motivated timescales.
+wide range in densities and over physically-motivated timescales.
 Because this test disables the hydrodynamic and gravity solvers and
 uses a simple model for the density evolution, it is far faster than
 running a true collapse simulation.  The density evolution is based on
@@ -60,18 +60,17 @@ The specific energy evolves as
 
 where $\Lambda$ is the cooling rate in units of erg s$^{-1}$ g$^{-1}$
 and energy, temperature, density, and pressure are related by the
-ideal gas law.  Figure \ref{fig.onezone} shows an example of the
-one-zone collapse test performed with an initial number density of 1
-hydrogen atom per cm$^{-3}$ and an initial temperature of 100 K using
-the 12 species chemistry network with H, D, and He species and metal
-cooling rates calculated with the \texttt{Cloudy} code.  The effects
-of metal cooling can be clearly seen; as the metallicity increases
-from zero to $10^{-2}$~Z$_\odot$, the gas rapidly and significantly
-deviates from the primordial result (black line).  Our primordial
-results compare very well to those shown in
-\citet{2005ApJ...626..627O}; however, we use a different metal cooling
-method, so the lines describing the evolution of the
-metal-enriched gas are not directly comparable.
+ideal gas law, including effects from molecular hydrogen as appropriate.
+Figure \ref{fig.onezone} shows an example of the one-zone collapse test
+performed with an initial number density of 1 hydrogen atom per cm$^{-3}$ and
+an initial temperature of 100 K using the 12 species chemistry network with H,
+D, and He species and metal cooling rates calculated with the \texttt{Cloudy}
+code.  The effects of metal cooling can be clearly seen; as the metallicity
+increases from zero to $10^{-2}$~Z$_\odot$, the gas rapidly and significantly
+deviates from the primordial result (black line).  Our primordial results
+compare very well to those shown in \citet{2005ApJ...626..627O}; however, we
+use a different metal cooling method, so the lines describing the evolution of
+the metal-enriched gas are not directly comparable.
 
 \begin{figure}
   \begin{center}
