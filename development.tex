@@ -5,17 +5,17 @@
 
 Over time, \enzo's development has followed a trajectory toward
 openness.  Started as the graduate research project of Greg Bryan at
-the University of Illinois, it has subsequently been stewarded by
-the Laboratory for Computational Astrophysics (LCA) at the University
-of California at San Diego, and has transitioned to a distributed,
+the University of Illinois, it was subsequently stewarded by the
+Laboratory for Computational Astrophysics (LCA) at the University of
+California at San Diego, and has transitioned to a distributed,
 completely open, and community-driven project.  Initially, \enzo\ was
 versioned using a series of ``snapshots'' of the code base, usually
-hand-created by the developing individuals.  These were distributed to
-collaborators and colleagues, but the central ``trunk'' of development
-was updated primarily by a single person: while patches and technology
-were accepted from external developers, the relatively small number of
-individuals using the code resulted in a strong centralization of
-development.
+hand-created by the individuals doing development work.  These were
+distributed to collaborators and colleagues, but the central ``trunk''
+of development was updated primarily by a single person: while patches
+and technology were accepted from external developers, the relatively
+small number of individuals using the code resulted in a strong
+centralization of development.
 
 As the stewardship of the code passed to the LCA, the code was
 released first to ``friendly users'' and then as an open source
@@ -27,7 +27,7 @@ used the version of the code developed by the LCA.
 
 
 Following the first public, open source release of \enzo, the code was
-migrated to using the Subversion version control system.  This is a
+migrated to the Subversion version control system.  This is a
 centralized version control system, and the ``stable'' \enzo\ source
 code was made globally readable following the \enzo\ 1.5 release.
 Access to the primary development tree required a password and login
@@ -69,7 +69,7 @@ platform Bitbucket (\url{http://bitbucket.org/}) at
 \url{http://bitbucket.org/enzo/}.  There are two mailing lists, one
 for usage-focused questions and discussion, and another for
 development discussion.  Both of these lists are open and publicly
-archived.  Bitbucket provides mechanisms for inspecting source,
+archived.  Bitbucket provides mechanisms for inspecting source code,
 hosting branches and forks of the primary source, and for code review.
 All proposed source code changes for \enzo\ are subjected to a peer
 review process, where experienced developers read, inspect, test, and
@@ -86,17 +86,19 @@ previously, this enables anyone to contribute changes to be evaluated
 for inclusion in the \enzo\ codebase.
 
 While peer review is able to catch many bugs and problems with source
-code changes, \enzo\ is also subject to ``answer'' testing.  We have
-created a set of parameter files and problem types that exercise the
-underlying machinery of \enzo.  These ``test problems'' have
-affiliated ``tests,'' which consist of scripts that use \texttt{yt}
+code changes, \enzo\ is also subject to ``answer'' testing (described
+in detail in Section~\ref{sec.tests.suite}).  We have created a set of
+parameter files and problem types that exercise the underlying
+machinery of \enzo.  These ``test problems'' have affiliated
+``tests,'' which consist of scripts that use \texttt{yt}
 \citep{2011ApJS..192....9T} to produce results such as mass
 distribution, projections, profiles and so on.  The testing
 infrastructure then evaluates whether the variation in the new results
 compared to a ``gold standard'' of results has exceeded an acceptable
-threshold, typically set to roughly single precision.  Optionally, for
-those test problems that are deemed unsafe to change to any precision,
-the tests also produce hashes of the outputs; these hashes will only
+threshold, typically set to roughly the level of roundoff error in
+single-precision floating point arithmetic.  Optionally, for those
+test problems that are deemed unsafe to change to any precision, the
+tests also produce hashes of the outputs; these hashes will only
 remain unchanged in the event of bitwise identicality between results.
 The results of the gold standard are versioned and stored in Amazon
 S3, enabling remote testing to proceed.  While the testing process --

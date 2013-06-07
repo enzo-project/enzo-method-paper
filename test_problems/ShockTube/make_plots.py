@@ -32,14 +32,14 @@ def error_label(name, norm, maxnorm, xpos, ypos):
     thistext += r'$\Vert$E$\Vert_1 = \, %3.1f' % vmant
     if vexp != 0:
         thistext += r' \times \, 10^{%2d}' % vexp
-    thistext += '$\n'
+#    thistext += '$\n'
 
-    vexp =  pylab.floor( pylab.log10( maxnorm ) )
-    if maxnorm == 0: vexp = 0
-    vmant = maxnorm / 10**vexp
-    thistext += r'$\Vert$E$\Vert_\infty \! = \, %3.1f' % vmant
-    if vexp != 0:
-        thistext += r' \times \, 10^{%2d}' % vexp
+#    vexp =  pylab.floor( pylab.log10( maxnorm ) )
+#    if maxnorm == 0: vexp = 0
+#    vmant = maxnorm / 10**vexp
+#    thistext += r'$\Vert$E$\Vert_\infty \! = \, %3.1f' % vmant
+#    if vexp != 0:
+#        thistext += r' \times \, 10^{%2d}' % vexp
     thistext += '$'
 
     pylab.text(xpos, ypos, thistext, va='top')  
@@ -65,7 +65,7 @@ def plot_one(filename, name, axes):
     # compute first order and max error norms
     delta = ray['dx'] * abs( ray[field] - ray_exact[field] )
     norm = delta.sum()
-    maxnorm = delta.max()
+    maxnorm = abs(ray[field]-ray_exact[field]).max()
 
     # rough computation of level for each point in ray (probably better way)
     level = -pylab.log(ray['dx']/ray['dx'][0])/pylab.log(2.0)

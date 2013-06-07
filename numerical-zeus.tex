@@ -8,9 +8,9 @@ As discussed in the section describing the Piecewise Parabolic Method (Section~\
 The \zeus\ method uses a von Neumann-Richtmeyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a breakdown of the finite-difference equations.  The artificial viscosity term is added in the source terms as:
 
 \begin{eqnarray}
-\rho \frac{\partial\vecv}{\partial t} &=& - \nabla p - \rho \nabla \phi 
-- \nabla \cdot \textbf{Q} \\
-\frac{\partial e}{\partial t} &=& -p \nabla \cdot \vecv - \textbf{Q} : \nabla \vecv, 
+\rho \frac{\partial\vecv}{\partial t} &=& - \grad p - \rho \grad \phi 
+- \div \textbf{Q} \\
+\frac{\partial e}{\partial t} &=& -p \div \vecv - \textbf{Q} : \grad \vecv, 
 \end{eqnarray}
 %where \textbf{v} is the baryon velocity, $\rho$ is the mass density, $p$ is the pressure, $e$ is the internal energy density of the gas and 
 
@@ -45,10 +45,10 @@ where $c_j^2 = \gamma p/\rho$ is the adiabatic sounds speed.
 
 Finally, the third source step is the compression term and is given by
 \begin{equation}
-e^{n+c}_j = e^{n+b}_j \left( \frac{1 - (\Delta t/2) (\gamma - 1) (\nabla \cdot \vecv)_j }
-                           {1 + (\Delta t/2) (\gamma - 1) (\nabla \cdot \vecv)_j } \right)
+e^{n+c}_j = e^{n+b}_j \left( \frac{1 - (\Delta t/2) (\gamma - 1) (\div \vecv)_j }
+                           {1 + (\Delta t/2) (\gamma - 1) (\div \vecv)_j } \right)
 \end{equation}
-We have used the notation $(\nabla \cdot \vecv)_j$ to indicate the (potentially) multi-dimensional velocity divergence evaluated at the cell center position $x_j$.  This equation differs from the previous ones in that in the multi-dimensional case, still only one finite difference equation is evaluated, but the divergence becomes multi-dimensional.
+We have used the notation $(\div \vecv)_j$ to indicate the (potentially) multi-dimensional velocity divergence evaluated at the cell center position $x_j$.  This equation differs from the previous ones in that in the multi-dimensional case, still only one finite difference equation is evaluated, but the divergence becomes multi-dimensional.
 
 Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite-difference equations actually solved are:
 \begin{equation}

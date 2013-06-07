@@ -4,7 +4,7 @@
 \section{Conclusions}
 \label{sec.conclusions}
 
-In this paper, we have presented the algorithms underlying \enzo: an
+In this paper, we have presented the algorithms underlying \enzo, an
 open-source adaptive mesh refinement code designed for
 self-gravitating compressible fluid dynamics, including the effects of
 magnetic fields, radiation transport, and a variety of microphysical
@@ -14,13 +14,13 @@ test problems, and have provided information about \enzo's performance
 and parallel scaling on recent supercomputing platforms.  The \enzo\
 code, its test suite, and all of the scripts used to generate plots
 and figures for this paper are open source and are available at the
-\enzo\ website, \url{http://enzo-project.org}.  Furthermore, the \texttt{yt} toolkit,
-which is designed to analyze \enzo\ data (as well as data from a wide
-variety of other simulation tools), can be found at its website,
-\url{http://yt-project.org}.  Both of these codes have active user and
-developer communities, extensive documentation and user support, and
-strong mechanisms for users to contribute their changes and fixes to
-the codebase.
+\enzo\ website, \url{http://enzo-project.org}.  Furthermore, the
+\texttt{yt} toolkit, which is designed to analyze \enzo\ data (as well
+as data from a wide variety of other simulation tools), can be found
+at its website, \url{http://yt-project.org}.  Both of these codes have
+active user and developer communities, extensive documentation and
+user support, and strong mechanisms for users to contribute their
+changes and fixes to the codebase.
 
 The developers of the \enzo\ code are currently working on several
 projects that will extend the functionality, scalability, or overall
@@ -31,7 +31,7 @@ in forthcoming releases of the \enzo\ code include:
 \item The creation of a hybrid-parallel version of \enzo, combining
 MPI for communication between nodes of a supercomputer and OpenMP for
 thread-based parallelism within a node.  This will reduce on-node
-memory usage and overall scaling behavior.
+memory usage and improve overall scaling behavior.
 \item The restructuring of \enzo's treatment of particles to
 accommodate a wider range of ``active'' particles that can easily
 interact with each other and with multiple grids, and include sink,
@@ -42,21 +42,22 @@ accurate, and more scalable than the current multigrid solver.
   users to more quickly and easily create new types of simulations.
 \end{itemize}
 
-With the continual rapid development of computer hardware, it makes sense to review
-not only at \enzo's current capabilities, but to look towards its future development 
-in view of predicted technological trends. These trends in supercomputing hardware suggest that  
-substantial modifications to \enzo's core infrastructure, and very possibly some of 
-the core algorithms will be required. More
+With the continual rapid development of computer hardware, it makes
+sense to not only review \enzo's current capabilities, but to look
+toward its future development in view of predicted technological
+trends. These trends in supercomputing hardware suggest that
+substantial modifications to \enzo's core infrastructure, and very
+possibly some of the core algorithms, will be required. More
 specifically, the progression involves the usage of specialized
 large-core-count, vectorized computing units such as graphics
-processing units (GPUs) or chips like the Intel Xeon Phi, as well as
+processing units or chips like the Intel Xeon Phi, as well as
 precipitously decreasing amounts of RAM per computing core.  The
 former trend means that the amount of processing power per compute
-node will continue to increase, likely much faster than the
-bandwidth between nodes, and will require tremendous reduction in
-inter-node (and possibly inter-CPU) communication in order to maintain
-code scalability.  Also, much of the current code will need to be
-rewritten to take advantage of the vector nature of these CPUs, making
+node will continue to increase, likely much faster than the bandwidth
+between nodes, and will require tremendous reduction in inter-node
+(and possibly inter-CPU) communication in order to maintain code
+scalability.  Also, much of the current code will need to be rewritten
+to take advantage of the vector nature of these CPUs, making
 assumptions that are quite unlike those made in much of the current
 codebase.  The latter trend means that duplication of data -- for
 example, the grid hierarchy -- must be effectively eliminated to save
@@ -72,8 +73,8 @@ hardware improvements will not make these challenges disappear, and
 careful thought (and the rewriting of a great deal of code) must take
 place!  These challenges are not unique to the \enzo\ code, and in
 fact are faced by effectively all applications that wish to take
-advantage of new computational architectures. We therefore anticipated that 
-\enzo\ (or a code that has the capabilities of \enzo, from a user's
-point of view) will continue to develop to be usable at the largest scales on
-such machines.
+advantage of new computational architectures. We therefore anticipated
+that \enzo\ (or a code that has the capabilities of \enzo, from a
+user's point of view) will continue to be usable at the
+largest scales on such machines.
 

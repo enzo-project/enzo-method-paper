@@ -93,7 +93,7 @@ are allowed to form in a cell if the following criteria are met:
 \label{cendens}
 %\end{equation} 
 %\begin{equation}
-\nabla \cdot \vec{v}_b & < & 0, \\
+\div \vec{v}_b & < & 0, \\
 \label{cencont}
 %\end{equation}
 %\begin{equation}
@@ -250,7 +250,7 @@ density threshold is determined by observations of star forming
 regions on $\sim 100$ pc scales.
 
 Algorithmically, the star formation events in the Schmidt-law algorithm are
-assumed to occur once every global time step (with the constraint $\Delta t_0 \leq
+assumed to occur once every global timestep (with the constraint $\Delta t_0 \leq
 10^7$ years).
 In cells where star formation is determined to occur (i.e. $\rho_{\rm
   gas} \geq \rho_{\rm SF}$), star particles with a mass of $m_* =
@@ -258,8 +258,8 @@ In cells where star formation is determined to occur (i.e. $\rho_{\rm
 volume of the mesh cell) are assumed to form instantaneously in a
 manner similar to that described in Section~\ref{sec:starform_cen}.
 The \enzo\ implementation of this algorithm is similar, except that
-instead of forming stars only at the root grid time step, we allow
-stars to form at the time step of the highest level of resolution at
+instead of forming stars only at the root grid timestep, we allow
+stars to form at the timestep of the highest level of resolution at
 any particular point in space.  As can be seen from the equation for
 $m_*$ above, this can result in very small stellar masses.  To avoid
 memory and processor time issues related to having very large numbers
@@ -346,7 +346,7 @@ following conditions:
   hydrogen number density of 
   roughly $10^3$ cm$^{-3}$ at $z=10$),
 
-\item A converging gas flow ($\nabla \cdot \vec{v} < 0$), and
+\item A converging gas flow ($\div \vec{v} < 0$), and
 
 \item A molecular hydrogen mass fraction f$_{\rm H2} > 5 \times 10^{-4}$,
 \end{enumerate}

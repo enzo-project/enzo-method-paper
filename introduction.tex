@@ -1,25 +1,106 @@
-% EJT: in code comments point to changes
-
 \section{Introduction}\label{sec.intro}
 
-Due to the high spatial and temporal dynamical ranges involved, astrophysics and cosmological phenomena present a taxing challenge for simulators. To tackle such situations, a number of numerical techniques have been developed which can be broadly split into the gridless, fully Lagrangian methods and grid-based, Eulerian schemes. The most commonly used is an example of the first type known as Smoothed Particle Hydrodynamics \citep[SPH;][]{Lucy77, SPH}. It has achieved much success, particularly in regimes dominated by gravity.
-% I felt metioning SPH before anything else was a little confusing for the article's focus so I added an earlier mention of Eulerian. 
-%where systems evolve over large spatial and temporal dynamic ranges (cut because we've already said that in the first sentense - EJT)
-However, its development to include an increasing number of sort-after physical processes is still at a relatively early stage when compared with the effort put into the latter type of Eulerian grid-based hydrodynamic schemes \citep[e.g.,][]{laney-1998, toro-1997, Woodward84}.
-% is that what was meant by `` Its development, however, is still at a relatively early stage''? Since SPH is older than AMR, I found this a little confusing as written.
+Due to the high spatial and temporal dynamical ranges involved,
+astrophysics and cosmological phenomena present a taxing challenge for
+simulators. To tackle such situations, a number of numerical
+techniques have been developed that can be broadly split into the
+gridless, Lagrangian methods and grid-based, Eulerian schemes. The
+most commonly used is an example of the first type known as Smoothed
+Particle Hydrodynamics \citep[SPH;][]{Lucy77, SPH}. It has achieved
+much success, particularly in regimes dominated by gravity. However,
+its development to include an increasing number of sought-after
+physical processes is still at a relatively early stage when compared
+with the effort put into the latter type of Eulerian grid-based
+hydrodynamic schemes \citep[e.g.,][]{laney-1998, toro-1997,
+Woodward84}.
 
-Despite this invested expertise, the Eulerian solvers in their original form have a serious drawback: they do not provide an easy method of adaptively increasing the spatial and temporal resolution in small volumes of the simulation. Such flexibility is essential for following physical processes such as gravitational instability. 
-A solution to this was first proposed by \citet{Berger89} in the Computational Fluid Dynamics (CFD) community, and became known as Structured Adaptive Mesh Refinement (SAMR). The principal is to adaptively add and modify additional, finer meshes (``grids'') over regions that require higher resolution. In addition, it is possible to add other more advanced physics including --for the implementation in the astrophysics code presented in this paper-- comoving coordinates, self-gravity, radiative cooling, chemistry, heat conduction, collisionless fluids, magnetohydrodynamics, radiation transport, star formation and a range of other physical effects.
-% I was concerned the original text sounded a little like this was a brand new technique in a brand new code (despite the references below) which would be confusing to a reader familiar with the field and in particular, Enzo. 
+Despite this invested expertise, the Eulerian solvers in their
+original form have a serious drawback: they do not provide an easy
+method of adaptively increasing the spatial and temporal resolution in
+small volumes of the simulation. Such flexibility is essential for
+following physical processes such as gravitational instability. A
+solution to this was first proposed by \citet{Berger89} in the
+Computational Fluid Dynamics (CFD) community, and became known as
+Structured Adaptive Mesh Refinement (SAMR). The principle is to
+adaptively add and modify additional, finer meshes (``grids'') over
+regions that require higher resolution. In addition, it is possible to
+add other, more advanced physics including -- for the AMR
+implementation in the astrophysics code presented in this paper --
+comoving coordinates, self-gravity, radiative cooling, chemistry, heat
+conduction, collisionless fluids, magnetohydrodynamics, radiation
+transport, star formation and a range of other physical effects.
 
-There have been a number of numerical methods described in the astronomical literature which contain elements of SAMR or have a similar aim. For example, the N-body solver developed by \citet{Villumsen89} used non-adaptive meshing to increase the resolution in pre-selected regions. This static approach was later used extensively when applied to hydrodynamics \citep[e.g.,][]{Ruffert94, Anninos94}. Adding adaptivity is a more recent enhancement, and there are now a number of N-body codes that possess this feature, both with and without  hydrodynamics  \citep{Couchman91, Jessop94, Suisalu95, Splinter96, Gelato97, ART97, Truelove98, flash_method, MLAPM01,  Yahagi01, RAMSES, Quilis04, Ziegler05, Zhang06, Astrobear09, Pluto-amr, GAMER, Nyx}. Of these, perhaps the most comparable and widely used are FLASH \citep{flash_method}, which uses grid blocks of fixed size, and RAMSES \citep{RAMSES} and ART \citep{ART97}, both of which refine individual cells. It is also possible to deform the grid to obtain high resolution \citep[e.g.,][]{Gnedin95, Xu97, Pen98}, and more recently a few grid codes have adopted an unstructured approach based on a moving Voronoi mesh \citep{Arepo10, Tess11}.
 
-In this paper, we present \enzo; a structured adaptive mesh refinement (SAMR) code. Originally developed for cosmological hydrodynamics, \enzo\ has since been used on a wide variety of problems.  It has grown to become a general tool for astrophysical fluid dynamics and is intended to be efficient, accurate and easily extended to include new capabilities.  Although many of the components of the \enzo\ code have been described in previous publications \citep{1995CoPhC..89..149B, BryanThesis96, Bryan97a, Bryan97b, Norman99, BryanCompSci99, Bryan01, Oshea04, 2007arXiv0705.1556N, WangAbelZhang08,ReynoldsHayesPaschosNorman2009,Collins10,Wise11_Moray}, there has previously been no systematic and complete description of the code.  In this paper we provide that description, filling in many previous omissions and showing the code's performance for a wide variety of test problems.
+There have been a number of numerical methods described in the
+astronomical literature that contain elements of SAMR or have a
+similar aim. For example, the N-body solver developed by
+\citet{Villumsen89} used non-adaptive meshing to increase the
+resolution in pre-selected regions. This static approach was later
+used extensively when applied to hydrodynamics
+\citep[e.g.,][]{Ruffert94, Anninos94}. Adding adaptivity is a more
+recent enhancement, and there are now a number of N-body codes that
+possess this feature, both with and without hydrodynamics
+\citep{Couchman91, Jessop94, Suisalu95, Splinter96, Gelato97, ART97,
+Truelove98, flash_method, MLAPM01, Yahagi01, RAMSES, Quilis04,
+Ziegler05, Zhang06, Astrobear09, Pluto-amr, GAMER, Nyx}. Of these,
+perhaps the most comparable and widely used are FLASH
+\citep{flash_method}, which uses grid blocks of fixed size, and RAMSES
+\citep{RAMSES} and ART \citep{ART97}, both of which refine individual
+cells. It is also possible to deform the grid to obtain high
+resolution \citep[e.g.,][]{Gnedin95, Xu97, Pen98}, and more recently a
+few grid codes have adopted an unstructured approach based on a moving
+Voronoi mesh \citep{Arepo10, Tess11}.
 
-The \enzo\ code has been extensively used over the last two decades in a wide variety of problems, resulting in the publication of more than 100 peer-reviewed papers based on results obtained with the code. The variety of astrophysical systems that \enzo\ has been used for include galaxies \citep{2003ApJ...587...13T, 2012ApJ...749..140H}, galaxy clusters \citep{Loken02, Skillman13}, the interstellar medium \citep{Slyz05}, the intergalactic medium \citep{Fang01, 2011ApJ...731....6S}, cooling flows \citep{Li12, 2013ApJ...763...38S}, turbulence \citep{Kritsuk04, 2009JPhCS.180a2020K, Collins11}, the formation of the first stars \citep{ABN02, 2007ApJ...654...66O, 2009Sci...325..601T}, and the formation of stars in our own Galaxy \citep{Collins12a}.
+In this paper, we present \enzo; a structured adaptive mesh refinement
+(SAMR) code. Originally developed for cosmological hydrodynamics,
+\enzo\ has since been used on a wide variety of problems.  It has
+grown to become a general tool for astrophysical fluid dynamics and is
+intended to be efficient, accurate and easily extended to include new
+capabilities.  Although many of the components of the \enzo\ code have
+been described in previous publications \citep{1995CoPhC..89..149B,
+BryanThesis96, Bryan97a, Bryan97b, Norman99, BryanCompSci99, Bryan01,
+Oshea04, 2007arXiv0705.1556N,
+WangAbelZhang08,ReynoldsHayesPaschosNorman2009,Collins10,Wise11_Moray},
+there has previously been no systematic and complete description of
+the code.  In this paper we provide that description, filling in many
+previous omissions and showing the code's performance for a wide
+variety of test problems.
 
-% 'finally' here sounded strange, since this is really the key point
-Numerical simulations of astronomical phenomena now play a key role, along with observations and analytic theory, in pushing forward our understanding of the cosmos \citep[e.g.,][]{DecadalSurvey01, DecadalSurvey10}.   But along with this role comes responsibility.  We believe that those developing simulation tools must fulfill two key obligations: the first is to make those tools available to the community as a whole, much in the way that astronomical data is now regularly made publicly available.  The second is to document, test and refine those methods so that they can be critically evaluated and expanded by others.  This paper represents one part of our attempt to meet our obligations with respect to the \enzo\ code.
+The \enzo\ code has been extensively used over the last two decades in
+a wide variety of problems, resulting in the publication of more than
+100 peer-reviewed papers based on results obtained with the code. The
+variety of astrophysical systems that \enzo\ has been used for include
+galaxies \citep{2003ApJ...587...13T, 2012ApJ...749..140H}, galaxy
+clusters \citep{Loken02, Skillman13}, the interstellar medium
+\citep{Slyz05}, the intergalactic medium \citep{Fang01,
+2011ApJ...731....6S}, cooling flows \citep{Li12, 2013ApJ...763...38S},
+turbulence \citep{Kritsuk04, 2009JPhCS.180a2020K, Collins11}, the
+formation of the first stars \citep{ABN02, 2007ApJ...654...66O,
+2009Sci...325..601T}, and the formation of stars in our own Galaxy
+\citep{Collins12a}.
 
-The structure of the code is as follows.  In Section~\ref{sec.overview}, we first provide a top-level overview of the code method and structure.  This is designed to give a first broad-brush picture of the equations we aim to solve and the methods used to solve them.  Next, in Sections~\ref{sec.amr} through~\ref{sec.num.analysis}, we describe the methods we use in detail, reserving some of the longer descriptions of particular components for the appendix in order not to interrupt the flow of the paper.  The \enzo\ testing framework and code tests are described in Section~\ref{sec.tests}.  The parallelism strategy and scaling results are described in Section~\ref{sec.parallel}.  Finally, we discuss the code's development methodology (which is as far as we know unique in the astrophysics community) in Section~\ref{sec.development}.
+Numerical simulations of astronomical phenomena now play a key role,
+along with observations and analytic theory, in pushing forward our
+understanding of the cosmos \citep[e.g.,][]{DecadalSurvey01,
+DecadalSurvey10}.  But along with this role comes responsibility.  We
+believe that those developing simulation tools must fulfill two key
+obligations: the first is to make those tools available to the
+community as a whole, much in the way that astronomical data is now
+regularly made publicly available.  The second is to document, test
+and refine those methods so that they can be critically evaluated and
+expanded upon by others.  This paper represents one component of our
+attempt to meet these obligations with respect to the \enzo\ code.
 
+The structure of this paper is as follows.  In
+Section~\ref{sec.overview}, we first provide a top-level overview of
+the code method and structure.  This is designed to give a broad-brush
+picture of the equations solved by \enzo\ and the methods used to
+solve them.  Next, in Sections~\ref{sec.amr}
+through~\ref{sec.num.analysis}, we describe the methods we use in
+detail, reserving some of the longer descriptions of particular
+components for the appendix in order to not interrupt the flow of the
+paper.  The \enzo\ testing framework and code tests are described in
+Section~\ref{sec.tests}.  The parallelism strategy and scaling results
+are described in Section~\ref{sec.parallel}.  Finally, we discuss the
+code's development methodology (which is, as far as we know, unique in
+the astrophysics community) in Section~\ref{sec.development}.
