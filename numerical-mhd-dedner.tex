@@ -1,7 +1,19 @@
 \subsection{Hydrodynamics: MUSCL}
 \label{sec.num.hydro-muscl}
 
-The second method we describe is a MUSCL-based solver than can be used in both HD and MHD modes.  To more clearly include the Dedner divergence cleaning modifications, we write the equations of compressible inviscid hydrodynamics can be written in the form of conservation laws as,
+The second method we describe is a MUSCL-based solver than can be used in both HD and MHD modes.  The description here will be very brief both because the ideas are similar to those described in the previous section, and because this implementation has previously
+been described in more detail elsewhere \citep{WangAbelZhang08, WangAbel09}.
+
+Much like the PPM solver, we have three basic steps: the first is
+reconstruction of the variables, the second is a solution of the
+Riemann problem, and the third is is updating the conserved quanties
+with the fluxes as written above.
+For the reconstruction scheme we have implemented only the simple
+piecewise linear reconstruction \citep{1979JCoPh..32..101V, 1985JCoPh..59..264C},
+with options for both primitive and conservative variable reconstruction.
+The available Riemann solvers are HLL, HLLC, and HLLD, as described earlier.
+
+To more clearly describe the Dedner divergence cleaning modifications, we write the equations of compressible inviscid hydrodynamics can be written in the form of conservation laws as,
 \begin{equation}
  \frac{\partial{U}}{\partial{t}} +
  \frac{\partial{F^x}}{\partial{x}} + \frac{\partial{F^y}}{\partial{y}} + \frac{\partial{F^z}}{\partial{z}}= 0, \label{hydro}
@@ -38,17 +50,8 @@ where $c_h$ is a constant controlling the propagation speed and
 damping rate of $\div B$, and $h=e+p/\rho$ denotes the enthalpy.
 All quantities are cell-centered.
 
-Much like the PPM solver, we have three basic steps: the first is
-reconstruction of the variables, the second is a solution of the
-Riemann problem, and the third is is updating the conserved quanties
-with the fluxes as written above.
-
-For the reconstruction scheme we here implemented only the simple
-piecewise linear reconstruction \citep{1979JCoPh..32..101V}.
-And a number of approximate Riemann
-solvers. 
-
 The method is dimensionally un-split in that the fluxes are computed
 for all dimensions first and the conserved quantities are updated in
-one go in contrast to the Strang splitting employed in the Zeus and
-PPM solvers described above. 
+one step, in contrast to the Strang splitting employed in the other solvers.
+Also unlike the other schemes, time-integration is done with a second-order
+Runge-Kutta scheme \citep{1988JCoPh..77..439S}.
