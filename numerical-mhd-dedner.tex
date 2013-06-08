@@ -1,7 +1,7 @@
 \subsection{Hydrodynamics: MUSCL}
 \label{sec.num.hydro-muscl}
 
-The equations of compressible inviscid hydrodynamics can be written in the form of conservation laws,
+The second method we describe is a MUSCL-based solver than can be used in both HD and MHD modes.  To more clearly include the Dedner divergence cleaning modifications, we write the equations of compressible inviscid hydrodynamics can be written in the form of conservation laws as,
 \begin{equation}
  \frac{\partial{U}}{\partial{t}} +
  \frac{\partial{F^x}}{\partial{x}} + \frac{\partial{F^y}}{\partial{y}} + \frac{\partial{F^z}}{\partial{z}}= 0, \label{hydro}
@@ -15,7 +15,7 @@ for $i={x,y,z}$, $E=v^2/2 + e$ denotes the specific total energy and $e$ the
 specific internal energy.
 
 For the generalized Lagrange multiplier formulation of the MHD
-equations \citep{}{}{2002JCoPh.175..645D}, we consider these 
+equations \citep{2002JCoPh.175..645D}, we consider these 
 conserved variables
 \begin{equation}
  U = (\rho, \rho v_x, \rho v_y, \rho v_z, \rho E+B^2/2, B_x, B_y, B_z, \psi)^{T},
@@ -35,10 +35,17 @@ formulation for the divergence cleaning.  The fluxes then are
     &&  -v_yB_z+v_zB_y, v_zB_x-v_xB_z,\psi, c_h^2B_z)^{T},
 \end{eqnarray}
 where $c_h$ is a constant controlling the propagation speed and
-damping rate of $\div B$. $h=e+p/\rho$ denotes the enthalpy.
+damping rate of $\div B$, and $h=e+p/\rho$ denotes the enthalpy.
+All quantities are cell-centered.
 
-As a reconstruction scheme we here implemented only the simple
-piecewise linear reconstruction. And a number of approximate Riemann
+Much like the PPM solver, we have three basic steps: the first is
+reconstruction of the variables, the second is a solution of the
+Riemann problem, and the third is is updating the conserved quanties
+with the fluxes as written above.
+
+For the reconstruction scheme we here implemented only the simple
+piecewise linear reconstruction \citep{
+And a number of approximate Riemann
 solvers. 
 
 The method is dimensionally un-split in that the fluxes are computed
