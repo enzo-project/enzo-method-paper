@@ -9,10 +9,9 @@ have yt (http://yt-project.org) built with SciPy, which requires a
 non-default option to be set in the install script.  If you do NOT
 compile Enzo with the HYPRE library, or do not have SciPy installed
 along with yt, remove the 'CosmoIFront' problem from the testnames
-list below.  You also need to set two paths -- the location of the
-Enzo binary and the path to the test problem directory -- and you
-can turn on and off some options.  This is all done directly below
-this comment block.
+list below.  You also need to set a path -- the location of the
+Enzo binary -- and you can turn on and off some options.  This is
+all done directly below this comment block.
 
 Note: some of the simulations used to create the method paper figures
 can take several hours to run, or should be run on several CPUs. See
@@ -31,16 +30,18 @@ import os as os
 enzodir = '/Users/bwoshea/Desktop/SYNCHED/Current\ Projects/Papers/enzo-method-paper/test_problems'
 
 # directory where this file is located (needs absolute path name)
-topleveldir = '/Users/bwoshea/Desktop/SYNCHED/Current Projects/Papers/enzo-method-paper/test_problems'
+topleveldir = os.path.dirname(os.path.realpath(__file__))
 
-# the following options allow you to articulate whether you want the simulations to be run (runsim),
-#   figures to be made (makefig), and directories to be cleaned out (cleandata/cleanfigs).  Note that 
-#   this is so you can separately run the various simulations, make the figures, and/or clean out all
-#   of the various subdirectories.
+# the following options allow you to articulate whether you want the simulations
+#   to be run (runsim), figures to be made (makefig), and directories to be
+#   cleaned out (cleandata/cleanfigs).  Note that this is so you can separately
+#   run the various simulations, make the figures, and/or clean out all of the
+#   various subdirectories.
 
-# if cleandata == 1, delete all simulation files in the directory.  If 0, don't touch them.
-#    Note: output log is always deleted before a simulation is run.  Also, if you clean out
-#    the data, you can't make figures without rerunning the simulations!
+# if cleandata == 1, delete all simulation files in the directory.  If 0, don't
+#    touch them.  Note: output log is always deleted before a simulation is run.
+#    Also, if you clean out the data, you can't make figures without rerunning
+#    the simulations!
 cleandata = 1
 
 # if cleanfigs == 1, delete all figures in the directory.  If 0, don't touch them.
