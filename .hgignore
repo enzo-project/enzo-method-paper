@@ -1,6 +1,7 @@
 ms.pdf
 ms.dvi
 ms.bbl
+msNotes.bib
 test_problems/Enzo_Build
 
 syntax: glob
