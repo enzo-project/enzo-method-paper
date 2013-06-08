@@ -1,4 +1,4 @@
-\subsection{The \zeus\ hydro method}
+\subsection{Hydrodynamics: The \zeus\ method}
 \label{sec.hydro.zeus}
 
 As an alternative to the previous Godunov methods, \enzo\ also includes an implementation of the finite-difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus\ \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator split) solution procedure that is fully explicit in time.  This method is formally second order-accurate in space but first order-accurate in time.  
