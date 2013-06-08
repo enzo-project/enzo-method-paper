@@ -15,7 +15,6 @@ Sections~\ref{sec.amr}-\ref{sec.num.analysis}. In
 Table~\ref{tab:variables} we provide a convenient summary of all
 variables and physical constants used throughout this manuscript.
 
-\mqk{Move this table to the Appendix?}
 \input{table_of_variables_and_constants}
 
 % ====================================================
@@ -276,112 +275,6 @@ options also H$^-$, H$_2$, H$_2^+$, and HD, D, and D$^+$. Lastly,
 which can contribute to the radiative cooling and star formation
 processes.
 
-%\red{
-%There is some debate over whether to put in the hydro equations without cosmology, in addition
-%to the equations that are already here.  Would this
-%be more or less clear?  We're leaning towards saying ``when cosmology is turned off,
-% $\dot{a}$ goes to zero and $a$ goes to 1, and the poisson equation changes to blah blah blah'' 
-%and assuming our readers can figure it out for themselves.
-%We also want to emphasize that the heating and cooling is glossed over in this section, 
-%and it's discussed more thoroughly later.
-%} %end red
-% GB: I agree this would be shorter, and maybe it is a better idea, but I think it's nice to be able
-% GB: to include both equations and at the same time make the transformation to comoving coords
-% GB: very clear -- this has engendered a lot of confusion in the past and one of the goals of writing
-% GB this paper is to answer peoples questions before they ask them.
-
-
-% GB: I commented out the following.  It has now been incorporated into the above discussion
-% GB: (see my comments anove on why I think this is a good way to do it)
-%
-%\enzo\ solves the equations of ideal gas dynamics
-%in a coordinate system that is comoving with the expanding universe:
-
-%\begin{equation}
-%\frac{\partial \rho_b}{\partial t} + \frac{1}{a} \vecv_b \cdot \grad \rho_b =  \label{enzoconserve}
-% - \frac{1}{a} \rho_b \div \vecv_b 
-%\end{equation}
-
-%\begin{equation}
-%\frac{\partial \vecv_b}{\partial t} + \frac{1}{a} (\vecv_b \cdot \grad) \vecv_b = \label{enzomomentum} 
-%-\frac{\dot{a}}{a} \vecv_b - \frac{1}{a \rho_b} \grad p - \frac{1}{a} \grad \phi
-%\end{equation}
-
-%\begin{eqnarray}
-%\frac{\partial E}{\partial t} + \frac{1}{a} \vecv_b \cdot \grad E =  
-%- \frac{\dot{a}}{a} \left( 3 \frac{p}{\rho_b} + \vecv_b^2 \right)  \nonumber \\
-%- \frac{1}{a \rho_b} \div (p \vecv_b) \nonumber \\
-%- \frac{1}{a} \vecv_b \cdot \grad \phi + \Gamma - \Lambda
-%\label{enzoenergy}
-%\end{eqnarray}
-
-%Where $\rho_b$ is the comoving baryon density, $\vecv_b$ is the baryon velocity, $p$ is the pressure, 
-%$\phi$ is the modified gravitational potential (in comoving coordinates, which is related to
-%the potential in proper coordinates $\Phi$ by $\phi \equiv \Phi + 0.5 $a\"{a}$ \vecx^2$) and 
-%$a$ is the ``expansion parameter'' which describes the expansion of a smooth, homogeneous 
-%universe as a function of time.  This expansion parameter is related to the redshift:  
-%$a \equiv 1/(1+z)$.  All derivatives are in comoving coordinates.  $E$ is the specific
-%energy of the gas (total energy per unit mass), and
-%$\Gamma$ and $\Lambda$ represent radiative heating and cooling processes as described below.
-%  Equations~\ref{enzoconserve}, \ref{enzomomentum}
-%and \ref{enzoenergy} represent the conservation of mass, momentum and total (e.g.,
-%kinetic plus thermal) fluid energy.
-
-%The equations above are closed with three more equations:
-
-%\begin{equation}
-%E = p / [(\gamma - 1) \rho_b] + \vecv^2/2   \label{enzoeos}
-%\end{equation}
-
-%\begin{equation}
-%\nabla^2 \phi = \frac{4 \pi G}{a} (\rho_b + \rho_{dm} - \rho_0 )
-%\label{enzopoisson}
-%\end{equation}
-
-%\begin{equation}
-%\frac{\ddot{a}}{a} = - \frac{4 \pi G}{3 a^3} (\rho_0 + 3 p_0 / c^2) + \Lambda/3.
-%\label{enzocomove}
-%\end{equation}
-
-%where $\rho_{dm}$ is the comoving dark matter density, $\rho_0$ is the comoving
-%background density 
-%($\rho_0 \equiv \Omega_{matter} \rho_{crit}$) and $p_0$ is the background pressure, 
-%$\gamma$ is the ratio of specific heats and $\Lambda$ is the cosmological constant.
-%Equations~\ref{enzoeos}, \ref{enzopoisson} and~\ref{enzocomove} are the 
-%equation of state, Poisson's equation in comoving form and an equation that 
-%describes the evolution of the comoving coordinates (i.e. the formula for the 
-%expansion of an isotropic, homogeneous universe). 
-%All particles in the simulation are governed by Newton's equations in comoving 
-%coordinates:
-
-%\begin{equation}
-%\frac{d \vecx_{part}}{dt} = \frac{1}{a} \vecv_{part}
-%\label{enzopartvel}
-%\end{equation}
-
-%\begin{equation}
-%\frac{d \vecv_{part}}{dt} = -\frac{\dot{a}}{a} \vecv_{part} - \frac{1}{a} \grad \phi
-%\label{enzopartmom}
-%\end{equation}
-
-%Where $\vecx_{part}$ and $\vecv_{part}$ refer to the position and peculiar velocity of any
-%particles in the system.  Note that the system of equations~\ref{enzoconserve}-\ref{enzopartmom} 
-%is valid only in regimes where relativistic effects are not
-%important ($v_b, v_{dm} \ll c$, where c is the speed of light) 
-%and where cosmological curvature effects are 
-%unimportant, meaning that the simulation volume is much smaller than the radius
-%of curvature of the universe, as defined as $r_{hub} \equiv c/H_0$, where $c$ is the
-%speed of light and $H_0$ is the Hubble constant.
-
-%\dcc{Fixed punctuation, added 'no mhd, rhd' caveat to Zeus statements.  This has caused
-%confusion in the past.}
-
-%\subsubsection{Magnetohydrodynamics}
-
-
-
-%\subsubsection{Radiation transport: ray-tracing}
-
 The code can include either a homogeneous radiation background (with
 possible local self-shielding corrections), or evolve an inhomogeneous
 radiation field either by directly solving the radiative transfer
@@ -578,7 +471,7 @@ Four different (magneto)-hydrodynamic methods are implemented in
 \enzo: (i) the hydrodynamic-only piecewise parabolic method (PPM)
 developed by~\citet{1984JCoPh..54..174C} and extended to cosmology
 by~\citet{1995CoPhC..89..149B}; (ii) the MUSCL-like Godunov scheme
-\citep{MUSCL} with or without magnetic fields and Dedner-based
+\citep{1977JCoPh..23..276V} with or without magnetic fields and Dedner-based
 divergence cleaning, described in more detail in
 \citet{WangAbelZhang08} and \citet{WangAbel09}; (iii) a constrained
 transport staggered MHD scheme \citep{Collins10}, and (iv) the
@@ -623,11 +516,6 @@ inaccuracies. We overcome this difficulty by additionally solving a
 thermal energy equation and using $e$ from this equation when we
 expect the error to be large.
 
-%The advantage of the PPM method is that it conserves energy better and is higher-order accurate.  The disadvantage is that it is generally less robust than the ZEUS method.
-
-%%% If you prefer the following \paragraph{} sections to be numbered,
-%%% then you can add \setcounter{secnumdepth}{5} to the preamble...
-
 \paragraph{Godunov MUSCL (HD) with Dedner divergence cleaning (MHD)}
 This solver was developed to attack problems in magnetic field
 amplification during the formation of galaxies \citep{Wang:2009a} and
@@ -644,7 +532,7 @@ well as a version of the PPM hydro solver, has been ported to
 nVidia's CUDA framework, allowing \enzo\ to take advantage of modern
 graphics hardware \citep{Wang:2010}.
 
-\paragraph{MHD with Constrained Transport (MHD)}
+\paragraph{Godunov MHD with Constrained Transport (MHD)}
 This MHD method is second order in time and space, and preserves the
 divergence constraint, $\div \vecB = 0$, to machine precision
 through the Constrained Transport (CT) method.  CT, originally

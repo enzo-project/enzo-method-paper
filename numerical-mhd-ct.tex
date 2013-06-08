@@ -1,4 +1,4 @@
-\subsection{MHD: Constrained transport}
+\subsection{Magnetohydrodynamics: Constrained transport}
 \label{sec.num.mhd-ct}
 \def\Bvec{{\bf B}}
 \def\Bf{Bf}
@@ -6,38 +6,34 @@
 \def\Evec{{\bf E}}
 \def\Divb{\ensuremath{\div \Bvec}}
 
-This MHD method was developed by \citet{Collins10} in order to study Population
-III stars \citep{Xu08}, molecular clouds \citep{Collins12a}, and galaxy clusters
-\citep{Xu12, Skillman13}.  A full description and suite of test problems can be
-found in \citet{Collins10}
+The third solver we describe is an MHD method developed by 
+\citet{Collins10} and since a full description and suite of test problems can be
+found in that paper, we only describe the method briefly here.
 
 The divergence of the magnetic field, \Divb, is
 identically zero due to the fact that the evolution of the magnetic field is the
 curl of a vector, and the divergence of the curl of a vector is identically
-zero:
-\begin{eqnarray}
-\partial \Bvec/\partial t & =& \frac{1}{a} \curl \Evec\\
-\Divb & =& 0.
-\end{eqnarray}
-
+zero.
+%\begin{eqnarray}
+%\partial \Bvec/\partial t & =& \frac{1}{a} \curl \Evec\\
+%\Divb & =& 0.
+%\end{eqnarray}
 The Constrained Transport (CT) method \citep{Evans88, Balsara99} for
 magnetohydrodynamic (MHD) evolution employs this same vector property
-to evolve the magnetic field in a manner that preserves $\Divb=0$ to
-limits of machine precision.  The electric field is computed using
+to evolve the magnetic field in a manner that preserves $\Divb=0$.  
+The electric field is computed using
 the fluxes from the Riemann solver.  The curl of that electric field
 is then used to update the magnetic field.  The advantage of this
-method is that it preserves \Divb\ to machine precision.  The drawback
-is twofold: increased algorithm complexity, as will be described in
-this section; and since only the update of the magnetic field is
-divergence free, any monopoles created by other numerical sources
-persist.
+method is that it preserves \Divb\ to machine precision.  The primary
+drawback is increased algorithm complexity.  Note also that since 
+only the update of the magnetic field is divergence free, any monopoles 
+created by other numerical sources persist.
 
-\enzo\ MHD-CT has been described in great detail in \citet{Collins10},
-and we direct the interested reader to that reference.  The base
-Godunov method, described in \citet{Li08a}, uses spatially and
+The base Godunov method, described in \citet{Li08a}, uses spatially and
 temporally second order reconstruction (both MUSCL-Hancock and
-Piecewise Linear Method), a selection of Riemann solvers including
-HLLC and HLLD \citep{Mignone07}.  The constrainted transport methods
+Piecewise Linear Method), and a selection of Riemann solvers including
+HLLC and HLLD \citep{Mignone07}, as described earlier.  
+The constrained transport methods
 are the first-order method described by \citet{Balsara99} and the
 second order methods described in \citet{Gardiner05}.  The AMR
 machinery is described by \citet{Balsara01} and \citet{Collins10}.
@@ -68,17 +64,13 @@ grids (rather than the magnetic field), and is then used to re-update
 the parent magnetic field.  This is described in detail in
 \citet{Balsara99} and \citet{Collins10}.
 
-Cosmological MHD can be treated in a number of ways.  As described in Section
-\red{reference}, the MUSCL with Dedner treats the cosmological dilution of
-$\vecB$ with a source term, 
-$$ 
-\frac{\partial \vecB}{\partial t} - \frac{1}{a}  \curl (\vecv \times
-\vecB)  =  -\frac{\dot{a}}{2 a} \vecB. \label{eq:induction_cosmo_source}
-$$
-However, one can eliminate the right hand side of Equation 
-\ref{eq:induction_cosmo_source} by defining
+Cosmological MHD can be treated in a number of ways.  As described in 
+the previous section, and equation~\ref{eq:induction} the MUSCL with Dedner
+method treats the cosmological dilution of
+$\vecB$ with a source term,  However, one can eliminate the right hand side of equation 
+\ref{eq:induction} by defining
 $\vecB^\prime = \vecB / \sqrt{a}.$
-Then Equation \ref{eq:induction_cosmo_source} becomes
+Then equation~\ref{eq:induction} becomes
 $$ 
 \frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \curl (\vecv \times
 \vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
@@ -87,24 +79,26 @@ and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
 electric field creation, interpolation, projection, and flux correction) without
 modification.  
 
-Dual energy formalism has also been incorporated in two methods, one internal
-energy, similar to that described in Section \ref{sec.hydro.ppm}, and one that
-uses entropy.  The additional equations are
-\begin{eqnarray}
-\end{eqnarray}
-\begin{eqnarray}
-  \frac{\partial S}{\partial t} +\frac{1}{a} \div (S \vecv) & = &  -
-  \frac{ 3 (\gamma - 1) \dot{a}}{a} S \\
-  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \div (\rho e \vecv) &
-  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \div \vecv,
-\end{eqnarray}
-where $e$ is the internal energy and $S=p/\rho^{\gamma-1}$ is the entropy.  If
-the ratio of thermal to kinetic energy, $\eta$, is below a certain value, the
-alternative energy is used.  As in \citet{Li08a}, we use $\eta=0.008$.
+The dual energy formalism has also been incorporated in two possible ways, one internal
+energy, as described in Section \ref{sec.hydro.ppm}, and one that
+uses entropy \cite{TVD93, Collins10}..  
+%The additional equations are
+%\begin{eqnarray}
+%\end{eqnarray}
+%\begin{eqnarray}
+%  \frac{\partial S}{\partial t} +\frac{1}{a} \div (S \vecv) & = &  -
+%  \frac{ 3 (\gamma - 1) \dot{a}}{a} S \\
+%  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \div (\rho e \vecv) &
+%  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \div \vecv,
+%\end{eqnarray}
+%where $e$ is the internal energy and $S=p/\rho^{\gamma-1}$ is the entropy.  If
+%the ratio of thermal to kinetic energy, $\eta$, is below a certain value, the
+%alternative energy is used.  As in \citet{Li08a}, we use $\eta=0.008$.
 
-
-\enzo's MHD-CT has been used in a variety of contexts, from galaxy
-cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
-halos \citep{Skillman13}, primordial star formation \citep{Xu08}, and
-present-day star formation \citep{Collins11, Collins12a}.
+%
+%\enzo's MHD-CT has been used in a variety of contexts, from galaxy
+%cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
+%halos \citep{Skillman13}, primordial star formation \citep{Xu08}, and
+%present-day star formation \citep{Collins11, Collins12a}.
+% GB NOTE: incorporate these elsewhere
 

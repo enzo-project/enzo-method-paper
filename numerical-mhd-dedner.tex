@@ -1,7 +1,19 @@
-\subsection{Hydrodynamics: MUSCL}
+\subsection{Hydrodynamics and Magnetohydrodynamics: MUSCL with Dedner cleaning}
 \label{sec.num.hydro-muscl}
 
-The equations of compressible inviscid hydrodynamics can be written in the form of conservation laws,
+The second method we describe is a MUSCL-based solver than can be used in both HD and MHD modes.  The description here will be very brief both because the ideas are similar to those described in the previous section, and because this implementation has previously
+been described in more detail elsewhere \citep{WangAbelZhang08, WangAbel09}.
+
+Much like the PPM solver, we have three basic steps: the first is
+reconstruction of the variables, the second is a solution of the
+Riemann problem, and the third is is updating the conserved quanties
+with the fluxes as written above.
+For the reconstruction scheme we have implemented only the simple
+piecewise linear reconstruction \citep{1979JCoPh..32..101V, 1985JCoPh..59..264C},
+with options for both primitive and conservative variable reconstruction.
+The available Riemann solvers are HLL, HLLC, and HLLD, as described earlier.
+
+To more clearly describe the Dedner divergence cleaning modifications, we write the equations of compressible inviscid hydrodynamics can be written in the form of conservation laws as,
 \begin{equation}
  \frac{\partial{U}}{\partial{t}} +
  \frac{\partial{F^x}}{\partial{x}} + \frac{\partial{F^y}}{\partial{y}} + \frac{\partial{F^z}}{\partial{z}}= 0, \label{hydro}
@@ -15,7 +27,7 @@ for $i={x,y,z}$, $E=v^2/2 + e$ denotes the specific total energy and $e$ the
 specific internal energy.
 
 For the generalized Lagrange multiplier formulation of the MHD
-equations \citep{}{}{2002JCoPh.175..645D}, we consider these 
+equations \citep{2002JCoPh.175..645D}, we consider these 
 conserved variables
 \begin{equation}
  U = (\rho, \rho v_x, \rho v_y, \rho v_z, \rho E+B^2/2, B_x, B_y, B_z, \psi)^{T},
@@ -35,13 +47,11 @@ formulation for the divergence cleaning.  The fluxes then are
     &&  -v_yB_z+v_zB_y, v_zB_x-v_xB_z,\psi, c_h^2B_z)^{T},
 \end{eqnarray}
 where $c_h$ is a constant controlling the propagation speed and
-damping rate of $\div B$. $h=e+p/\rho$ denotes the enthalpy.
-
-As a reconstruction scheme we here implemented only the simple
-piecewise linear reconstruction. And a number of approximate Riemann
-solvers. 
+damping rate of $\div B$, and $h=e+p/\rho$ denotes the enthalpy.
+All quantities are cell-centered.
 
 The method is dimensionally un-split in that the fluxes are computed
 for all dimensions first and the conserved quantities are updated in
-one go in contrast to the Strang splitting employed in the Zeus and
-PPM solvers described above. 
+one step, in contrast to the Strang splitting employed in the other solvers.
+Also unlike the other schemes, time-integration is done with a second-order
+Runge-Kutta scheme \citep{1988JCoPh..77..439S}.

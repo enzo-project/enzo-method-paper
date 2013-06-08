@@ -1,4 +1,12 @@
-\subsection{Hydrodynamics: The PPM hydro method}
+In this section, we describe the four solvers that we have implemented for
+solving the fluid equations.  We describe the PPM method in considerably
+more detail than the other methods in part
+because its implementation in Enzo has not previously been described,
+but mostly because it introduces many of the ideas and methods used for
+the MUSCL-Dedner and MHDCT schemes (including expansion terms,
+reconstruction, Riemann solvers, and dual energy formalism);
+
+\subsection{Hydrodynamics: The PPM method}
 \label{sec.hydro.ppm}
 
 One (purely) hydrodynamic method used in \enzo\ is closely based on the
@@ -12,18 +20,6 @@ Remap version has previously been adapted for cosmological use
 as described in \citet{1995CoPhC..89..149B} and the implementation
 we use here is closely based on that work.
 
-%We can examine the structure of Equations~(\ref{eq:mass})-(\ref{eq:total_energy})
-%to obtain a better understanding of the effect of each term.
-%The derivatives are first order in time
-%and provide us with the dependent variables that will be evaluated each
-%timestep: $\rhob$, $\vecvb$, and $E$.
-%
-%The second term on the left hand side of each relation
-%is due to our choice of Eulerian coordinates and corresponds to
-%advection, the flow of conserved quantities 
-%($\rhob$, $\rhob \vecvb$, and $\rhob E$) 
-%across the mesh.  These will be termed the transport terms.
-
 The first term on the right hand side of equations~(\ref{eq:momentum}) and
 (\ref{eq:total_energy}) come from our choice of comoving coordinates
 (a similar term also appears in equation~(\ref{eq:dm_velocity}), the velocity 
@@ -33,26 +29,17 @@ of the comoving density definition.
 We note that these expansion terms could be
 eliminated entirely by the proper choice of variables (including time),
 although we have not done so here, as they do not constitute a major
-source of error.  
-We solve these terms (for all hydro methods)
+source of error.  We solve these terms
 using the same technique -- they are split from the rest of the terms and
 solved using an (implicit) time-centered method, which is straightforward
-as there are no spatial gradients.
-
-%
-%The remainder of the right-hand side terms (due to pressure and gravity) are denoted as
-%source terms.  We make these distinctions because the 
-%source and transport steps will be solved in
-%a self-consistent fashion by the PPM scheme while the expansion terms,
-%which are spatially localized, are split off and solved in a separate step
-%(as are radiative cooling, heating and other processes, if present).  
+as there are no spatial gradients.  Note that we use this method for
+all four of the hydro solvers.
 
 The remainder of the terms in the fluid equations
 involve derivatives.  
 Because we are interested in phenomena with no special geometry, we will
 restrict discussion to Cartesian coordinates.
-Once again we use the concept of operator splitting,
-but now apply it spatially.   We can rewrite the one-dimensional (Eulerian) 
+We can dimensionally split the equations and rewrite the one-dimensional (Eulerian) 
 versions of equations~(\ref{eq:mass})--(\ref{eq:total_energy}) without expansion terms
 in conservative form as,
 \begin{eqnarray}
@@ -64,11 +51,9 @@ in conservative form as,
 \frac{\partial \rho E}{\partial t}  + \frac{1}{a} \frac{\partial \rho v E}{\partial x}  & =  &
       \rho v \frac{1}{a} \frac{\partial \phi}{\partial x}. \label{eq:total_energy1d}
 \end{eqnarray}
-
 %
-Note that $x$ and $v$ refer to the one dimensional comoving position and 
+Here $x$ and $v$ refer to the one dimensional comoving position and 
 peculiar velocity of the baryonic gas, and $g$ is the acceleration at the cell center.
-We write this including the cosmological scale factors, but it reduces to the non-cosmological case with $a = 1$.
 These equations are now in a form that can be solved by the split PPM scheme.
 
 % ------------------------------------------------------------
@@ -86,7 +71,8 @@ distance each characteristic wave can travel ($u$, $u-c_s$ and
 $u+c_s$, where $c_s$ is the sound speed).
 Second, a Riemann problem is solved using these effective left and
 right states, and finally the fluxes are computed based on the
-solution to this Riemann problem.  This is described in detail in
+solution to this Riemann problem and the conserved quantities are
+updated.  This is described in detail in
 \citet{1984JCoPh..54..174C}, but we will briefly outline the procedure
 here both for completeness and to put the changes we will make in
 context.
@@ -107,7 +93,7 @@ The Eulerian difference equations are:
        \rho_j^{n+1} v_j^n  + \Delta t \left(
           \frac{ \avp{\rho} \avp{v}^2 - \avm{\rho} \avm{v}^2 + \avp{p} - \avm{p}} {\Delta x_j}
              \right)
-     + \frac{ \Delta }{2} g_j^{n+1/2} (\rho_j^n + \rho_j^{n+1}), 
+     + \frac{ \Delta t }{2} g_j^{n+1/2} (\rho_j^n + \rho_j^{n+1}), 
      \label{eq:momentum_diff}
 \end{equation}
 \begin{eqnarray}
@@ -135,7 +121,6 @@ We first construct monotonic piecewise
 parabolic (third order) interpolations in one dimension
 for each of $p$, $\rho$, and $v$.  The pressure is determined from
 equation~(\ref{eq:eq_of_state}), the equation of state.
-%We have dropped the subscript b in this and the following two sections because we will be referring solely to baryonic quantities.  
 The interpolation formula for some quantity $q$ is given by:
 %
 \begin{eqnarray}
@@ -144,8 +129,7 @@ q_j(x) & = &  q_{L,j} + \tilde{x}(\Delta q_j + q_{6,j}(1-\tilde{x})), \\
              x_{j-1/2} \leq x \leq x_{j+1/2}. \nonumber
 \end{eqnarray}
 %
-This is Equation~(1.4) of CW84 (in the spatial rather than mass coordinate as is appropriate for the direct Eulerian approach). 
-%The zones edges in the mass coordinates are $m_{j-1/2}$ and $m_{j+1/2}$ for the left and right edges, respectively.  
+This is equation~(1.4) of CW84 (in the spatial rather than mass coordinate as is appropriate for the direct Eulerian approach). 
 The quantities $q_{L,j}$, $\Delta q_j$,
 and $q_{6,j}$ can be viewed simply as interpolation constants; however,
 they also have more intuitive meanings.  For example, $q_{L,j}$ is the
@@ -164,16 +148,14 @@ reproduced here, but see Equations 1.7 to 1.10 of \citet{1984JCoPh..54..174C}.
 We also optionally allow steepening as described in that reference.
 
 Once we have the reconstruction, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$ or $u+c$ (where $c$ is the sound speed in a cell):
-\begin{eqnarray}
-      q^{C+}_{j+1/2} & = &
-          {1 \over \Delta t C^n_j} \int^{x_{j+1/2}}_{x_{j+1/2}-\Delta t C^n_j} q_j(x) dx, \\
-      q^{C-}_{j+1/2} & = & 
-         {1 \over -\Delta t C^n_{j+1}} \int^{x_{j+1/2}+\Delta t C^n_{j+1}}_{x_{j+1/2}} q_{j+1}(x) dx \nonumber
-\end{eqnarray}
-where $q^{C+}$ ($q^{C-}$) refers to the left (right) characteristic $C$.  The linearized gas dynamics equations are then used to compute second-order accurate left and right states that take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
+\begin{equation}
+      q^{C+}_{j+1/2} =
+          {1 \over \Delta t C^n_j} \int^{x_{j+1/2}}_{x_{j+1/2}-\Delta t C^n_j} q_j(x) dx
+\end{equation}
+where $q^{C+}$ refers to the left characteristic $C$ (and a similar integral is done for the right characteristic $q^{C-}$).  The linearized gas dynamics equations are then used to compute second-order accurate left and right states that take into account the multiple wave families.  This process is described in \citet{1984JCoPh..54..174C} and we use their equations (3.6) and (3.7).
 
 With these effective states, an approximation to the Riemann problem is found
-with an iterative approach \citep[see][and section~\ref{sec.riemann}]{Woodward86}, producing estimates for 
+(see below for more detail about the Riemann solvers used), producing estimates for 
 $\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm1/2}$, and $\overline{v}_{j\pm 1/2}$ that are third order
 accurate in space and second order accurate in time.  These are then
 used to solve the difference Equations (\ref{eq:mass_diff})--(\ref{eq:energy_diff}) for $\rho^{n+1}$, $v^{n+1}$, and $E^{n+1}$.
@@ -317,19 +299,18 @@ analogous scheme for choosing which variable to employ.
 \subsubsection{Riemann Solvers and Fallback}
 \label{sec.riemann}
 
-While most numerical hydrodynamics schemes center around finding approximate
-solutions to the hydrodynamics equations, the core philosophy of a Godunov
-method \citep{Godunov1959} is to find the exact solution to an
-approximation of the physical setup.  The approximate problem in this case is
-the Riemann problem, wherein two volumes are separated by a thin membrane that
-is instantaneously removed at time $t=0$.  The subsequent evolution has an exact 
-analytic solution.  This solution is
+In this section, we describe the methods we adopt to solving the Riemann
+problem, which is generally required to compute the fluxes in 
+any Godunov.  This section therefore applies to all three of our 
+Godunov-based schemes.  The Riemann problem we are solving
+involves two constant states separated by a single discontinuity at $t=0$.
+The subsequent evolution has an exact analytic solution.  This solution is
 described in detail in many texts on computational fluid dynamics
 \citep[e.g.,][]{toro-1997}.   In brief, there are three waves that propagate
 away from the initial discontinuity.  The central wave, characterized by a
 density jump but not a pressure jump, is called the contact discontinuity.  The
 waves traveling to the left and right of the contact discontinuity can be either
-shocks, if characteristics converge on the wave front, or  rarefaction fans if
+shocks, if characteristics converge on the wave front, or rarefaction fans if
 characteristics diverge.  
 
 While there exists an exact solution to this problem, finding it is expensive.  There are four
@@ -363,10 +344,10 @@ the Dedner and CT solvers in \enzo.  The HLLD
 solver includes two of the additional waves, the rotational discontinuities,
 making it a five-wave solver.
 
-On rare occasions, high order
-solutions can cause negative densities or energies.  Both PPM and MUSCL solvers employ a Riemann
+On rare occasions, high order solutions can cause negative densities or energies.  
+Both our PPM and MUSCL solvers employ a Riemann
 solver fallback mechanism \citep{Lemaster09}.  If a negative density is found at
-a particular interface, the more diffusive HLL Riemann solver is used to compute the fluxes associated with that cell.
+a particular interface, the more diffusive HLL Riemann solver is used to compute the fluxes associated with that cell, and the flux update is repeated.
 
 
 
