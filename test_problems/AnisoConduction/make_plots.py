@@ -17,8 +17,9 @@ for n in [0,11]:
     print dd["Temperature"].max()
 
     slice = SlicePlot(pf, 'z', "Temperature", width = (1.05, '1'), origin='domain', axes_unit=('1','1'))  #.save()
+    slice.set_window_size(5)
 
-    slice.annotate_streamlines('Bx', 'By', plot_args={'color':(1,1,1,0.5),'linewidth':1.5})
+    slice.annotate_streamlines('Bx', 'By', plot_args={'color':(1,1,1,0.5),'linewidth':0.7})
     
     slice.set_zlim('Temperature', 7e5, 2e7)
 

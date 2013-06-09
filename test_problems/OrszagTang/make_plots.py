@@ -9,7 +9,8 @@ names=[
     ]
 for i, pf in enumerate([pf1,pf2]):
   sl = SlicePlot( pf, 2, 'Density', origin='domain', width=(1.05, 'unitary'))
+  sl.set_window_size(5)
   sl.set_zlim('Density',0.1,1)
   # See matplotlib issue #1188
   sl.plots['Density'].cb.solids.set_edgecolor('face')
-  print sl.save(names[i])
+  print sl.save(names[i],mpl_kwargs={'bbox_inches':'tight'})
