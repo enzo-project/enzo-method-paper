@@ -7,7 +7,10 @@
 import numpy as na
 import matplotlib as mpl
 mpl.rcParams['font.family'] = 'STIXGeneral'
+mpl.rcParams['figure.figsize'] = 6,6
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import os
 from math import *
 from yt.mods import *
@@ -26,12 +29,12 @@ zvel = []
 for line in FileIn:
    if 'id=1' in line:
       lst = line.split()
-      xpos.append(lst[1])
-      ypos.append(lst[2])
-      zpos.append(lst[3])
-      xvel.append(lst[4])
-      yvel.append(lst[5])
-      zvel.append(lst[6])
+      xpos.append(float(lst[1]))
+      ypos.append(float(lst[2]))
+      zpos.append(float(lst[3]))
+      xvel.append(float(lst[4]))
+      yvel.append(float(lst[5]))
+      zvel.append(float(lst[6]))
       
 FileIn.close()
 
@@ -79,11 +82,32 @@ ct = na.array(counter)/416.
 en = na.array(energy)/energysum
 
 
-# plots orbit in x-y plane (should be a circle)
-plt.scatter(x[::8], y[::8], s=1, lw=0, marker='.')
-plt.axis("equal")
-plt.xlabel('x')
-plt.ylabel('y')
+# plots orbit in x-y plane (should be a circle with zoom-in inset)
+fig = plt.figure()
+ax = fig.add_subplot(111, aspect='equal')
+ax.scatter(x[::8], y[::8], s=1, lw=0, marker='.').figure
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_xlim([-0.05,1.05])
+ax.set_ylim([-0.05,1.05])
+ax.xaxis.set_major_locator(mpl.ticker.FixedLocator([0,0.2,0.4,0.6,0.8,1.0]))
+ax.yaxis.set_major_locator(mpl.ticker.FixedLocator([0,0.2,0.4,0.6,0.8,1.0]))
+
+xbd = [0.744, 0.754]
+ybd = [0.663, 0.673]
+
+wh = np.where((xbd[0] < x) & (xbd[1] > x) & (ybd[0] < y) & (ybd[1] > y))
+iax = zoomed_inset_axes(ax, 20, loc=1)
+iax.scatter(x[wh], y[wh], marker='o', s=1, lw=0)
+iax.xaxis.set_ticks([])
+iax.xaxis.set_label('x')
+iax.yaxis.set_ticks([])
+iax.yaxis.set_label('y')
+iax.set_xlim(xbd)
+iax.set_ylim(ybd)
+
+mark_inset(ax, iax, loc1=2, loc2=4, fc='none', ec='0.5')
+
 plt.savefig('TestOrbit_xy.eps')
 plt.close()
 
@@ -137,8 +161,10 @@ time = []
 
 it = 0
 
-ts = TimeSeriesData.from_filenames("*/*.hierarchy")
-for pf in ts:
+fns = glob.glob('DD????/data????')
+for fn in fns:
+    
+    pf = load(fn)
     
     # particle position
     xp = pf.h.grids[0]["particle_position_x"][1]
@@ -183,17 +209,21 @@ print "|std/mean|: ", abs(np.std(TotalEnergy)/np.mean(TotalEnergy))
 print "|max-min/mean|: ", abs( (np.max(TotalEnergy)-np.min(TotalEnergy))/np.mean(TotalEnergy))
 
 # make the actual plot (note: total energy is specific total energy, in arbitrary units)
-plt.plot(AllTime[::2], TotalEnergy[::2])
-plt.plot([0,200],[np.mean(TotalEnergy),np.mean(TotalEnergy)],'k--')
-plt.plot([0,200],[np.mean(TotalEnergy)+np.std(TotalEnergy),np.mean(TotalEnergy)+np.std(TotalEnergy)],'k:')
-plt.plot([0,200],[np.mean(TotalEnergy)-np.std(TotalEnergy),np.mean(TotalEnergy)-np.std(TotalEnergy)],'k:')
-plt.xlabel('Orbit Number')
-plt.ylabel('Total Energy')
-plt.xlim(1,200)
-plt.ylim(-1.78, -1.75)
-plt.figtext(0.17, 0.82, '$<\mathrm{TE}> = -1.76797$', size=15)
-plt.figtext(0.17, 0.77, '$\sigma_{\mathrm{TE}} = 0.004885$', size=15)
-plt.figtext(0.17, 0.72, '$\sigma_{\mathrm{TE}}/|<\mathrm{TE}>| = 0.002763$', size=15)
-plt.savefig('TestOrbit_TotalEnergy.eps')
+fig = plt.figure()
+ax = fig.add_subplot(111,aspect='auto')
+ax.plot(AllTime[::2], TotalEnergy[::2])
+ax.plot([0,200],[np.mean(TotalEnergy),np.mean(TotalEnergy)],'k--')
+ax.plot([0,200],[np.mean(TotalEnergy)+np.std(TotalEnergy),np.mean(TotalEnergy)+np.std(TotalEnergy)],'k:')
+ax.plot([0,200],[np.mean(TotalEnergy)-np.std(TotalEnergy),np.mean(TotalEnergy)-np.std(TotalEnergy)],'k:')
+ax.set_xlabel('Orbit Number')
+ax.set_ylabel('Total Energy')
+ax.set_xlim([1,200])
+ax.set_ylim([-1.78, -1.75])
+fig.text(0.17, 0.82, '$<\mathrm{TE}> = -1.76797$', size=15)
+fig.text(0.17, 0.77, '$\sigma_{\mathrm{TE}} = 0.004885$', size=15)
+fig.text(0.17, 0.72, '$\sigma_{\mathrm{TE}}/|<\mathrm{TE}>| = 0.002763$', size=15)
+fig.savefig('TestOrbit_TotalEnergy.eps')
 plt.close()
+
+
 
