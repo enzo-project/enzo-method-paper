@@ -3,9 +3,11 @@ ms.dvi
 ms.bbl
 msNotes.bib
 test_problems/Enzo_Build
+test_problems/SelfSimilarInfall/SphericalInfallReport
+test_problems/OneZoneFreefallTest/data.p
 
 syntax: glob
-
+*.png
 DD????/DD????*
 DD????/data????*
 test_problems/**.eps

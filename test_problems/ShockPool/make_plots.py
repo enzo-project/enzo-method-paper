@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 from yt.mods import *
 import pylab
 
@@ -100,4 +102,4 @@ for i in range(3):
 
 
 ### Save plot
-pylab.savefig(plot_filename)
+pylab.savefig(plot_filename, bbox_inches='tight')

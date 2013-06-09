@@ -2,6 +2,9 @@
 # Daniel R. Reynolds, reynolds@smu.edu
 
 # imports
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
+
 from pylab import *
 
 
@@ -252,14 +255,13 @@ figure()
 plot(Hradii1, HIprof1, 'b-',  Hradii1, HIIprof1, 'r-',
      Hradii2, HIprof2, 'b--', Hradii2, HIIprof2, 'r--',
      Hradii3, HIprof3, 'b-.', Hradii3, HIIprof3, 'r-.')
-grid()
-xlabel('$r/L_{box}$')
-ylabel('log(xHI), log(xHII)')
-title('HI, HII Fraction Profiles')
-legend( ('xHI z=6.24','xHII z=6.24','xHI z=2.29','xHII z=2.29','xHI z=1.02','xHII z=1.02'), 
-        loc=4 )
-axis([ 0.0, 1.0, -7.0, 1.0 ])
-savefig('profiles' + pictype)
+xlabel('$r/L_{\mathrm{box}}$')
+ylabel('$\log(x_{\mathrm{HI}}),\/\log(x_{\mathrm{HII}})$')
+ylim(-6.5, 0.5)
+xlim(0,1) 
+legend( ('$x_{\mathrm{HI}}\/z=6.24$','$x_{\mathrm{HII}}\/z=6.24$','$x_{\mathrm{HI}}\/z=2.29$',
+         '$x_{\mathrm{HII}}\/z=2.29$','$x_{\mathrm{HI}}\/z=1.02$','$x_{\mathrm{HII}}\/z=1.02$'),loc=4 )
+savefig('FLDprofiles' + pictype, bbox_inches='tight')
 
 
 
@@ -278,12 +280,11 @@ z_ratio2 = (1.0 + rdata[2][2:te+1])/(1.0+zi)
 figure()
 xdata = -log10(z_ratio)
 plot(xdata,r_ratio,'b-',xdata,ranal_ratio,'r--')
-xlabel('$-log[(1+z)/(1+z_i)]$')
+xlabel('$-\log[(1+z)/(1+z_i)]$')
 ylabel('$r_I/r_S$')
-title('Scaled I-front Position vs Redshift')
+xlim(-.05,.85)
+ylim(-.05,1.05)
 legend( ('computed', 'analytical'), loc=4 )
-grid()
-axis([ 0.0, 1.0, 0.0, 1.0 ])
-savefig('radius' + pictype)
+savefig('FLDhistory' + pictype, bbox_inches='tight')
 
 

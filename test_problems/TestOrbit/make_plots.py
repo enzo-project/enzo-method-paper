@@ -5,6 +5,8 @@
 #   (since we need some stuff from output.log)
 #
 import numpy as na
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 import matplotlib.pyplot as plt
 import os
 from math import *
@@ -78,7 +80,7 @@ en = na.array(energy)/energysum
 
 
 # plots orbit in x-y plane (should be a circle)
-plt.plot(x[::2], y[::2])
+plt.scatter(x[::8], y[::8], s=1, lw=0, marker='.')
 plt.axis("equal")
 plt.xlabel('x')
 plt.ylabel('y')
@@ -87,7 +89,7 @@ plt.close()
 
 # plots orbit in x-z plane (should be a straight line)
 # NOT in paper.
-plt.plot(x[::2], z[::2])
+plt.scatter(x[::8], z[::8], s=1, lw=0, marker='.')
 plt.xlim(0.1,0.9)
 plt.ylim(0.4999999,0.5000001)
 plt.xlabel('x')
@@ -189,9 +191,9 @@ plt.xlabel('Orbit Number')
 plt.ylabel('Total Energy')
 plt.xlim(1,200)
 plt.ylim(-1.78, -1.75)
-plt.figtext(0.17, 0.82, '$<TE> = -1.76797$', size=15)
-plt.figtext(0.17, 0.77, '$\sigma_{TE} = 0.004885$', size=15)
-plt.figtext(0.17, 0.72, '$\sigma_{TE}/|<TE>| = 0.002763$', size=15)
-plt.savefig('TotalEnergy.eps')
+plt.figtext(0.17, 0.82, '$<\mathrm{TE}> = -1.76797$', size=15)
+plt.figtext(0.17, 0.77, '$\sigma_{\mathrm{TE}} = 0.004885$', size=15)
+plt.figtext(0.17, 0.72, '$\sigma_{\mathrm{TE}}/|<\mathrm{TE}>| = 0.002763$', size=15)
+plt.savefig('TestOrbit_TotalEnergy.eps')
 plt.close()
 

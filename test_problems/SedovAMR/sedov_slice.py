@@ -8,7 +8,9 @@ slice1 = SlicePlot(pf1, 'z', "Density", center=[0.5, 0.5, 0.0], origin='domain')
 slice1.set_width((1.05,'unitary'))
 # See matplotlib issue #1188
 slice1.plots['Density'].cb.solids.set_edgecolor('face')
+slice1.set_font({'size':15})
 slice1.save("sedov-ppm-slice.eps", mpl_kwargs={'bbox_inches':'tight'})
+
 
 fn2 = "Zeus/DD0007/DD0007"
 pf2 = load(fn2)

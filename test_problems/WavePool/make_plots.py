@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 from yt.mods import *
 import pylab
 
@@ -49,6 +51,9 @@ def plot_one(filename, name, axes, xbegin1, xwidth):
 
     # plot
     ax = pylab.axes(axes)
+    x1 = pylab.array([0.25, 0.75])
+    y1 = pylab.array([1.0, 1.0])
+    ax.fill_between(x1, y1-0.01, y1+0.01, facecolor='grey', alpha=0.2, zorder=1)
     pylab.axhline(0,color='k',linestyle='dotted')
     pylab.scatter(ray['x']+0.5*ray['dx'],ray['Density'], c=level, s=40, linewidths=(0,))
     pylab.plot(xexact, exact)
@@ -56,9 +61,6 @@ def plot_one(filename, name, axes, xbegin1, xwidth):
     #plot dashed lines for refined region
 #    pylab.plot([0.25, 0.25], [0.9, 1.1], linestyle="--") 
 #    pylab.plot([0.75, 0.75], [0.9, 1.1], linestyle="--") 
-    x1 = pylab.array([0.25, 0.75])
-    y1 = pylab.array([1.0, 1.0])
-    ax.fill_between(x1, y1-0.01, y1+0.01, facecolor='grey', alpha=0.2)
 
     #set boundaries
     pylab.axis([xbegin1,xbegin1+xwidth,0.99,1.009999])
@@ -100,4 +102,4 @@ for i in range(3):
 
 
 ### Save plot
-pylab.savefig(plot_filename)
+pylab.savefig(plot_filename, bbox_inches='tight')

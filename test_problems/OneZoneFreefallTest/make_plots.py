@@ -1,6 +1,9 @@
 from collections import defaultdict
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 from matplotlib import pyplot
 import numpy as np
+import cPickle as pickle
 import sys
 
 from yt.mods import *
@@ -19,14 +22,22 @@ def get_tracks(filenames, fields=None):
     return data
 
 dirs = ['mf', 'Z-5', 'Z-4', 'Z-3', 'Z-2']
-labels = ['0', '10$^{-5}$',  '10$^{-4}$',  '10$^{-3}$',  '10$^{-2}$']
+labels = ['$Z=0$', '10$^{-5}\/Z_\odot$',  '10$^{-4}\/Z_\odot$',
+          '10$^{-3}\/Z_\odot$',  '10$^{-2}\/Z_\odot$']
 colors = ['black', 'blue', 'green', 'orange', 'red']
 
-my_data = {}
-for my_dir in dirs:
-    my_data[my_dir] = get_tracks("%s/DD*/*.hierarchy" % my_dir)
+if os.path.exists('data.p'):
+    with open('data.p', 'rb') as fp:
+        my_data = pickle.load(fp)
+else:
+    my_data = {}
+    for my_dir in dirs:
+        my_data[my_dir] = get_tracks("%s/DD*/*.hierarchy" % my_dir)
 
-fontsize = 14
+    with open('data.p', 'wb') as fp:
+        pickle.dump(my_data, fp)
+    
+fontsize = 12
 
 n_rows = 1
 n_columns = 1
@@ -67,4 +78,4 @@ tick_labels = my_axes.xaxis.get_ticklabels() + \
 for tick_label in tick_labels:
     tick_label.set_size(fontsize)
 my_axes.legend(loc='lower right', prop=dict(size=fontsize))
-pyplot.savefig('n-T.eps')
+pyplot.savefig('OneZoneCollapseTest.eps')

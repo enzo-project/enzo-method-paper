@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 from yt.mods import *
 import pylab
 

@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 from yt.mods import *
 import pylab
 
@@ -29,7 +31,6 @@ exact = pylab.csv2rec( exact_solution_filename, delimiter=' ', names=('lambda', 
 
 # open output
 pf = load(filename)
-
 
 # Compute radial profile
 r_min = pf.h.get_smallest_dx()*pf.units["cm"]
