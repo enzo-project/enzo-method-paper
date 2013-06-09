@@ -4,7 +4,7 @@
 # imports
 import matplotlib as mpl
 mpl.rcParams['font.family'] = 'STIXGeneral'
-
+mpl.rcParams['figure.figsize'] = 4, 3
 from pylab import *
 
 
@@ -252,18 +252,24 @@ for tstep in range(te+1):
 
 # combined HI,HII profile plot
 figure()
-plot(Hradii1, HIprof1, 'b-',  Hradii1, HIIprof1, 'r-',
-     Hradii2, HIprof2, 'b--', Hradii2, HIIprof2, 'r--',
-     Hradii3, HIprof3, 'b-.', Hradii3, HIIprof3, 'r-.')
+plot(Hradii1, HIprof1, 'b-',
+     Hradii2, HIprof2, 'b--',
+     Hradii3, HIprof3, 'b-.',
+     Hradii1, HIIprof1, 'r-',
+     Hradii2, HIIprof2, 'r--',
+     Hradii3, HIIprof3, 'r-.')
 xlabel('$r/L_{\mathrm{box}}$')
 ylabel('$\log(x_{\mathrm{HI}}),\/\log(x_{\mathrm{HII}})$')
 ylim(-6.5, 0.5)
-xlim(0,1) 
-legend( ('$x_{\mathrm{HI}}\/z=6.24$','$x_{\mathrm{HII}}\/z=6.24$','$x_{\mathrm{HI}}\/z=2.29$',
-         '$x_{\mathrm{HII}}\/z=2.29$','$x_{\mathrm{HI}}\/z=1.02$','$x_{\mathrm{HII}}\/z=1.02$'),loc=4 )
+xlim(0,1.2) 
+legend( ('$x_{\mathrm{HI}}\/\/z=6.24$',
+         '$x_{\mathrm{HI}}\/\/z=2.29$',
+         '$x_{\mathrm{HI}}\/\/z=1.02$',
+         '$x_{\mathrm{HII}}\/z=6.24$',
+         '$x_{\mathrm{HII}}\/z=2.29$',
+         '$x_{\mathrm{HII}}\/z=1.02$'),
+         loc=4, fontsize=10)
 savefig('FLDprofiles' + pictype, bbox_inches='tight')
-
-
 
 # I-front radius plot vs analytical solution
 #   scaled i-front position
@@ -284,7 +290,7 @@ xlabel('$-\log[(1+z)/(1+z_i)]$')
 ylabel('$r_I/r_S$')
 xlim(-.05,.85)
 ylim(-.05,1.05)
-legend( ('computed', 'analytical'), loc=4 )
+legend( ('computed', 'analytical'), loc=4 , fontsize=14)
 savefig('FLDhistory' + pictype, bbox_inches='tight')
 
 
