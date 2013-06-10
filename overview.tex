@@ -275,8 +275,8 @@ options also H$^-$, H$_2$, H$_2^+$, and HD, D, and D$^+$. Lastly,
 which can contribute to the radiative cooling and star formation
 processes.
 
-The code can include either a homogeneous radiation background (with
-possible local self-shielding corrections), or evolve an inhomogeneous
+The code can include either a homogeneous radiation background, 
+or evolve an inhomogeneous
 radiation field either by directly solving the radiative transfer
 equation along rays or by solving a set of moment equations derived
 from the radiative transfer equation. In comoving coordinates
@@ -482,7 +482,7 @@ second-order finite-difference hydrodynamics method described in
 
 We begin with the direct-Eulerian PPM implementation.  This is an
 explicit, higher-order-accurate version of Godunov's method for ideal
-gas dynamics with third order accurate piecewise parabolic monotonic
+gas dynamics with the spatially third order accurate piecewise parabolic monotonic
 interpolation and a nonlinear Riemann solver for shock capturing.  It
 advances the hydrodynamic equations in the following steps:
 %\begin{enumerate}

@@ -3,7 +3,7 @@
 
 %\subsubsection{SAMR Overview}
 
-Unlike moving mesh methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or  methods that subdivide individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid patches at varying levels of resolution.  The SAMR method described here is similar to \citet{Berger89}.  A more complete discussion of the history and development of this type of algorithm is available in \citet{Neeman96}.
+%Unlike moving mesh methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or  methods that subdivide individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid patches at varying levels of resolution.  The SAMR method described here is similar to \citet{Berger89}.  A more complete discussion of the history and development of this type of algorithm is available in \citet{Neeman96}.
 
 The back-bone of the SAMR idea is the patch, or grid, which we take to be rectilinear to simplify bookkeeping (in practice, the lower-level routines such as the hydro solvers all assume Cartesian coordinates).  The single root grid covers the entire computational domain and plays the role of the root node in the grid hierarchy.  Subgrids are placed such that they cover (hopefully small) sub-volumes of the root grid at higher resolution.  This structure forms a tree that may be extended to arbitrary depths by adding additional grids to refine regions in the subgrids.  We use the following notation to describe grid relationships.  A grid's \textit{parent} is the coarse grid that completely contains it.  The \textit{root grid} is the most coarsely-resolved grid, and has no parent.  A \textit{child grid} is grid completely contained by its parent grid (note that a grid may have many children but only one parent), while sibling grids are those that have the same resolution, but not necessarily the same parent.  We also refer to levels of the hierarchy, where the root grid is labeled level zero and all grids with the same resolution are on the
 same level.
@@ -43,33 +43,27 @@ The basic control algorithm looks very much like any used in a grid-based code o
 \begin{verbatim}
 InitializeHierarchy
 While (Time < StopTime)
-begin
-  dt = ComputeTimeStep(0)
-  EvolveLevel(0, dt)
-  Time = Time + dt
+   dt = ComputeTimeStep(0)
+   EvolveLevel(0, dt)
+   Time = Time + dt
   CheckForOutput(Time)
-end
 \end{verbatim}
 The AMR control algorithm is contained within the recursive
 EvolveLevel algorithm, which takes the level on which to operate as an
 argument.  This looks something like the following pseudo-code:
 \begin{verbatim}
 EvolveLevel(level)
-begin
-  SetBoundaryValues
-  while (Time < ParentTime)
-  begin
-    dt = ComputeTimeStep(level)
-    SolveHydroEquations(dt)
-    SolveOtherEquations(dt)
-    Time = Time + dt
-    SetBoundaryValues
-    EvolveLevel(level+1, dt)
-    FluxCorrection
-    Projection
-    RebuildHierarchy(level+1)
-  end
-end
+   SetBoundaryValues
+   while (Time < ParentTime)
+      dt = ComputeTimeStep(level)
+      SolveHydroEquations(dt)
+      SolveOtherEquations(dt)
+      Time = Time + dt
+      SetBoundaryValues
+      EvolveLevel(level+1, dt)
+      FluxCorrection
+      Projection
+      RebuildHierarchy(level+1)
 \end{verbatim}
 
 Each function operates on all the grids on the given level.  In the following sections, we will address each of the major elements in turn.
@@ -142,13 +136,15 @@ accurate estimate of the flux of conserved quantities at cell
 interfaces.  This is required in the flux-correction step (see
 \ref{sec:flux_correction}).  There is also the issue of centering,
 which refers to the position of physical quantities within a cell (the
-primary types are cell-centered, face-centered, and node-centered). In this description we 
-will employ the direct Eulerian version of the piecewise
-parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B}, which
-assumes cell-centering for all quantities (actually they are
-cell-averages).  However, it is also possible to use other schemes,
-which employ different centering for different variables
-\citep[e.g.,][]{Stone92a}.  The interpolation step, described in
+primary types are cell-centered, face-centered, and node-centered). 
+%In this description we will employ the direct Eulerian version of the piecewise
+%parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B}, which
+%assumes cell-centering for all quantities (actually they are
+%cell-averages).  
+%However, it is also possible to use other schemes,
+%which employ different centering for different variables
+%\citep[e.g.,][]{Stone92a}.  
+The interpolation step, described in
 Section~\ref{sec:interpolation}, must correctly interpolate with the
 selected centering.
 
@@ -181,7 +177,7 @@ where $F$ is the flux of quantity $q_i$ in the $i$-direction through the cell in
 
 Since the addition of more highly refined grids is adaptive, the conditions for refinement must be specified. Many different criteria can be simultaneously specified for a given simulation, and these refinement criteria are discussed in more detail in the following section (Section~\ref{sec:refinement_criteria}).   Once all cells in a given grid that require additional refinement have been flagged, rectangular boundaries are determined that minimally encompass the flagged cells.  This is done using an iterative machine-vision technique, as described in \cite{Berger91}.
 
-We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently large (typically over 30\%), or if the grid is small enough (typically less than $4^d$ coarse cells) then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicated by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest axis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
+We first find the smallest region (or ``proto-subgrid") that covers all of the refined cells on a grid.  We compute an efficiency $\epsilon$ for this grid, defined as the ratio of flagged cells to total cells.  If this efficiency is sufficiently large (typically over 30\%), or if the grid is small enough, then we adopt the region as a new grid and move on to the next region (if any).  If the region is not acceptable, then we split it into two using the following algorithm.  First, we determine the longest dimension and compute the signature along that dimension.  The signature is found by summing the number of refined cells with the same index along the longest dimension.  Edges are typically indicated by inflection points in this signature, so we calculate the second derivative using a simple three-point finite difference estimator and look for the maximum in the second derivative, with ties going to the index closest to the center.  If no inflection points are found along the longest axis, the next-longest axis is searched.  If no inflection points are found, the longest axis is cut in half.  The original region is then split into two new regions, or proto-subgrids.  This process is then re-applied to each of the new regions.
 
 This algorithm is not necessarily optimal, but experience shows it does a reasonable job of generating an efficient covering of the refined cells.  Note that some cells are unnecessarily refined with the SAMR approach, resulting in wasted resources (unlike in cell-splitting AMR schemes).  However, it has a number of advantages.  First, traditional grid-based hydro methods can be simply added with only minor modifications.  Second, it is easier to accommodate larger stencils (as in PPM, which requires three boundary zones), and third, it can be more efficient for some machines since there are more predictable and linear memory accesses, which more efficiently use a CPU's cache.
 
