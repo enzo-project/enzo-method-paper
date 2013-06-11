@@ -1,4 +1,6 @@
 import numpy as na
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
 import matplotlib.pyplot as plt
 
 Data = na.loadtxt("TestGravityCheckResults.out")
