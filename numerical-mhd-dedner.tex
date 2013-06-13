@@ -55,3 +55,5 @@ for all dimensions first and the conserved quantities are updated in
 one step, in contrast to the Strang splitting employed in the other solvers.
 Also unlike the other schemes, time-integration is done with a second-order
 Runge-Kutta scheme \citep{1988JCoPh..77..439S}.
+
+Finally, we note that for cosmological simulations, this solver uses a slightly different definition of the magnetic field than used in the rest of the paper.  In particular, the field is defined as $\vecB = a^{3/2} \vecB^{\prime}$ (where $\vecB^{\prime}$ is the proper field strength).  This adds a source term of $-\dot{a}/(2a) \vecB$ on the right-hand side of equation~\ref{eq:induction}, removes the factor of $a$ in the $\vecB$ term in the energy equation (eq.~\ref{eq:total_energy_def}) and in the definition of the isotropic pressure $p^*$.

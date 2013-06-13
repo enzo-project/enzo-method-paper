@@ -51,7 +51,7 @@ expansion, are given by
   + \frac{1}{a} \div \left[ (E + p^*) \vecv - 
     \frac{1}{a} \vecB (\vecB \cdot \vecv) \right] & = &
   - \frac{\dot{a}}{a} \left( 2E - \frac{B^2}{2a} \right) - 
-  \frac{1}{a} \vecv \cdot \grad \phi 
+  \frac{\rho}{a} \vecv \cdot \grad \phi 
   - \Lambda + \Gamma + \frac{1}{a^2} \div \fcond,
 % 
 %         + \frac{1}{a} \vecv \cdot \grad E
@@ -64,7 +64,9 @@ expansion, are given by
 %
   \frac{\partial \vecB}{\partial t} - 
   \frac{1}{a}  \grad \times (\vecv \times \vecB) & = & 
-  -\frac{\dot{a}}{2 a} \vecB. \label{eq:induction}
+  %-\frac{\dot{a}}{2 a} \vecB. 
+  0
+  \label{eq:induction}
 \end{eqnarray}
 
 %\begin{eqnarray} 
@@ -157,11 +159,12 @@ E     & = & a^3 \left(\Ep -
 \end{eqnarray}
 where primes indicate quantities in proper coordinates (fixed frame).
 We note that the definition of comoving $\vecB$ used here is such
-that a uniform field is constant in a homogeneous, uniform universe
-and is also the quantity used in the MHD-Dedner solver described
+that a uniform field is constant in a homogeneous expanding universe
+and is also the quantity used in the MHD-CT solver described
 below; however, it is not universal,
 and in particular is slightly different from that used both in \citet{Li08a}
-and that used in the MHD-CT solver.
+and used in the MHD-Dedner solver (see section~\ref{sec.num.hydro-muscl}
+for more details).
 %These definitions result in the following comoving equivalents to eqs. 
 %(\ref{eq:mass})-(\ref{eq:potential}).
 %%

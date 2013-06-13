@@ -64,20 +64,22 @@ grids (rather than the magnetic field), and is then used to re-update
 the parent magnetic field.  This is described in detail in
 \citet{Balsara99} and \citet{Collins10}.
 
-Cosmological MHD can be treated in a number of ways.  As described in 
-the previous section, and equation~\ref{eq:induction} the MUSCL with Dedner
-method treats the cosmological dilution of
-$\vecB$ with a source term,  However, one can eliminate the right hand side of equation 
-\ref{eq:induction} by defining
-$\vecB^\prime = \vecB / \sqrt{a}.$
-Then equation~\ref{eq:induction} becomes
-$$ 
-\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \curl (\vecv \times
-\vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
-$$
-and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
-electric field creation, interpolation, projection, and flux correction) without
-modification.  
+%Cosmological MHD can be treated in a number of ways.  As described in 
+%the previous section, and equation~\ref{eq:induction} the MUSCL with Dedner
+%method treats the cosmological dilution of
+%$\vecB$ with a source term,  However, one can eliminate the right hand side of equation 
+%\ref{eq:induction} by defining
+%$\vecB^\prime = \vecB / \sqrt{a}.$
+%Then equation~\ref{eq:induction} becomes
+%$$ 
+%\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \curl (\vecv \times
+%\vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
+%$$
+%and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
+%electric field creation, interpolation, projection, and flux correction) without
+%modification.  
+%GB: I removed the above because the rest of the paper now uses the definition
+% of B in MHD-CT.
 
 The dual energy formalism has also been incorporated in two possible ways, one internal
 energy, as described in Section \ref{sec.hydro.ppm}, and one that
