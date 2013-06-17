@@ -13,7 +13,7 @@ S2ParticleSize         = 3.4
 GravityResolution      = 1.0
 #
 TestGravityNumberOfParticles = 5000
-TestGravityUseBaryons        = 1
+TestGravityUseBaryons        = 0
 TestGravitySubgridLeft       = 0.4375   // start of subgrid
 TestGravitySubgridRight      = 0.5625   // end of subgrid
 #
