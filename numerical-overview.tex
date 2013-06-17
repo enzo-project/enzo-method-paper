@@ -138,7 +138,7 @@ equations, the
  thermal energy $E_{therm}$ is calculated as $E - E_{kin}$, 
 where E is the total specific energy as
 calculated in equation~\ref{enzoenergy} and $E_{kin}$ is the specific kinetic energy,
-$0.5 \vec{v}_b^2$.  
+$0.5 \myvec{v}_b^2$.  
 In hypersonic flows $E$ and $E_{kin}$ are nearly the same, and any 
 number calculated as 
 the difference of these is going to be strongly affected by numerical error.  To 
@@ -146,8 +146,8 @@ avoid this problem, \enzo\ also solves the internal energy equation in
 comoving coordinates:
 
 \begin{equation}
-\frac{\partial e}{\partial t} + \frac{1}{a} \vec{v}_b \cdot \grad e = 
-- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \div \vec{v}_b
+\frac{\partial e}{\partial t} + \frac{1}{a} \myvec{v}_b \cdot \grad e = 
+- \frac{3(\gamma-1)\dot{a}}{a}e - \frac{p}{a \rho} \div \myvec{v}_b
 \label{enzointenergy}
 \end{equation}
 
@@ -540,7 +540,7 @@ Additionally, the gas in the cells must be contracting,
 cooling rapidly, and gravitationally unstable, e.g.:
 
 \begin{equation}
-\div \vec{v}_b < 0,
+\div \myvec{v}_b < 0,
 \label{cencont}
 \end{equation}
 
@@ -553,7 +553,7 @@ m_{b} > m_{J} \equiv G^{-3/2} \rho_{b}^{-1/2}C^{3}
 \left[ 1 + \frac{\delta\rho_{d}}{\delta\rho_{b}} \right]^{-3/2}
 \end{equation}
 
-where $\vec{v}$ is the velocity of the gas in the cell, $\rho_{b}$ and 
+where $\myvec{v}$ is the velocity of the gas in the cell, $\rho_{b}$ and 
 $\rho_{d}$ are the cell's baryon and dark matter density, respectively,
 $\rho_{total} = \rho_{b} + \rho_{d}$, $m_{b}$ and $m_{j}$ are the 
 baryonic mass in the cell and jeans mass of the cell, and C is the 
@@ -826,7 +826,7 @@ satisfied on each level.  The timestep criteria used by \enzo\ are
 \end{equation}
 
 \begin{equation}
-\Delta t_{accel} = min \left( \sqrt{\frac{\Delta x}{\vec{g}}} \right)_L 
+\Delta t_{accel} = min \left( \sqrt{\frac{\Delta x}{\myvec{g}}} \right)_L 
 \label{eqn:dtaccel}
 \end{equation}
 
@@ -855,7 +855,7 @@ homogeneous.
 
 Equation~\ref{eqn:dtaccel} is supplementary to equation~\ref{eqn:dthydro} in that it
 takes into account the possibility of large accelerations causing numerical 
-instabilities by violating the Courant condition.  In this equation, $\vec{g}$ is the
+instabilities by violating the Courant condition.  In this equation, $\myvec{g}$ is the
 gravitational acceleration in each cell on level L.  \blue{ \emph{It should be
   noted that the timestep is computed before the acceleration field is computed,
   and the acceleration field is deleted at the end of each timestep.

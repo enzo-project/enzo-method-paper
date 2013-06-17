@@ -23,12 +23,12 @@ satisfied.  The timestep criteria are given by the following expressions
 \end{equation}
 
 \begin{equation}
-\Delta t_{\rm accel} = \min \left( \sqrt{\frac{\Delta x}{\vec{g}}} \right)_L ,
+\Delta t_{\rm accel} = \min \left( \sqrt{\frac{\Delta x}{\myvec{g}}} \right)_L ,
 \label{eqn:dtaccel}
 \end{equation}
 
 \begin{equation}
-\Delta t_{\rm rad} = \min \left(  \sqrt{\frac{\Delta x}{\vec{a}_{rad}}} \right)_L,
+\Delta t_{\rm rad} = \min \left(  \sqrt{\frac{\Delta x}{\myvec{a}_{rad}}} \right)_L,
 \label{eqn:dtrad}
 \end{equation}
 
@@ -112,13 +112,13 @@ hydro}$, with a similar range of values.
 Equations~(\ref{eqn:dtaccel}) and~(\ref{eqn:dtrad}) are supplementary to equation~(\ref{eqn:dthydro}) in that they
 take into account the possibility of large accelerations due to either
 gravity (equation~\ref{eqn:dtaccel}) or radiation pressure
-(equation~\ref{eqn:dtrad}).  In equation~(\ref{eqn:dtaccel}), $\vec{g}$ is the
+(equation~\ref{eqn:dtrad}).  In equation~(\ref{eqn:dtaccel}), $\myvec{g}$ is the
 gravitational acceleration in each cell on level l.  In
-equation~(\ref{eqn:dtrad}), $\vec{a}_{\rm rad}$ is the estimated
+equation~(\ref{eqn:dtrad}), $\myvec{a}_{\rm rad}$ is the estimated
 acceleration due to radiation pressure in each cell on level l,
 defined as
 \begin{equation}
-\vec{a}_{rad} = \frac{ \sum_i \frac{\dot{E_i}}{c} \hat{r_i} }{m_b} 
+\myvec{a}_{rad} = \frac{ \sum_i \frac{\dot{E_i}}{c} \hat{r_i} }{m_b} 
 \end{equation}
 where the sum calculates the energy deposited in a cell during the
 previous timestep due to \textit{all photon packets} that crossed that

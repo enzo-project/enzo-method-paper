@@ -254,7 +254,7 @@ further, up to the maximum level of refinement.
 \begin{equation}
 L_R = |B| / |\curl B|
 \end{equation}
-is always refined by at least N cells locally (i.e.~we refine a given cell further if $L_R \leq N \Delta x$).
+is always refined by at least N cells locally (i.e.~we refine a given cell further if $L_R \leq N \Delta x$).  Note that \enzo\ does not actually solve the resistive MHD equations -- this is the ``characteristic'' local resistive length, rather than one calculated within the MHD solver.
 
 \item{\em Must refine region.}  This refinement criterion is used to ensure that all cells in a given subvolume of the simulation are refined to {\it at least} some minimum level of refinement.  The subvolume is user-specified, and may evolve over time (e.g., to follow a structure of interest that is traveling through the simulation volume).
 

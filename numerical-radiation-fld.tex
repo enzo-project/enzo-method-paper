@@ -25,14 +25,14 @@ transfer, with couplings to both the gas energy and chemical number
 densities.
 %\begin{eqnarray}
 %  \label{eq:fld_radiation}
-%  \partial_t E_r + \frac1a \div \left(E_r \vec{v}_b\right) &=& 
+%  \partial_t E_r + \frac1a \div \left(E_r \myvec{v}_b\right) &=& 
 %    \div\left(D\grad E_r\right) -
 %    \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
 %  \label{eq:fld_heating}
 %  \partial_t e_c &=& -\frac{2\dot{a}}{a} e_c + G - \Lambda, \\
 %  \label{eq:fld_chemistry}
 %  \partial_t {\mathrm n}_i + 
-%    \frac1a \div\left({\mathrm n}_i \vec{v}_b\right) &=& 
+%    \frac1a \div\left({\mathrm n}_i \myvec{v}_b\right) &=& 
 %    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
 %    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 %\end{eqnarray}
@@ -42,13 +42,13 @@ densities.
 %HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
 %number density.  Here, we define the grey radiation energy density
 %through first assuming a fixed frequency spectrum, i.e.
-%$E_{\nu}(\nu,\vec{x},t) = \tilde{E}_r(\vec{x},t) \chi(\nu)$, and then
+%$E_{\nu}(\nu,\myvec{x},t) = \tilde{E}_r(\myvec{x},t) \chi(\nu)$, and then
 %defining the integrated quantity
 %\begin{equation}
 %\label{eq:grey_radiation_energy}
-%   E_r(\vec{x},t) \equiv \int_{\nu_0}^{\infty}
-%   E_{\nu}(\nu,\vec{x},t)\,\mathrm d\nu \  = \ 
-%   \tilde{E}_r(\vec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
+%   E_r(\myvec{x},t) \equiv \int_{\nu_0}^{\infty}
+%   E_{\nu}(\nu,\myvec{x},t)\,\mathrm d\nu \  = \ 
+%   \tilde{E}_r(\myvec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
 %\end{equation}
 %In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
 %square-root flux-limiter} (see \cite{Morel2000}), $\kappa$ is the total
