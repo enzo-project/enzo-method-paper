@@ -179,13 +179,12 @@ values:
 \begin{equation}
 \tilde{Q_0} = \sum_{i=0}^{r-1} q_i
 \end{equation}
-
 is not, in general, equal to $Q_0$.  We can retain conservation by
 adding the factor $(Q_0 - \tilde{Q_0})/r$ to the interpolated values
 (or by multiplying the interpolated values by the ratio
 $Q_0/\tilde{Q_0}$).  Unfortunately, the result of this procedure does
 not preserve monotonicity -- it can introduce local minima and maxima
-at at parent cell boundaries.  We can then attempt to correct that by
+at parent cell boundaries.  We can then attempt to correct that by
 taking a weighted average between the interpolated values on the
 subgrid and the parent value with weights computed such that the
 interpolated values at the edge of the parent cell are not local
