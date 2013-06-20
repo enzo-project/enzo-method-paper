@@ -495,3 +495,103 @@ t_{\rm SU} \propto M_{\rm res}^{-1} l_{\rm max}.
 \end{equation}
 This is approximately accurate, and gives users some way to estimate
 compute times for \enzo\ calculations.  
+
+\subsection{GPU parallelization and scaling}
+
+Many of today's leading supercomputers use a heterogeneous structure:
+on a single node of a distributed-memory platform, a multi-core CPU is
+often paired with one or more many-core accelerators.  One programming
+model that has been shown to successfully take advantage of these
+hardware accelerators is to run the serial component of the algorithm
+on the CPU, and the vector-parallel part of the algorithm on the
+many-core hardware accelerator. Due to the much higher computational
+performance of the many-core accelerators, if a code can be ported to
+effectively utilize this heterogeneous architecture, massive speedup
+in simulation performance may be achieved.  This heterogeneous trend
+is likely to continue in future supercomputers, due to the relatively
+low energy needs of hardware accelerators as well as other
+factors. Thus, to ensure \enzo's efficiency on future high-end
+computational platforms, some of the most time-consuming parts of
+\enzo\ have been ported to many-core architecture.  Since GPUs are
+currently the most popular many-core accelerator, NVIDIA's CUDA C/C++
+programming technology was chosen to port some \enzo\ modules to
+NVIDIA GPUs.
+
+Thus far, the PPM and Dedner MHD solvers (described in
+Sections~\ref{sec.hydro.ppm} and~\ref{sec.num.hydro-muscl},
+respectively), have been ported to take advantage of GPUs using CUDA.
+Since the CPU and GPU on a node have access to separate pools of RAM,
+fields updated by other modules will be transferred to the GPU before
+calling the GPU fluid solver.  Correspondingly, after calling the GPU
+solver, the updated fields will be transferred back to CPU. This
+ensures that the GPU-parallelized solvers can work correctly with
+other parts of the code that have not yet been ported to the GPU, as
+well as with the communication infrastructure within \enzo.  In
+addition, the GPU solver supports SAMR, which is not a trivial task.
+As discussed in Section~\ref{sec.amr}, one of the key steps in \enzo's
+AMR implementation is flux correction, which is required when each
+level of resolution is allowed to take its own time step.  In the GPU
+version of the solvers, the fluxes are calculated on the GPU and only
+the fluxes required for flux correction are transferred back to the
+CPU.  This reduces data transfer overhead, which can be substantial in
+a heterogeneous architecture of this sort.
+
+The key step in porting to many-core architectures such as the GPU is
+exposing the massive parallelism inherent in the algorithm. Due to the
+explicit, directionally-split stencil pattern of both the PPM and
+Dedner MHD solvers, they are inherently massively parallel and thus
+should be good fit for hardware acceleration. Both solvers essentially
+contain basically two parts -- computation of fluxes, and cell update.
+When computing fluxes, the basic procedure is to compute the flux at
+each cell-interface given the inputs from neighboring cells. In the
+cell update part, the fundamental computation is updating the
+cell-centered values using the previously-computed fluxes. In the CPU
+serial code, a loop over the grid is used, where the loop body
+contains these basic computations. In both parts,
+algorithmically-different loop iterations are completely independent
+of each other. Thus, the parallelization scheme is naturally mapping
+one GPU thread to one iteration of the loop. However, the original CPU
+code, which operates on each grid as a serial process, does not
+completely expose this parallelism as some small temporary arrays are
+reused among loop iterations.  This re-use of arrays introduces data
+dependency among loop iterations, which is undesirable for GPU
+parallelization.  Because of this re-use of arrays, the main change in
+porting the serial CPU solvers to allow massively parallel GPU
+computation was replacing those shared temporary arrays by larger
+temporary arrays that are not shared among loop iterations. This
+change exposed the massive parallelism in the algorithm, which can
+then be accelerated in a straightforward manner using CUDA.
+
+To illustrate the speedup provided by porting two solvers to GPUs, we
+show the results of a weak scaling test of driven turbulence in
+Figure~\ref{fig:gpu_scaling}.  This \enzo\ problem type uses the
+Dedner MHD solver, which runs on both CPUs and GPUs, and has been
+tuned to maximize performance on both platforms.  The benchmarking platform is a Cray
+XK6 system where each node has a 16-core AMD Opteron 6272 CPU and a single
+NVIDIA Tesla K20 GPU, which has 2,496 CUDA cores and a maximum
+theoretical speed of 1.17 Tflops when used in double precision.
+For the CPU run, all the 16 cores in each node
+are used by launching 16 MPI processes per node. For the GPU run, 16 MPI
+processes are also launched per node, and all processes on this node share the single GPU
+on that node. This can work because NVIDIA's MPS (Multi-Process
+Service) technology allows multiple processes to concurrently use the
+same GPU.  A series of weak scaling tests were run, varying from 1
+to 8 nodes (16 to 128 MPI processes), with the number of cells per
+node fixed to $256^3$.  Figure~\ref{fig:gpu_scaling} displays the
+scaling results in terms of cell updates per second per node -- as a
+result, ideal weak scaling is a horizontal line.  In general, the
+simulations using the GPU-accelerated MHD solver perform roughly 5
+times better overall on this system than the CPU-only calculations.
+
+\begin{figure}
+\centerline{\includegraphics[width=0.5\textwidth]{figures/gpu_scaling.eps}}
+\caption{Weak scaling performance of MHD turbulence using the Dedner
+MHD algorithm, which has both CPU and GPU solvers.  Each node of the
+machine (a Cray XK6) contains one 16-core AMD Opteron 6272 CPU and 1
+NVIDIA Tesla K20 GPU.  In this test, there are $256^3$ cells/node.
+The y-axis shows cell updates per second per node, which for ideal
+weak scaling is a horizontal line.  Blue line: CPU solver.  Red line:
+GPU solver.}
+\label{fig:gpu_scaling}
+\end{figure}
+
