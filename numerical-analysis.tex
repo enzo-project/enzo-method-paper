@@ -48,7 +48,8 @@ projections (i.e., line integrals, both on- and off-axis), slices, 1-, 2-, and
 3-D fluid phase distributions, calculation of derived quantities and arbitrary
 data selection.  As of version 2.5 of \texttt{yt},  the Rockstar phase-space
 halo finder \citep{2013ApJ...762..109B} can be executed through \texttt{yt} on
-in-memory \enzo\ data.  Operations that currently cannot be conducted on
+in-memory \enzo\ data, and so can the Parallel HOP halo finder
+\citep{1998ApJ...498..137E, 2010ApJS..191...43S}.  Operations that currently cannot be conducted on
 in-memory datasets are those that require spatial decomposition of
 data.  For 
 instance, calculating marching cubes on a data object with \texttt{yt} is a
@@ -100,7 +101,7 @@ both at the beginning of each timestep and at the half-timestep
 by linearly interpolating the cell-centered baryon velocity to the
 position of the particle ($v^{\rm interp}$), and assigning it to that value.
 
-\enzo saves tracer particle data at user-specified intervals,
+\enzo\ saves tracer particle data at user-specified intervals,
 independent of the intervals at which regular data sets are written.  The data written out
 typically includes the tracer particle's unique ID, position, velocity, density,
 and temperature, but is easily extensible to output any grid-based
