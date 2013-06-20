@@ -91,7 +91,8 @@ expansion, are given by
 %
 In these equations, $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving
 total fluid energy density, comoving gas density, peculiar
-velocity, and comoving magnetic field strength, respectively.
+velocity, and comoving magnetic field strength, respectively. The
+matrix 
 $\myvec{I}$ is the identity matrix, and $a$ is the cosmological
 expansion parameter (discussed in more detail below).  The first
 equation represents conservation of mass, the second conservation of
@@ -108,12 +109,12 @@ The comoving total fluid energy density $E$ is given by
 E =  e + \frac{\rho v^2}{2}  + \frac{B^2}{2a}
         \label{eq:total_energy_def},
 \end{equation}
-where $e$ is the comoving thermal energy density, the total comoving
+where $e$ is the comoving thermal energy density. The total comoving
 isotropic pressure $p^*$ is given by
 \begin{equation}
 p^* = p + \frac{B^2}{2a},
 \end{equation}
-and $p$ is the thermal pressure.  We use units such that the magnetic
+and the quantity $p$ is the thermal pressure.  We use units such that the magnetic
 permeability is unity ($\mu_0=1$).  The equations are closed by an
 equation of state and Poisson's equation (in the Newtonian limit) for
 the gravitational potential $\phi$:
@@ -345,10 +346,10 @@ spectrum, i.e.  $E_{\nu}(\nu,\vecx,t) = \tilde{E}_r(\vecx,t)
    E_{\nu}(\nu,\vecx,t)\,\mathrm d\nu \  = \ 
    \tilde{E}_r(\vecx,t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
 \end{equation}
-$D$ in Equation (\ref{eq:fld_radiation}) is the Larsen
-square-root flux-limiter \citep[see][]{Morel2000}, $\kappa$ the
-total opacity, $\eta$ the field of radiation sources, $\Gamma$
-the radiation induced photo-heating rate, and $\Lambda$ the
+The quantity $D$ in Equation (\ref{eq:fld_radiation}) is the Larsen
+square-root flux-limiter \citep[see][]{Morel2000}, $\kappa$ is  the
+total opacity, $\eta$ is the field of radiation sources, $\Gamma$ is
+the radiation induced photo-heating rate, and $\Lambda$ is the
 chemical cooling rate.
 %, $\alpha_{i,j}$ are the reaction rate coefficients defining
 %the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
@@ -399,13 +400,13 @@ principles of the methods without drowning in detail.
 
 \subsubsection{Structured Adaptive Mesh Refinement}
 
-The primary purpose of the \enzo\ code is its Adaptive Mesh Refinement
+The primary feature of the \enzo\ code is its Adaptive Mesh Refinement
 (AMR) capability, which allows it to reach extremely large dynamical
-ranges with limited computational resources, opening doors otherwise
+ranges with limited computational resources, opening doors to applications otherwise
 closed by finite memory and computational time. Unlike moving mesh
 methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or methods
 that subdivide individual cells \citep{Adjerid}, Berger \& Collela's
-AMR (also referred to as \emph{structured} AMR) utilizes an adaptive
+AMR (also referred to as \emph{structured} AMR, or SAMR) utilizes an adaptive
 hierarchy of grid patches at varying levels of resolution.  Each
 rectangular grid patch (referred to as a ``grid'') covers some region
 of space in its \emph{parent grid} requiring higher resolution,
@@ -414,13 +415,12 @@ and can itself become the parent grid to an even more highly resolved
 
 The grid hierarchy begins with the root grid, which covers the entire
 domain of interest with a coarse uniform Cartesian grid. Then, as
-the solution evolves and interesting regions start to develop, finer meshes are
+the solution evolves and interesting regions start to develop, finer grids are
 placed within these coarse regions.
 % (we use the notation `below' to refer to
 % finer grids and `above' for coarser grids). 
-We restrict the ratio between cell sizes to be an integer, typically 2
-or 4, and refer to a level as all grids with the same cell size.  In
-order to keep things as simple as possible, the edges of subgrids must
+We restrict the ratio between cell sizes of parent and child grids to be an integer, typically 2
+or 4, and refer to a level as all grids with the same cell size.  For simplicity, the edges of subgrids must
 coincide with the cell edge of its immediate parent (coarser)
 grid. Additionally, the hierarchy can be initialized with one or more
 static grids if a higher initial resolution is required.
@@ -457,7 +457,7 @@ Since interesting regions on the grid may move, the hierarchy must
 adapt itself. This happens whenever a level has caught up to its
 parent level, by entirely rebuilding the grids on that level and at
 finer resolutions. Rebuilding is achieved by applying the grid
-refinement criteria to the grids on that level, flagging zones that
+refinement criteria to the grids on that level and flagging zones that
 require extra grids.  These criteria depend on the physical problem
 being simulated; see Section~\ref{sec:refinement_criteria} for more
 details.  Once a grid has a set of flagged cells, we apply a
@@ -472,7 +472,7 @@ next coarser grid is interpolated in order to initialize the values on
 the new grids.  Finally, any overlap between new subgrids and old ones
 is identified, and the prior solution within the regions of overlap is
 copied to the new subgrids. This procedure is then repeated on the new
-grids and in this way the entire hierarchy (from the original level
+grids and in this way, the entire hierarchy (from the original level
 examined and continuing on to all finer levels) is rebuilt.
 
 \subsubsection{(Magneto)-hydrodynamic solver methods}
@@ -637,12 +637,13 @@ sub-cycle.
 \subsubsection{Radiative Cooling and Heating}
 
 \enzo\ can operate in a number of different modes with regard to
-radiative cooling and heating. In the simplest mode, with the
-multi-species flag turned off, the cooling rate is computed from a
+radiative cooling and heating. In the simplest mode, where the
+multi-species flag is turned off and no individual chemical species
+are tracked, the cooling rate is computed from a
 simple temperature-dependent cooling function, taken from
 \citet{SW87}.  If chemistry is turned on, then the code can include
 cooling from all species of hydrogen and helium (including H$_2$) --
-this primordial cooling is treated in the same Jacobi iteration as the
+and the primordial cooling rates are computed in the same Jacobi iteration as the
 chemistry.  It is also possible to include metal cooling based on a
 set of multi-dimensional lookup tables computed with the
 \textsc{Cloudy} code \citep{1998PASP..110..761F} as described in
@@ -709,12 +710,12 @@ star particle.
 
 \subsubsection{Timestep constraints}
 
-All grids on a given level are advanced with the same timestep,
-determined by calculating, for each cell and for each physical process
-(except for chemistry and heat conduction, which are sub-cycled)
-separately, the largest $\Delta t$ allowed for stability. The level is
-advanced with a timestep equal to the minimum over all of these
-$\Delta t$.
+All grids on a given level are advanced with the same timestep.  This
+time step is determined by first calculating the largest time step
+allowed for each cell and for each physical process separately (except
+for chemistry and heat conduction, which are sub-cycled).  The level
+is then advanced with a timestep equal to the minimum over all of
+these $\Delta t$.
 
 %%% Local Variables:
 %%% mode: latex
