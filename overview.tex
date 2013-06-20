@@ -282,7 +282,7 @@ are destruction/creation rates due to photoionizations and/or
 photodissociations.  Currently the species \enzo\ can follow include
 H, H$^+$, He, He$^+$, He$^{++}$, and e$^-$, and through additional
 options also H$^-$, H$_2$, H$_2^+$, and HD, D, and D$^+$. Lastly,
-\enzo\ can also track the advection of a comoving metal density field,
+\enzo\ can also track the advection of one or more comoving metal density fields,
 which can contribute to the radiative cooling and star formation
 processes.
 
@@ -396,7 +396,7 @@ used in Sections~\ref{sec.amr} through~\ref{sec.num.analysis} so that
 there is a one-to-one correspondence between each of the following
 overviews and the complete description provided in the later sections.
 The goal in this section is to introduce the reader to the basic
-principles of the methods without drowning in detail.
+principles of the methods without drowning them in detail.
 
 \subsubsection{Structured Adaptive Mesh Refinement}
 
@@ -516,7 +516,7 @@ order-accurate in space and time and which explicitly conserves mass,
 linear momentum, and energy \citep{Hawley84, Norman86}.  A variety of
 Riemann solvers have been implemented.
 
-As described in \citet{Bryan95}, we modify the method for use in
+As described in \citet{1995CoPhC..89..149B}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small
 compared to the total energy $E$.  This situation presents a problem
 because in the total energy method the temperature is computed by
@@ -545,7 +545,7 @@ graphics hardware \citep{Wang:2010}.
 \paragraph{Godunov MHD with Constrained Transport (MHD)}
 This MHD method is second order in time and space, and preserves the
 divergence constraint, $\div \vecB = 0$, to machine precision
-through the Constrained Transport (CT) method.  CT, originally
+through the Constrained Transport (CT) method \citep{Collins10}.  CT, originally
 described by \citet{Evans88}, updates the magnetic field with the curl
 of an electric field, suitably formulated to preserve $\div
 \vecB$.  We employ the CT methods described by \citet{Balsara99} and
@@ -667,7 +667,7 @@ either constant in time or varying as in \citet{WiseAbel05}.
 
 \enzo\ includes a photon-conserving radiative transfer algorithm that
 is based on an adaptive ray-tracing method utilizing the HEALPix
-pixelization of a sphere \citep{AbelWandelt02}. Photons are integrated
+pixelization of a sphere \citep{Abel02_RT}. Photons are integrated
 outwards from sources using an adaptive timestepping scheme that
 preserves accuracy in ionization fronts even in the optically-thin
 limit. This has been coupled to the chemistry and cooling network to
@@ -681,7 +681,8 @@ A second option for radiative transfer is a moment-based method that
 adds an additional field tracking the radiation energy density.  This
 field is evolved using the flux-limited diffusion method, which
 transitions smoothly between streaming (optically thin) and opaque
-limits and is coupled to a hydrogen-only ionization network.  The
+limits and is coupled to an ionization network of either purely
+hydrogen, or both hydrogen and helium.  The
 resulting set of linear equations is solved using the parallel HYPRE
 framework.  Full details on the \enzo\ implementation of this method
 can be found in \citet{ReynoldsHayesPaschosNorman2009}.
@@ -706,7 +707,9 @@ computed using a range of methods, such as a density-dependent method
 based on the Schmidt-Kennicutt relation \citep{K89}.  The affected gas
 is converted into a star particle over a few dynamical times, and
 metals and thermal energy are injected into the region surrounding the
-star particle.
+star particle.  A related set of methods involves the simulation of
+single Population III stars, rather than ensembles, and is calibrated
+by \textit{ab initio} simulations of primordial star formation.
 
 \subsubsection{Timestep constraints}
 
