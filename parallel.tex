@@ -563,25 +563,40 @@ change exposed the massive parallelism in the algorithm, which can
 then be accelerated in a straightforward manner using CUDA.
 
 To illustrate the speedup provided by porting two solvers to GPUs, we
-show the results of a weak scaling test of driven turbulence in
-Figure~\ref{fig:gpu_scaling}.  This \enzo\ problem type uses the
-Dedner MHD solver, which runs on both CPUs and GPUs, and has been
-tuned to maximize performance on both platforms.  The benchmarking platform is a Cray
-XK6 system where each node has a 16-core AMD Opteron 6272 CPU and a single
-NVIDIA Tesla K20 GPU, which has 2,496 CUDA cores and a maximum
-theoretical speed of 1.17 Tflops when used in double precision.
-For the CPU run, all the 16 cores in each node
-are used by launching 16 MPI processes per node. For the GPU run, 16 MPI
-processes are also launched per node, and all processes on this node share the single GPU
+show the results of a weak scaling test of driven MHD turbulence on a
+uniform mesh in Figure~\ref{fig:gpu_scaling}.  This particular problem
+type contains no physics other than solving the equations of ideal
+MHD, and thus is representative of the type of calculation than can
+benefit from the GPU-optimized solvers in \enzo.  In this scaling
+test, we use the Dedner MHD solver, which runs on both CPUs and GPUs
+and has been tuned to maximize performance on both platforms.  The
+benchmarking platform is a Cray XK6 system with a Gemini
+interconnect. Each node has a 16-core AMD Opteron 6272 CPU and a
+single NVIDIA Tesla K20 GPU, which has 2,496 CUDA cores and a maximum
+theoretical speed of 1.17 Tflops when used in double precision.  For
+the CPU run, all the 16 cores in each node are used by launching 16
+MPI processes per node. For the GPU run, 16 MPI processes are also
+launched per node, and all processes on this node share the single GPU
 on that node. This can work because NVIDIA's MPS (Multi-Process
 Service) technology allows multiple processes to concurrently use the
-same GPU.  A series of weak scaling tests were run, varying from 1
-to 8 nodes (16 to 128 MPI processes), with the number of cells per
-node fixed to $256^3$.  Figure~\ref{fig:gpu_scaling} displays the
-scaling results in terms of cell updates per second per node -- as a
-result, ideal weak scaling is a horizontal line.  In general, the
-simulations using the GPU-accelerated MHD solver perform roughly 5
-times better overall on this system than the CPU-only calculations.
+same GPU.  A series of weak scaling tests were run, varying from 1 to
+8 nodes (16 to 128 MPI processes), with each node containing a cube of
+$256^3$ cells (so, a 4-node computation would have a domain that is
+$512 \times 512 \times 256$ cells).  Figure~\ref{fig:gpu_scaling}
+displays the scaling results in terms of cell updates per second per
+node -- as a result, ideal weak scaling is a horizontal line.  In
+general, the simulations using the GPU-accelerated MHD solver perform
+roughly 5 times better overall on this system than the equivalent
+CPU-only calculation run on the same number of nodes.  We note,
+however, that this somewhat mis-represents the speedup obtained by
+porting the MHD code to GPUs -- in the GPU simulation case, the 16 CPU
+cores on each node are effectively idle, as they are used only for
+timestep calculation and boundary condition transmission (which are
+both computationally inexpensive compared to the fluid solve).  This
+means that, effectively, the GPU simulation is 80 times faster than a
+single CPU core, so a user would likely see much greater effective
+speedup on a system where the ratio of CPU cores to GPUs is lower.
+
 
 \begin{figure}
 \centerline{\includegraphics[width=0.5\textwidth]{figures/gpu_scaling.eps}}
