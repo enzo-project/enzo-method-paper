@@ -19,7 +19,7 @@ more efficient than a direct solution of the Boltzmann equation in
 essentially all astrophysical situations for the levels of accuracy
 that are required for simulations of structure formation.  As
 described earlier, the gravitational potential is computed by solving
-the elliptic Poisson's equation (Eq.~\ref{eq:potential}), and
+the elliptic Poisson's equation (Eq.~\ref{eq:potential}) and
 differencing the potential to find accelerations, which are then
 interpolated back to particles.  This acceleration is time-centered
 (because the underlying gravitating mass field is approximately
@@ -46,4 +46,4 @@ end of each timestep on a level.
 To avoid unphysical point-mass effects, \enzo\ provides a parameter that
 governs the maximum level at which particles will be regarded as point masses.
 At higher levels, contributions from particles to the gravitating mass field
-will be smoothed over a spherical region centered at each particle's center.
+will be smoothed over a spherical region centered at each particle's position.
