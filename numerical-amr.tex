@@ -5,7 +5,7 @@
 
 %Unlike moving mesh methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or  methods that subdivide individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid patches at varying levels of resolution.  The SAMR method described here is similar to \citet{Berger89}.  A more complete discussion of the history and development of this type of algorithm is available in \citet{Neeman96}.
 
-The back-bone of the SAMR idea is the patch, or grid, which we take to be rectilinear to simplify bookkeeping (in practice, the lower-level routines such as the hydro solvers all assume Cartesian coordinates).  The single root grid covers the entire computational domain and plays the role of the root node in the grid hierarchy.  Subgrids are placed such that they cover (hopefully small) sub-volumes of the root grid at higher resolution.  This structure forms a tree that may be extended to arbitrary depths by adding additional grids to refine regions in the subgrids.  We use the following notation to describe grid relationships.  A grid's \textit{parent} is the coarse grid that completely contains it.  The \textit{root grid} is the most coarsely-resolved grid, and has no parent.  A \textit{child grid} is grid completely contained by its parent grid (note that a grid may have many children but only one parent), while sibling grids are those that have the same resolution, but not necessarily the same parent.  We also refer to levels of the hierarchy, where the root grid is labeled level zero and all grids with the same resolution are on the
+The back-bone of the SAMR idea is the patch, or grid, which we take to be rectilinear to simplify bookkeeping (in practice, the lower-level routines such as the hydro solvers all assume Cartesian coordinates).  The single root grid covers the entire computational domain and plays the role of the root node in the grid hierarchy.  Subgrids are placed such that they cover (hopefully small) sub-volumes of the root grid at higher resolution.  This structure forms a tree that may be extended to arbitrary depths by adding additional grids to refine regions in the subgrids.  We use the following notation to describe grid relationships.  A grid's \textit{parent} is the coarse grid that completely contains it.  The \textit{root grid} is the most coarsely-resolved grid, and it has no parent.  A \textit{child grid} is a grid completely contained by its parent grid (note that a grid may have many children but only one parent), while sibling grids are those that have the same resolution, but not necessarily the same parent.  We also refer to levels of the hierarchy, where the root grid is labeled level zero and all grids with the same resolution are on the
 same level.
 
 In order to simplify bookeeping, a number of restrictions are imposed on the subgrids:
@@ -83,7 +83,7 @@ negative $x$ exterior to the domain):
   \item{\em Periodic.} The boundary solution is obtained from the other side of the grid: $q(-x) = q(x_{\rm{max}}-x)$.
 \end{enumerate}
 
-In the second case, the value must be either (1) interpolated from a parent, or (2) copied from a sibling.  In practice, we solve this problem by first interpolating all boundaries from the grid's parent and then performing the sibling copy wherever possible, since these values will always be as good as, or superior to, interpolation.
+In the second case, the value must be either (1) interpolated from a parent or (2) copied from a sibling.  In practice, we solve this problem by first interpolating all boundaries from the grid's parent and then performing the sibling copy wherever possible, since these values will always be as good as, or superior to, interpolation.
 
 We focus first on conserved, cell-centered quantities.  The interpolation function should be conservative in the sense that the mean over the interpolated quantity, in a given cell, must return the cell-centered value.  It should also be monotonic, so that new extrema are not introduced into a smoothly varying field.
 
@@ -116,7 +116,7 @@ In three dimensions this process breaks down since the number of
 constraints (center + four diagonals = five) exceeds the number of
 parameters (four).  One way to solve this problem would be to perform
 a least-squares fit under the given constraints, however, this is
-computationally too expensive.  Therefore, in Appendix~\ref{app:interpolation} we describe
+too computationally expensive.  Therefore, in Appendix~\ref{app:interpolation} we describe
 a heuristic approach that satisfies four constaints analytically and
 then adjusts the interpolation parameters in such a way as to satisfy the fifth.
 While the result is not necessarily optimal, it does appear to perform

@@ -41,15 +41,15 @@ machinery is described by \citet{Balsara01} and \citet{Collins10}.
 The increased complexity of the constrained transport scheme comes in
 the form of area-averaged face and length-averaged edge-centered
 variables, while the rest of \enzo\ employs predominantly
-volume-averaged cell centered variables.  The magnetic field is
-represented by both a face centered field, B$_f$, and a cell centered
-field, B$_c$.  The electric field is edge centered.  The magnetic
+volume-averaged cell-centered variables.  The magnetic field is
+represented by both a face-centered field, B$_f$, and a cell-centered
+field, B$_c$.  The electric field is edge-centered.  The magnetic
 field is updated in four steps: first, the Riemann problem is solved
-in the traditional manner, using the cell centered field; second, an
+in the traditional manner, using the cell-centered field; second, an
 edge-centered electric field is computed using the fluxes from the
 Riemann solver; third, the curl of that electric field is used to
-update the face centered field; finally, the cell centered magnetic
-field is updated with an average of the face centered field.
+update the face-centered field; finally, the cell-centered magnetic
+field is updated with an average of the face-centered field.
 
 Divergence-free AMR is somewhat more complex than the AMR employed
 elsewhere in \enzo.  First, the interpolation must be constrained to be

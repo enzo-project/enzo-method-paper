@@ -409,7 +409,7 @@ that subdivide individual cells \citep{Adjerid}, Berger \& Collela's
 AMR (also referred to as \emph{structured} AMR, or SAMR) utilizes an adaptive
 hierarchy of grid patches at varying levels of resolution.  Each
 rectangular grid patch (referred to as a ``grid'') covers some region
-of space in its \emph{parent grid} requiring higher resolution,
+of space requiring higher resolution than its \emph{parent grid},
 and can itself become the parent grid to an even more highly resolved
 \emph{child grid}.
 
@@ -491,8 +491,8 @@ second-order finite difference hydrodynamics method described in
 \paragraph{Godunov PPM method (HD only)}
 
 We begin with the direct-Eulerian PPM implementation.  This is an
-explicit, higher-order-accurate version of Godunov's method for ideal
-gas dynamics with the spatially third-order-accurate piecewise parabolic monotonic
+explicit, higher-order accurate version of Godunov's method for ideal
+gas dynamics with the spatially third-order accurate piecewise parabolic monotonic
 interpolation and a nonlinear Riemann solver for shock capturing.  It
 advances the hydrodynamic equations in the following steps:
 %\begin{enumerate}
@@ -511,7 +511,8 @@ quantities.
 
 The PPM implementation does an excellent job of capturing strong
 shocks across a few cells.  Multidimensional schemes are built up by
-directional splitting and produce a method that is formally second-order-accurate in space and time and which explicitly conserves mass,
+directional splitting and produce a method that is formally
+second-order accurate in space and time and which explicitly conserves mass,
 linear momentum, and energy \citep{Hawley84, Norman86}.  A variety of
 Riemann solvers have been implemented.
 

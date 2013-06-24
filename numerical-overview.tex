@@ -94,8 +94,8 @@ Eulerian (PPM-DE) variant and its additions briefly here, and in
 further depth in Appendix \ref{app.ppm} 
 
 
-PPM is an explicit, higher order-accurate version of
-Godunov's method for ideal gas dynamics with third-order-accurate piecewise parabolic
+PPM is an explicit, higher-order accurate version of
+Godunov's method for ideal gas dynamics with third-order accurate piecewise parabolic
 monotonic interpolation and a nonlinear Riemann solver for shock
 capturing.  It advances the hydrodynamic equations in the following
 steps:
@@ -109,7 +109,7 @@ steps:
 \end{enumerate}
 It does an excellent job of capturing strong shocks in at
 most two cells.  Multidimensional schemes are built up by directional
-splitting and produce a method that is formally second-order-accurate
+splitting and produce a method that is formally second-order accurate
 in space and time which explicitly conserves mass, linear momentum, and energy.  
 
 To use the above algorithm for cosmological simulations, the
@@ -175,15 +175,15 @@ magnetohydrodynamics code `\zeus'
 \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian
 grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} 
 within a multistep 
-(operator split) solution procedure which is fully explicit in time.  
-This method is formally second-order-accurate in space but 
-first-order-accurate in time.  It is important to note that 
+(operator-split) solution procedure which is fully explicit in time.  
+This method is formally second-order accurate in space but 
+first-order accurate in time.  It is important to note that 
 this method conserves internal energy
 rather than total energy, so the ``dual energy
 formulation'' discussed in Section~\ref{sec.ov.hydro.ppm} is unnecessary.
  
 
-Operator split methods break
+Operator-split methods break
 the solution of the hydrodynamic equations into parts, with each part
 representing a single term in the equations.  Each part is evaluated
 successively using the results preceding it.  The individual parts of
