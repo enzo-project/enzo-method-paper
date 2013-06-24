@@ -7,11 +7,11 @@
 \def\Divb{\ensuremath{\div \Bvec}}
 
 The third solver we describe is an MHD method developed by 
-\citet{Collins10} and since a full description and suite of test problems can be
-found in that paper, we only describe the method briefly here.
+\citet{Collins10}.  Since a full description and suite of test problems can be
+found in that reference, we only describe the method briefly here.
 
 The divergence of the magnetic field, \Divb, is
-identically zero due to the fact that the evolution of the magnetic field is the
+identically zero in reality due to the fact that the evolution of the magnetic field is the
 curl of a vector, and the divergence of the curl of a vector is identically
 zero.
 %\begin{eqnarray}
@@ -27,7 +27,7 @@ is then used to update the magnetic field.  The advantage of this
 method is that it preserves \Divb\ to machine precision.  The primary
 drawback is increased algorithm complexity.  Note also that since 
 only the update of the magnetic field is divergence free, any monopoles 
-created by other numerical sources persist.
+created by other numerical sources (such as ill-chosen initial conditions) persist.
 
 The base Godunov method, described in \citet{Li08a}, uses spatially and
 temporally second-order reconstruction (both MUSCL-Hancock and
@@ -81,9 +81,11 @@ the parent magnetic field.  This is described in detail in
 %GB: I removed the above because the rest of the paper now uses the definition
 % of B in MHD-CT.
 
-The dual energy formalism has also been incorporated in two possible ways, one internal
+The dual energy formalism has also been incorporated in two possible
+ways -- one that uses internal
 energy, as described in Section \ref{sec.hydro.ppm}, and one that
 uses entropy \cite{TVD93, Collins10}.
+
 %The additional equations are
 %\begin{eqnarray}
 %\end{eqnarray}
