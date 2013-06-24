@@ -260,6 +260,27 @@ is always refined by at least N$_R$ cells locally (i.e.~we refine a given cell f
 
 \item{\em Metallicity.}  This refinement criterion ensures that all cells with a metallicity (defined as $Z \equiv \rho_{Z} / \rho_{b} / 0.022$, where $\rho_{Z}$ is the density of metals in the cell, $\rho_{b}$ is the total baryon density (including metals), and 0.022 is the solar mass fraction of metals) above a user-defined value is refined to {\it at least} some minimum level of refinement. 
 
+\item{\em Second Derivative.}  This is similar to the refinement criteria used
+  in Paramesh and was originally developed by \cite{1987nasa.reptQ....L}.  This
+  method calculates the second derivative of a user-defined field normalized by
+  the first derivative, and sets a threshold for refinement.  More background
+  information can be found in the FLASH4 user guide\footnote{\url{http://flash.uchicago.edu/site/flashcode/user\_support/flash4\_ug/}},
+  but we reproduce the relevant equation here for completeness. The
+  multi-dimensional version of the criteria takes in to account all
+  cross-derivatives, and is expressed by
+
+ \begin{equation}
+   S = \left\{ \frac{\sum_{ij}\left( \frac{\partial^2f}{\partial x_i \partial x_j} \right)^2}{\sum_{ij}\left[ \frac{1}{2\Delta x_j}\left( \abs{\frac{\partial f}{\partial x_i}}_{x_i+\Delta x_i} + \abs{\frac{\partial f}{\partial x_i}}_{x_i-\Delta x_i} \right) + \epsilon \frac{\abs{\bar{f_{ij}}}}{\Delta x_i \Delta x_j} \right]^2} \right\}^{1/2},
+   \label{eq:second-deriv_analytical}
+ \end{equation}
+
+  where $f$ is the user-defined field, $\abs{\bar{f_{ij}}}$ is an average of
+  $f$ over cells in the $i$ and $j$ dimensions, and $\epsilon$ is
+  a user-controlled value that provides a method of ignoring small
+  fluctuations, set by default to $10^{-2}$.  If $S$ is larger than a specified
+  threshold (bounded by [0,1]) a cell is marked for refinement. This threshold
+  is chosen at runtime and can vary for each of the fields under consideration.
+
 \end{enumerate}
 
 Finally, it is also possible to specify a rectangular region that is statically refined to a certain level.  These static refined regions are in place throughout the simulation regardless of the grid quantities and can be used for testing purposes, or for multiply-zoomed initial conditions (in cosmology simulations, for example) that would not otherwise be refined.
