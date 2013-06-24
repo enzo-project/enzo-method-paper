@@ -1,11 +1,11 @@
 \subsection{Hydrodynamics: The \zeus\ method}
 \label{sec.hydro.zeus}
 
-As an alternative to the previous Godunov methods, \enzo\ also includes an implementation of the finite-difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus\ \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator split) solution procedure that is fully explicit in time.  This method is formally second order-accurate in space but first order-accurate in time.  
+As an alternative to the previous Godunov methods, \enzo\ also includes an implementation of the finite difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus\ \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator split) solution procedure that is fully explicit in time.  This method is formally second-order-accurate in space but first-order-accurate in time.  
  
 As discussed in the section describing the Piecewise Parabolic Method (Section~\ref{sec.hydro.ppm}), operator split methods break the solution of the hydrodynamic equations into parts, with each part representing a single term in the equations.  Each part is evaluated successively using the results preceding it.  In this method, in addition to operator splitting the expansion terms (i.e. those terms in eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}) that depend on $\dot{a}$), we divide the remaining terms into \emph{source} and \emph{transport} steps.  The terms to be solved in the source step are those on the right-hand side of eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}), while the transport terms are on the left-hand side of these equations and are responsible for the advection of mass, momentum and energy across the grid.
 
-The \zeus\ method uses a von Neumann-Richtmyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a breakdown of the finite-difference equations.  The artificial viscosity term is added in the source terms as:
+The \zeus\ method uses a von Neumann-Richtmyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a breakdown of the finite difference equations.  The artificial viscosity term is added in the source terms as:
 \begin{eqnarray}
 \rho \frac{\partial\vecv}{\partial t} &=& - \grad p - \rho \grad \phi 
 - \div \textbf{Q} \\
@@ -45,7 +45,7 @@ e^{n+c}_j = e^{n+b}_j \left( \frac{1 - (\Delta t/2) (\gamma - 1) (\div \vecv)_j 
 \end{equation}
 We have used the notation $(\div \vecv)_j$ to indicate the (potentially) multi-dimensional velocity divergence evaluated at the cell center position $x_j$.  This equation differs from the previous ones in that in the multi-dimensional case, still only one finite difference equation is evaluated, but the divergence becomes multi-dimensional.
 
-Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite-difference equations actually solved are:
+Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite difference equations actually solved are:
 \begin{equation}
 \rho_j^{n+d} = \rho_j^{n} - \frac{\Delta t}{\Delta x} (v^{n+c}_{j+1/2} \rho^{*}_{j+1/2} - v^{n+c}_{j-1/2} \rho^{*}_{j-1/2} )
 \end{equation}

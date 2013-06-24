@@ -26,7 +26,7 @@ Poisson's equation (Eq.~\ref{eq:potential}).
 
 
 
-These equations are finite-differenced and for simplicity are solved with the
+These equations are finite differenced and for simplicity are solved with the
 same timestep as the hydrodynamic equations, as discussed in 
 Section~\ref{sec.ov.amr}.
 The dark matter particles are distributed onto the grids
@@ -44,7 +44,7 @@ parent grid (with adjacent grid patches on a given level communicating to
 ensure that their boundary values are the same), and then a multigrid
 relaxation technique is used to calculate the gravitational potential at every
 point within a subgrid.  Forces are computed on the mesh by
-finite-differencing potential values and are then interpolated to the particle
+finite differencing potential values and are then interpolated to the particle
 positions, where they are used to update the particle's position and velocity
 information.  Potentials on child grids are computed recursively and particle
 positions are updated using the same timestep as in the hydrodynamic
@@ -95,7 +95,7 @@ further depth in Appendix \ref{app.ppm}
 
 
 PPM is an explicit, higher order-accurate version of
-Godunov's method for ideal gas dynamics with third order-accurate piecewise parabolic
+Godunov's method for ideal gas dynamics with third-order-accurate piecewise parabolic
 monotonic interpolation and a nonlinear Riemann solver for shock
 capturing.  It advances the hydrodynamic equations in the following
 steps:
@@ -109,7 +109,7 @@ steps:
 \end{enumerate}
 It does an excellent job of capturing strong shocks in at
 most two cells.  Multidimensional schemes are built up by directional
-splitting and produce a method that is formally second order-accurate
+splitting and produce a method that is formally second-order-accurate
 in space and time which explicitly conserves mass, linear momentum, and energy.  
 
 To use the above algorithm for cosmological simulations, the
@@ -170,14 +170,14 @@ flows.
 
 
 As a check on PPM, \enzo\ also includes an implementation of the
-finite-difference hydrodynamic algorithm employed in the compressible 
+finite difference hydrodynamic algorithm employed in the compressible 
 magnetohydrodynamics code `\zeus'
 \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian
 grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} 
 within a multistep 
 (operator split) solution procedure which is fully explicit in time.  
-This method is formally second order-accurate in space but 
-first order-accurate in time.  It is important to note that 
+This method is formally second-order-accurate in space but 
+first-order-accurate in time.  It is important to note that 
 this method conserves internal energy
 rather than total energy, so the ``dual energy
 formulation'' discussed in Section~\ref{sec.ov.hydro.ppm} is unnecessary.
@@ -192,7 +192,7 @@ the solution are grouped into two steps, called the \emph{source} and
 
 The \zeus\ method uses a von Neumann-Richtmeyer artificial viscosity 
 to smooth shock discontinuities that may
-appear in fluid flows and can cause a break-down of finite-difference
+appear in fluid flows and can cause a breakdown of finite difference
 equations.  The artificial viscosity term is added in the source terms
 as
 \begin{eqnarray}

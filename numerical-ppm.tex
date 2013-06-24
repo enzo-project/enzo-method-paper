@@ -118,7 +118,7 @@ by $\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm 1/2}$, and $\overline{v}_{j
 describe the steps required to compute these quantities.
 
 We first construct monotonic piecewise 
-parabolic (third order) interpolations in one dimension
+parabolic (third-order) interpolations in one dimension
 for each of $p$, $\rho$, and $v$.  The pressure is determined from
 equation~(\ref{eq:eq_of_state}), the equation of state.
 The interpolation formula for some quantity $q$ is given by:
@@ -133,7 +133,7 @@ This is equation~(1.4) of CW84 (in the spatial rather than mass coordinate as is
 The quantities $q_{L,j}$, $\Delta q_j$,
 and $q_{6,j}$ can be viewed simply as interpolation constants; however,
 they also have more intuitive meanings.  For example, $q_{L,j}$ is the
-value of $q$ at the left edge of zone j, while $\Delta q_j$ and $q_{6,j}$ are analogous to the slope and first order correction to the slope of $q$ (see \citet{1984JCoPh..54..174C} for a complete discussion):
+value of $q$ at the left edge of zone j, while $\Delta q_j$ and $q_{6,j}$ are analogous to the slope and first-order correction to the slope of $q$ (see \citet{1984JCoPh..54..174C} for a complete discussion):
 \begin{equation}
 \Delta q_j \equiv q_{R,j} - q_{L,j} \qquad 
 q_{6,j}    \equiv 6\left[q_j - 1/2\left(q_{L,j} + q_{R,j}\right)\right].
@@ -156,8 +156,8 @@ where $q^{C+}$ refers to the left characteristic $C$ (and a similar integral is 
 
 With these effective states, an approximation to the Riemann problem is found
 (see below for more detail about the Riemann solvers used), producing estimates for 
-$\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm1/2}$, and $\overline{v}_{j\pm 1/2}$ that are third order
-accurate in space and second order accurate in time.  These are then
+$\overline{p}_{j\pm 1/2}$, $\overline{\rho}_{j\pm1/2}$, and $\overline{v}_{j\pm 1/2}$ that are third-order
+accurate in space and second-order accurate in time.  These are then
 used to solve the difference Equations (\ref{eq:mass_diff})--(\ref{eq:energy_diff}) for $\rho^{n+1}$, $v^{n+1}$, and $E^{n+1}$.
 
 We include an optional diffusive flux (and flattening for the parabolic curves) that can improve the solution in some cases.  Our implementation follows that in the appendix of \citet{1984JCoPh..54..174C}.
@@ -168,7 +168,7 @@ We note that the acceleration required in Equation~(\ref{eq:momentum_diff}) is a
 acceleration felt by the entire zone and not just at the zone center.
 Therefore, it is possible to find the mass weighted average acceleration over the zone
 by expanding the density and acceleration distributions and
-retaining all terms up to second order in $\Delta x$:
+retaining all terms up to second-order in $\Delta x$:
 %
 \begin{equation}
 g_j^{n+1/2} = 
@@ -344,7 +344,7 @@ the Dedner and CT solvers in \enzo.  The HLLD
 solver includes two of the additional waves, the rotational discontinuities,
 making it a five-wave solver.
 
-On rare occasions, high order solutions can cause negative densities or energies.  
+On rare occasions, high-order solutions can cause negative densities or energies.  
 Both our PPM and MUSCL solvers employ a Riemann
 solver fallback mechanism \citep{Lemaster09}.  If a negative density is found at
 a particular interface, the more diffusive HLL Riemann solver is used to compute the fluxes associated with that cell, and the flux update is repeated.

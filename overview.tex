@@ -485,14 +485,14 @@ by~\citet{1995CoPhC..89..149B}; (ii) the MUSCL-like Godunov scheme
 divergence cleaning, described in more detail in
 \citet{WangAbelZhang08} and \citet{WangAbel09}; (iii) a constrained
 transport staggered MHD scheme \citep{Collins10}, and (iv) the
-second-order finite-difference hydrodynamics method described in
+second-order finite difference hydrodynamics method described in
 \zeus~\citep{Stone92a,Stone92b}.
 
 \paragraph{Godunov PPM method (HD only)}
 
 We begin with the direct-Eulerian PPM implementation.  This is an
 explicit, higher-order-accurate version of Godunov's method for ideal
-gas dynamics with the spatially third order accurate piecewise parabolic monotonic
+gas dynamics with the spatially third-order-accurate piecewise parabolic monotonic
 interpolation and a nonlinear Riemann solver for shock capturing.  It
 advances the hydrodynamic equations in the following steps:
 %\begin{enumerate}
@@ -511,8 +511,7 @@ quantities.
 
 The PPM implementation does an excellent job of capturing strong
 shocks across a few cells.  Multidimensional schemes are built up by
-directional splitting and produce a method that is formally second
-order-accurate in space and time and which explicitly conserves mass,
+directional splitting and produce a method that is formally second-order-accurate in space and time and which explicitly conserves mass,
 linear momentum, and energy \citep{Hawley84, Norman86}.  A variety of
 Riemann solvers have been implemented.
 
@@ -543,19 +542,19 @@ nVidia's CUDA framework, allowing \enzo\ to take advantage of modern
 graphics hardware \citep{Wang:2010}.
 
 \paragraph{Godunov MHD with Constrained Transport (MHD)}
-This MHD method is second order in time and space, and preserves the
+This MHD method is second-order in time and space, and preserves the
 divergence constraint, $\div \vecB = 0$, to machine precision
 through the Constrained Transport (CT) method \citep{Collins10}.  CT, originally
 described by \citet{Evans88}, updates the magnetic field with the curl
 of an electric field, suitably formulated to preserve $\div
 \vecB$.  We employ the CT methods described by \citet{Balsara99} and
-\citet{Gardiner05} with the second order hyperbolic
+\citet{Gardiner05} with the second-order hyperbolic
 solver of \citet{Li08a} and the divergence free AMR scheme of
 \citet{Balsara01}.
 
-\paragraph{Second order finite difference method (HD only)}
+\paragraph{Second-order finite difference method (HD only)}
 
-Lastly, we briefly describe the \zeus\ method, a finite-difference
+Lastly, we briefly describe the \zeus\ method, a finite difference
 algorithm originally used in the \zeus\ code \citep{Stone92a}. Note
 that \enzo\ is entirely independent of the \zeus\ code, and only the
 hydrodynamical algorithm of \zeus\ has been implemented in \enzo; the

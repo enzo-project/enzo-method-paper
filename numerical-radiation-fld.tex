@@ -72,7 +72,7 @@ $(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1}, {\mathrm
 n}_i^{n+1})$, we first evolve equation (\ref{eq:fld_radiation}):
 $(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n}, {\mathrm
   n}_i^{n})$.  This uses an implicit Euler time discretization, and a
-second-order centered finite-difference spatial discretization,
+second-order centered finite difference spatial discretization,
 resulting in a large linear system of equations.  These are solved
 using a preconditioned conjugate gradient iteration, where the
 preconditioner consists of a geometric multigrid solver.  Both of
