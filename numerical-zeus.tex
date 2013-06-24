@@ -3,7 +3,7 @@
 
 As an alternative to the previous Godunov methods, \enzo\ also includes an implementation of the finite difference hydrodynamic algorithm employed in the compressible magnetohydrodynamics code \zeus\ \citep{Stone92a, Stone92b}.  Fluid transport is solved on a Cartesian grid using the upwind, monotonic advection scheme of \citet{1977JCoPh..23..276V} within a multistep (operator-split) solution procedure that is fully explicit in time.  This method is formally second-order accurate in space but first-order accurate in time.  
  
-As discussed in the section describing the Piecewise Parabolic Method (Section~\ref{sec.hydro.ppm}), operator-split methods break the solution of the hydrodynamic equations into parts, with each part representing a single term in the equations.  Each part is evaluated successively using the results preceding it.  In this method, in addition to operator-splitting the expansion terms (i.e. those terms in eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}) that depend on $\dot{a}$), we divide the remaining terms into \emph{source} and \emph{transport} steps.  The terms to be solved in the source step are those on the right-hand side of eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}), while the transport terms are on the left-hand side of these equations and are responsible for the advection of mass, momentum and energy across the grid.
+As discussed in the section describing the Piecewise Parabolic Method (Section~\ref{sec.hydro.ppm}), operator-split methods break the solution of the hydrodynamic equations into parts, with each part representing a single term in the equations.  Each part is evaluated successively using the results preceding it.  In this method, in addition to operator-splitting the expansion terms (i.e., those terms in Eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}) that depend on $\dot{a}$), we divide the remaining terms into \emph{source} and \emph{transport} steps.  The terms to be solved in the source step are those on the right-hand side of eqs.~(\ref{eq:mass}) -- (\ref{eq:total_energy}), while the transport terms are on the left-hand side of these equations and are responsible for the advection of mass, momentum and energy across the grid.
 
 The \zeus\ method uses a von Neumann-Richtmyer artificial viscosity to smooth shock discontinuities that may appear in fluid flows and can cause a breakdown of the finite difference equations.  The artificial viscosity term is added in the source terms as:
 \begin{eqnarray}
@@ -28,7 +28,7 @@ e_j^{n+b} & = & e_j^n - \frac{\Delta t}{\Delta x_j} q^{n+a}_j (v^{n+a}_{j+1} - v
 The artificial viscosity coefficient $q_j$ is given by:
 \begin{equation}
 q_j = \left\{ \begin{array}{ll}
-              Q_{\rm AV} \rho_j (v_{j+1} - v_j)^2 \quad & \rm{if} (v_{j+1} - v_j) < 0 \\
+              Q_{\rm AV} \rho_j (v_{j+1} - v_j)^2 \quad & \rm{if}~(v_{j+1} - v_j) < 0 \\
                0 & \rm{otherwise}
                \end{array} \right.
 \end{equation}
@@ -45,11 +45,11 @@ e^{n+c}_j = e^{n+b}_j \left( \frac{1 - (\Delta t/2) (\gamma - 1) (\div \vecv)_j 
 \end{equation}
 We have used the notation $(\div \vecv)_j$ to indicate the (potentially) multi-dimensional velocity divergence evaluated at the cell center position $x_j$.  This equation differs from the previous ones in that in the multi-dimensional case, still only one finite difference equation is evaluated, but the divergence becomes multi-dimensional.
 
-Next, we examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite difference equations actually solved are:
+We next examine the transport step, which is conservative.  Once again, we dimensionally split the equations and present only the one-dimensional version.  The finite difference equations actually solved are:
 \begin{equation}
 \rho_j^{n+d} = \rho_j^{n} - \frac{\Delta t}{\Delta x} (v^{n+c}_{j+1/2} \rho^{*}_{j+1/2} - v^{n+c}_{j-1/2} \rho^{*}_{j-1/2} )
 \end{equation}
-Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-face corresponding to $v_j$, making $\rho^*_j v_j$ the mass flux at the cell boundary and guaranteeing mass conservation.   This requires interpolating each cell-centered quantity to the cell edge.  As recommended in \citet{Stone92a}, we use the second-order van Leer scheme, which uses piecewise linear functions.  These are given by equations (48) and (49) of \citet{Stone92a}.  The transport steps for the other variables are similar.  Note that we advect the specific energy and specific momenta using the mass flux, as dictated by the principle of consistent transport.  This requires appropriate averaging for the momenta in the perpendicular directions as outlined in equations (57)-(72) of \citet{Stone92a}.
+Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-face corresponding to $v_j$, making $\rho^*_j v_j$ the mass flux at the cell boundary and guaranteeing mass conservation.   This requires interpolating each cell-centered quantity to the cell edge.  As recommended in \citet{Stone92a}, we use the second-order van Leer scheme, which uses piecewise linear functions.  These are given by Equations (48) and (49) of \citet{Stone92a}.  The transport steps for the other variables are similar.  Note that we advect the specific energy and specific momenta using the mass flux, as dictated by the principle of consistent transport.  This requires appropriate averaging for the momenta in the perpendicular directions as outlined in equations (57)-(72) of \citet{Stone92a}.
 
 %GB: the following is not correct (it is based on the Anninos & Norman paper which uses a
 %GB: different set of definitions for the comoving coordinates).
