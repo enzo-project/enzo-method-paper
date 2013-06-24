@@ -241,12 +241,12 @@ coordinate version in the non-cosmological limit ($a = 1$, $\dot{a} =
 0$).  We include the cosmological terms with the understanding that
 \enzo\ is not restricted to cosmological applications -- while
 historically the code was written with cosmological situations in mind
-(e.g. galaxy clusters), in more recent years it has been used to
+(e.g., galaxy clusters), in more recent years it has been used to
 simulate a much broader range of astrophysical environments.
 
 %\subsubsection{Particles}
 
-Any collisionless components (e.g. dark matter and stars) are modeled
+Any collisionless components (such as dark matter and stars) are modeled
 by N-body particles, whose dynamics are governed by Newton's equations
 in comoving coordinates:
 %
@@ -286,7 +286,7 @@ options also H$^-$, H$_2$, H$_2^+$, and HD, D, and D$^+$. Lastly,
 which can contribute to the radiative cooling and star formation
 processes.
 
-The code can include either a homogeneous radiation background, 
+The code can include either a homogeneous radiation background 
 or evolve an inhomogeneous
 radiation field either by directly solving the radiative transfer
 equation along rays or by solving a set of moment equations derived
@@ -315,8 +315,8 @@ sources of radiation (whether point or diffuse).
 %\subsubsection{Radiation transport: moment method}
 
 As an alternative to the ray-casting strategy, \enzo\ can also solve
-the angle-averaged radiative transfer equation, through a
-flux-limited diffusion approximation with couplings to both the gas
+the angle-averaged radiative transfer equation through a
+flux-limited diffusion approximation, with couplings to both the gas
 energy and chemical number densities. The equations solved are
 \begin{eqnarray}
   \label{eq:fld_radiation}
@@ -349,7 +349,7 @@ spectrum, i.e.  $E_{\nu}(\nu,\vecx,t) = \tilde{E}_r(\vecx,t)
 The quantity $D$ in Equation (\ref{eq:fld_radiation}) is the Larsen
 square-root flux-limiter \citep[see][]{Morel2000}, $\kappa$ is  the
 total opacity, $\eta$ is the field of radiation sources, $\Gamma$ is
-the radiation induced photo-heating rate, and $\Lambda$ is the
+the radiation-induced photo-heating rate, and $\Lambda$ is the
 chemical cooling rate.
 %, $\alpha_{i,j}$ are the reaction rate coefficients defining
 %the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
@@ -379,9 +379,9 @@ is possible to allow heat transport only along (not across) magnetic
 field lines, as follows:
 
 \begin{equation}
-\fcond= -\kappa_{\rm cond} \, {\hat \textbf{b}} (\hat{\textbf{b}} \cdot \grad T),
+\fcond= -\kappa_{\rm cond} \,\myvec{b} ( \myvec{b} \cdot \grad T),
 \end{equation}
-where $\hat{\textbf{b}}$ is the unit vector denoting the direction of
+where $\myvec{b}$ is the unit vector denoting the direction of
 the magnetic field.
 
 % ====================================================
@@ -389,7 +389,7 @@ the magnetic field.
 \subsection{Overview of Numerical Methods}
 \label{sec.method_overview}
 
-In this section we briefly describe the numerical methods which are
+In this section we briefly describe the numerical methods that are
 used to solve the equations outlined in Section~\ref{sec.equations}.
 We proceed through the numerical methods in the same order as will be
 used in Sections~\ref{sec.amr} through~\ref{sec.num.analysis} so that
@@ -401,7 +401,8 @@ principles of the methods without drowning them in detail.
 \subsubsection{Structured Adaptive Mesh Refinement}
 
 The primary feature of the \enzo\ code is its Adaptive Mesh Refinement
-(AMR) capability, which allows it to reach extremely large dynamical
+(AMR) capability, which allows it to reach extremely large spatial and
+temporal dynamical
 ranges with limited computational resources, opening doors to applications otherwise
 closed by finite memory and computational time. Unlike moving mesh
 methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or methods
@@ -435,7 +436,7 @@ advance all the grids on that level by a timestep $\Delta t_1 \leq
 those grids.  If there are more levels, we repeat this procedure until
 the bottom level of the hierarchy has been reached.  Once there, we
 continue advancing the grids on the lowest level until they have
-``caught up'' to the coarser parent grids (i.e. $\sum \Delta t_l =
+``caught up'' to the coarser parent grids (i.e., $\sum \Delta t_l =
 \Delta t_{l-1}$).  This procedure repeats itself until all grids have
 been advanced by a total time of $\Delta t_0$ (see
 Figure~\ref{fig:wcycle} for a schematic).
@@ -550,7 +551,7 @@ described by \citet{Evans88}, updates the magnetic field with the curl
 of an electric field, suitably formulated to preserve $\div
 \vecB$.  We employ the CT methods described by \citet{Balsara99} and
 \citet{Gardiner05} with the second-order hyperbolic
-solver of \citet{Li08a} and the divergence free AMR scheme of
+solver of \citet{Li08a} and the divergence-free AMR scheme of
 \citet{Balsara01}.
 
 \paragraph{Second-order finite difference method (HD only)}
@@ -572,7 +573,7 @@ across the grid.
 \subsubsection{Gravity}
 
 The current implementation of self-gravity in \enzo\ uses a Fast
-Fourier Technique \citep{Hockney88} to solve Poisson's equation on the
+Fourier technique \citep{Hockney88} to solve Poisson's equation on the
 root grid on each timestep.  The advantage of using this method is
 that it is fast, accurate, and naturally allows both periodic and
 isolated boundary conditions for the gravity, choices which are very
@@ -597,7 +598,7 @@ duplicate sets of particles for each level; instead, each particle is
 associated with the highest refined level available at its position in
 the domain and particles are moved between grids as the hierarchy is
 rebuilt. Thus a particle has the same timestep and feels the same
-gravitational force as a grid at that refinement level.
+gravitational force as a grid cell at that refinement level.
 
 Although the particles are fixed in mass once initialized (with the
 exception of star particles, which can lose mass in the feedback
@@ -605,7 +606,7 @@ process), we can create them with any initial set of masses and
 positions.  For example, in many cosmological simulations static
 subgrids are included from the beginning in order to improve the
 initial spatial and baryonic mass resolution, and these subgrid are
-populated with lower mass particles to correspondingly improve the
+populated with lower-mass particles to correspondingly improve the
 collisionless mass resolution.
 %% One particle per initial grid point seems to provide approximately
 %% equal sampling between the dark matter and gas. \mqk{This
@@ -642,7 +643,8 @@ multi-species flag is turned off and no individual chemical species
 are tracked, the cooling rate is computed from a
 simple temperature-dependent cooling function, taken from
 \citet{SW87}.  If chemistry is turned on, then the code can include
-cooling from all species of hydrogen and helium (including H$_2$) --
+cooling from all species of hydrogen and helium (including H$_2$ and
+Deuterium-related species such as HD) --
 and the primordial cooling rates are computed in the same Jacobi iteration as the
 chemistry.  It is also possible to include metal cooling based on a
 set of multi-dimensional lookup tables computed with the
@@ -708,7 +710,7 @@ based on the Schmidt-Kennicutt relation \citep{K89}.  The affected gas
 is converted into a star particle over a few dynamical times, and
 metals and thermal energy are injected into the region surrounding the
 star particle.  A related set of methods involves the simulation of
-single Population III stars, rather than ensembles, and is calibrated
+single Population III stars rather than ensembles, and is calibrated
 by \textit{ab initio} simulations of primordial star formation.
 
 \subsubsection{Timestep constraints}
