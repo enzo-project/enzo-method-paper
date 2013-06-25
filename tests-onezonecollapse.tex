@@ -9,8 +9,8 @@ wide range in densities and over physically-motivated timescales.
 Because this test disables the hydrodynamic and gravity solvers and
 uses a simple model for the density evolution, it is far faster than
 running a true collapse simulation.  The density evolution is based on
-the self-similar Larson-Penston \citep{1969MNRAS.145..271L,
-1969MNRAS.144..425P} solution for isothermal collapse with a
+the self-similar Larson-Penston solution for isothermal collapse \citep{1969MNRAS.145..271L,
+1969MNRAS.144..425P} with a
 modification to account for the efficiency with which the heat
 introduced by compression can be radiated away
 \citep{1983ApJ...265.1047Y}.  Our implementation, described briefly
@@ -27,7 +27,8 @@ where the collapse timescale, $t_{\rm col}$, is
 \begin{equation} \label{eqn.tcol}
 t_{\rm col} = \frac{t_{\rm dyn}}{\sqrt{1 - f}},
 \end{equation}
-In this equation, $t_{\rm dyn}$ is the dynamical time and is expressed as
+In this equation, $t_{\rm dyn}$ is the dynamical time for the collapse
+of a spherical cloud, and is expressed as
 \begin{equation}
 t_{\rm dyn} = \sqrt{\frac{3 \pi}{32 G \rho}}.
 \end{equation}

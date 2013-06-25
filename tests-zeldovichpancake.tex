@@ -1,7 +1,7 @@
-\subsubsection{Zel`dovich Pancake}
+\subsubsection{Zel'dovich Pancake}
 \label{sec.tests.pancake}
 
-The Zel`dovich pancake \citep{1970A&A.....5...84Z} is particularly
+The Zel'dovich pancake \citep{1970A&A.....5...84Z} is particularly
 relevant to cosmological simulations, because it includes many
 features that are critical to structure formation: hydrodynamics,
 expansion, and self gravity.  This problem represents the formation of an ideal,
@@ -28,7 +28,7 @@ Lagrangian mass coordinate, $k = 2 \pi / \lambda$ (where $\lambda$ is
 the perturbation wavelength), and H$_0$ is the value of the Hubble
 constant at $z = 0$.  Note that this solution is expressed in terms of 
 Lagrangian positions, so one needs to convert this into the Eulerian
-coordinates, x$_e$, that are more useful to \enzo:
+coordinates, x$_e$, that are more useful to a grid-based calculation:
 \begin{equation}
 x_e = x_l - \frac{1 + z_c}{1 + z} \frac{\sin(k x_l)}{k}
 \end{equation}
@@ -38,7 +38,7 @@ caustic formation.  In Figure~\ref{fig.pancake}, we show the results
 of a test of the adaptive mesh version of \enzo's Zel'dovich Pancake test.  A
 one-dimensional box of length $64$~Mpc/h is initialized at $z = 20$ in
 an $\Omega_M = 1$ universe with $h = 0.5$ and a background temperature
-of 100~K, $\rho_0 = \rho_c$.  The simulation is initialized with 64
+of 100~K, with a background density of $\rho_0 = \rho_c$.  The simulation is initialized with 64
 grid cells, refining by factors of four using criteria based on cell
 mass and the presence of shocks, for a maximum of 2 levels (i.e., an
 equivalent maximum resolution of 1024 grid cells).  The simulation is
