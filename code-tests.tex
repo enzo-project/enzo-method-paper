@@ -11,14 +11,17 @@ the code, used to ensure that \enzo\ is running correctly on a new
 computer, with a new compiler, or after substantial changes have been
 made to the code base; and by direct comparisons to other
 astrophysical fluid dynamics codes.  We describe the \enzo\ test
-methodology in Section~\ref{sec.tests.suite}, code comparisons in
-Section~\ref{sec.tests.compare}, and show a small set of
-representative test problems in Section~\ref{sec.tests.problems}.  We
-further note that the \enzo\ test suite
-(Section~\ref{sec.tests.suite}) contains hundreds of test problems, as
-well as the ability to compare to a ``gold standard'' solution, and
-thus all of the tests shown here are easily reproducible by the
-reader.
+methodology in Section~\ref{sec.tests.suite}, discuss code comparisons
+involving \enzo\ in Section~\ref{sec.tests.compare}, and show a small
+set of representative test problems in
+Section~\ref{sec.tests.problems}.  We further note that the \enzo\
+test suite (Section~\ref{sec.tests.suite}) contains hundreds of test
+problems, as well as the ability to compare to a ``gold standard''
+solution, and thus all of the tests shown here are easily reproducible
+by the reader.  To facilitate this, all of the test problems included
+in this paper, as well as scripts to run the test problems and
+generate the figures found in Section~\ref{sec.tests.problems}, can be
+found on the \enzo\ website.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Verifying and validating the \enzo\ code}
@@ -32,14 +35,15 @@ reader.
 
 The \enzo\ test suite (described in Section~\ref{sec.tests.suite})
 contains hundreds of test problems that probe the code's behavior in a
-wide range of physical circumstances, and explicitly test each physics
+wide range of physical circumstances, and explicitly tests each physics
 package in the \enzo\ code, both individually and in combination.  It
 is impractical to include a substantial fraction of these problems in
 a method paper; as a result, we have chosen to publish the results of
 only a small subset of particularly crucial test problems here.  If
 the interested reader desires, they can download \enzo\ and
 \texttt{yt}, run the test suite, and see the results of any other test
-problem and its comparison to an analytic solution (if available).
+problem and its comparison to an analytic solution (if available), or
+to a ``gold standard'' solution from a stable version of \enzo.
 
 The general structure of each test problem description is as follows.
 We will describe the construction of the test problem (including its

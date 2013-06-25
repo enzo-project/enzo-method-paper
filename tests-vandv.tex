@@ -3,7 +3,7 @@
 
 \enzo\ is capable of simulating a large variety of problems types,
 with all but a few of these types requiring only a parameter file as an
-input.  The notable exception is the cosmology simulation, which takes
+input.  The most notable exception is the cosmology simulation, which takes
 as input initial conditions created by other codes.  The suite of test
 problems spans a wide range in complexity.  At one end of this spectrum
 are simple problems that utilize only a single component of \enzo\ and
@@ -12,14 +12,14 @@ results.  At the opposite end are problems that exercise a large
 portion of \enzo's machinery in concert.  Together, the available
 problem types fully cover all of \enzo's functionality.  This enables
 them to serve as a vehicle for verifying that the code's behavior
-remains stable over time and after modification of the codebase.
+remains stable over time, on new computing platforms, and after modification of the codebase.
 
 \enzo\ uses an automated testing framework that allows a user to run,
 with a single command, a set of test problems and compare the results
 against results produced by any other version of the code.  Within the
 \enzo\ source distribution, the test problem parameter files are stored
 in a nested directory structure organized according to the primary
-functionality tested, e.g., hydrodynamics, gravity, cooling, etc.
+functionality tested (e.g., hydrodynamics, gravity, cooling, etc.).
 Each parameter file is accompanied by a text file containing various
 descriptive keywords, such as the machinery tested, the
 dimensionality, and the approximate run time.  A test runner script is
@@ -45,7 +45,7 @@ running the test problem simulations, the test runner then performs a
 series of basic analysis tasks using the \texttt{yt} analysis toolkit
 \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  The default
 analysis performed on all test problems includes calculation of
-various statistics, such as extrema, mean and variance, on the fields
+various statistics (such as extrema, mean, and variance) on the fields
 present in the output data.  Custom analysis provided by scripts that
 accompany the test problem parameter files is run for special cases,
 such as when an analytical solution exists that can be compared
@@ -58,11 +58,11 @@ Section~\ref{sec.tests.problems}, we describe some of the key test
 problems that are used to verify proper behavior.  All of these test
 problems, as well as the scripts to generate the figures from them,
 are available at \url{http://bitbucket.org/bwoshea/enzo-method-paper},
-the BitBucket repository for the \enzo\ method paper.  The
+the Bitbucket repository for the \enzo\ method paper.  The
 \texttt{test\_problems} subdirectory in this repository contains all of
 the files necessary to regenerate all of the figures in
-Section~\ref{sec.tests.compare}.  We note for completeness that all of
-the figures were generated using \texttt{yt} version 2.5.3 and the
+Section~\ref{sec.tests.problems}.  We note for completeness that 
+the figures in Section~\ref{sec.tests.problems} were generated using \texttt{yt} version 2.5.3 and the
 \url{https://bitbucket.org/enzo/enzo-dev} repository of \enzo\ with
 changeset \texttt{5d8c412}.
 
