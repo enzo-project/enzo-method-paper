@@ -11,7 +11,8 @@ massless test particle is set in circular orbit around a massive
 central particle, with the gravitational potential calculated on a 3D,
 $32^3$ grid, and evolved forward in time for 200 orbits.  Left panel:
 path of the test particle in the orbital plane plotted for the
-duration of the simulation.  Right panel: total specific energy
+duration of the simulation, with a zoomed box showing a small portion
+of the orbit to highlight deviations from perfect circularity.  Right panel: total specific energy
 (kinetic plus potential) for the test particle for the duration of the
 simulation.  The particle's mean energy (integrated over the length of
 the simulation) is represented by a horizontal dashed line, and +/-
@@ -25,7 +26,7 @@ The ``orbit test'' simulates the orbit of an effectively massless
 particle around a massive primary particle and is used to test the
 accuracy of both the gravity solver and particle integration.  In this
 problem (shown in Figure~\ref{fig.orbittest}), a 3D box with unit size
-and $32^3$ grid is created, and a particle with mass 1 is placed at
+and a $32^3$ grid is created, and a particle with mass 1 is placed at
 the center of the box (both box length and particle mass are in
 arbitrary units).  A second ``test'' particle, with mass of $10^{-6}$,
 is placed at a distance of 0.3 L$_{box}$ from the primary particle in
@@ -52,4 +53,4 @@ Given that the potential is calculated on $32^3$ cells, the two
 particles are separated by between 10 and 14 cells depending on their
 relative positioning in the grid, and the particles are integrated
 using a second-order leapfrog method, this level of accuracy is
-expected.
+expected and acceptable.

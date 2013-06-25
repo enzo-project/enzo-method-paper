@@ -7,9 +7,9 @@ In Figure~\ref{fig.shockpool}, we show the evolution of the shock wave at three 
 
 Beginning with PPM (top row of Figure \ref{fig.shockpool}), we see that this method captures the shock in a small number of zones with only a small amount of oscillation.  Upon entering the refined region, the shock finds itself broader than the natural width of the scheme (since the cell spacing is decreased by a factor of 2), and so the shock front contracts, causing a slight entropy perturbation in the post-shock gas. 
 
-For Zeus (middle row of Figure~\ref{fig.shockpool}), the shock is broadened because of artificial viscosity and there are slightly more post-shock oscillations, although again quite mild.  The impact of entering and exiting the refined region is somewhat larger than in PPM; however, the most noticeable difference is the incorrect position of the shock front. This is due to the fact that the scheme is not energy-conserving (see also the Sedov problem, below), and has very little to do with the passage through the refined region.
+For Zeus (middle row of Figure~\ref{fig.shockpool}), the shock is broadened because of artificial viscosity and there are slightly more post-shock oscillations, although again quite mild.  The impact of entering and exiting the refined region is somewhat larger than in PPM; however, the most noticeable difference is the incorrect position of the shock front. This is due to the fact that the scheme is not energy-conserving (see also the Sedov problem in Section~\ref{sec.tests.sedov}), and has very little to do with the passage through the refined region.
 
-Finally, the MUSCL scheme produces a shock which is intermediate in width between the two previous cases.  This method is energy conserving and so correctly reproduces the shock speed.  The oscillations are mild except for the cell immediately outside of the refined region upon exiting.
+Finally, the MUSCL scheme produces a shock that is intermediate in width between the two previous cases.  This method is energy-conserving, and thus correctly reproduces the shock speed.  The oscillations are mild except for the cell immediately outside of the refined region upon exiting.
 
 \begin{figure}
 \begin{center}
