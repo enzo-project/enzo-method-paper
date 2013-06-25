@@ -10,31 +10,6 @@ adds to the difficulty.  Here we briefly describe \enzo's ray tracing
 implementation \moray, which is presented in full detail in
 \citet{Wise11_Moray} with seven code tests and six applications.
 
-%The radiative transfer equation in comoving coordinates
-%\citep{Gnedin97} reads
-%%
-%\begin{equation}
-%  \label{eq:rteqn}
-%  \frac{1}{c} \; \frac{\partial I_\nu}{\partial t} + 
-%  \frac{\hat{n} \cdot \grad I_\nu}{\bar{a}} -
-%  \frac{H}{c} \; \left( \nu \frac{\partial I_\nu}{\partial \nu} -
-%  3 I_\nu \right) = -\kappa_\nu I_\nu + j_\nu .
-%\end{equation}
-%%
-%Here $I_\nu \equiv I(\nu, \mathbf{x}, \Omega, t)$ is the radiation
-%specific intensity in units of energy per time $t$ per solid angle per
-%unit area per frequency $\nu$.  $H = \dot{a}/a$ is the Hubble
-%constant, where $a$ is the scale factor.  $\bar{a} = a/a_{em}$ is the
-%ratio of scale factors at the current time and time of emission.  The
-%second term represents the propagation of radiation, where the factor
-%$1/\bar{a}$ accounts for cosmic expansion.  The third term describes
-%both the cosmological redshift and dilution of radiation.  On the
-%right hand side, the first term considers the absorption coefficient
-%$\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$, and the second term
-%$j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ is the emission coefficient
-%that includes any point sources of radiation or diffuse radiation.
-%GB: this was moved to the equations section.
-
 We solve the radiative transfer equation in comoving coordinates (given by Equation~\ref{eq:rteqn}).
 We can make some appropriate approximations to reduce the complexity
 of this equation in order to include radiation transport
@@ -189,7 +164,3 @@ complete, these rates are used as inputs to the solver described in
 Section~\ref{sec.ov.chem} to update the ionization, chemical, and energy states
 of the gas in each cell.
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "ms"
-%%% End: 

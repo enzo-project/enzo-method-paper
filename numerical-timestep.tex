@@ -44,16 +44,6 @@ expressions, showing the one-dimensional case for clarity:
 \label{eqn:dtexpand}
 \end{equation}
 
-% \begin{equation}
-% \Delta t_{} = 
-% \label{eqn:dt}
-% \end{equation}
-
-% \begin{equation}
-% \Delta t_{} = 
-% \label{eqn:dt}
-% \end{equation}
-
 In equations~(\ref{eqn:dthydro})-(\ref{eqn:dtcond}), the $\min ( \ldots)_L$ 
 formalism means that this value is calculated for all cells or
 particles on a given level L and the minimum overall value is taken as the timestep.
@@ -61,9 +51,6 @@ particles on a given level L and the minimum overall value is taken as the times
 Equation~(\ref{eqn:dthydro}) ensures that all cells satisfy the
 Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of
 an explicit finite difference discretization of the Euler equations.
-%Effectively this condition forces the timestep to be small enough such
-%that any changes in the fluid propagate less than a single grid
-%spacing, $\Delta x$.  
 In this equation, $\kappa_{\rm hydro}$ is a dimensionless
 numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 1$
 (with a typical value of $\kappa_{\rm hydro} \sim 0.3-0.5$) that
@@ -132,8 +119,6 @@ packet direction.
 Equation~(\ref{eqn:dtcond}) is the stability condition for an explicit
 solution to the equation of heat conduction.  In this expression,
 $n_b$ is the baryon number density, 
-%defined as $n_b = \rho_b / \mu
-%m_p$, where $\mu$ is the mean molecular weight, 
 $\kappa_{\rm sp}(T)$ is the Spitzer thermal conductivity, and f$_{\rm sp}$ is a
 user-defined, dimensionless
 conduction suppression factor whose value must be f$_{\rm sp} \leq 1$.  
@@ -161,8 +146,3 @@ for the stability of the PPM algorithm in comoving coordinates.  This
 criterion typically limits the simulation's timestep
 only during the earliest phases of a cosmological simulation, before
 substantial structure has formed.
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "ms"
-%%% End: 

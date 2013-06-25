@@ -58,7 +58,6 @@ These equations are now in a form that can be solved by the split PPM scheme.
 
 % ------------------------------------------------------------
 
-%\subsubsection{The piecewise parabolic method in one dimension} % 2.2
 
 We now restrict ourselves to the solution of equations
 (\ref{eq:mass1d})--(\ref{eq:total_energy1d}) in one
@@ -166,20 +165,6 @@ Therefore, it is possible to find the mass-weighted average acceleration over th
 by expanding the density and acceleration distributions and
 retaining all terms up to second-order in $\Delta x$ \citep{1995CoPhC..89..149B}, although we find that
 the potential is so slowly varying that this is unnecessary.
-%
-%\begin{equation}
-%g_j^{n+1/2} = 
-%       \frac{1}{2 a^{n+1/2} \delta x_j} \left[ 
-%             \phi_{j+1}^{n+1/2} 
-%           - \phi_{j-1}^{n+1/2} 
-%           + \frac{1}{12} \left(    \phi^{n+1/2}_{j+1} 
-%                                 - 2\phi^{n+1/2}_j 
-%                                 + \phi^{n+1/2}_{j-1} \right) 
-%                                   {\delta d_j \over d_j}
-%       \right].
-%       \label{eq:accel}
-%\end{equation}
-%Generally we find that the potential is so slowly varying that this change is unnecessary.
 
 % ------------------------------------------------------------
 
@@ -276,8 +261,6 @@ e = \cases{ (E - \vecv^2/2),& $\rho(E - \vecv^2/2)/
     \label{eq:dualselect}
 \end{equation}
 Thus, ${\eta}_2$ determines when the synchronization (of $e$ with $E$) occurs.
-%is a measure of how much error we will allow to be passed
-%from neighboring cells.  
 Too high a value may mask relatively weak shocks, 
 while spurious heating (via contamination) may occur if it is set too low.
 After some experimentation,

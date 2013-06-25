@@ -24,8 +24,6 @@ variables and physical constants used throughout this manuscript.
 
 % ----------------------------------------------------------------------------------------
 
-%\subsubsection{Magnetohydrodynamics and Gravity}
-
 The Eulerian equations of ideal magnetohydrodynamics (MHD) including
 gravity, in a coordinate systems comoving with the cosmological
 expansion, are given by
@@ -39,12 +37,6 @@ expansion, are given by
   + \frac{1}{a} \div \left(\rho \vecv \vecv + \myvec{I}p^* - 
     \frac{\vecB \vecB}{a} \right) & = &
   - \frac{\dot{a}}{a} \rho \vecv - \frac{1}{a} \rho \grad \phi,
-% 
-%          + \frac{1}{a} ( \vecv \cdot \grad ) \vecv
-%    & = & - \frac{\dot{a}}{a} \vecv 
-%          - \frac{1}{a \rho} \grad p
-%          - \frac{1}{a \rho} (\nalba \times \vecB) \times \vecB
-%          - \frac{1}{a} \grad \phi, 
   \label{eq:momentum} \\
 %
   \frac{\partial E}{\partial t} 
@@ -53,13 +45,6 @@ expansion, are given by
   - \frac{\dot{a}}{a} \left( 2E - \frac{B^2}{2a} \right) - 
   \frac{\rho}{a} \vecv \cdot \grad \phi 
   - \Lambda + \Gamma + \frac{1}{a^2} \div \fcond,
-% 
-%         + \frac{1}{a} \vecv \cdot \grad E
-%  & = & - \frac{\dot{a}}{a} (3 \frac{p}{\rho} + {\vecv \cdot \vecv} )
-%       - \frac{1}{a \rho } \div (p \vecv) 
-%%\nonumber   & &   %uncomment for 2-column
-%        - \frac{1}{a} \vecv \cdot \grad \phi 
-%               + \Gamma - \Lambda.
   \label{eq:total_energy}  \\
 %
   \frac{\partial \vecB}{\partial t} - 
@@ -69,26 +54,7 @@ expansion, are given by
   \label{eq:induction}
 \end{eqnarray}
 
-%\begin{eqnarray} 
-%\frac{\partial \rho}{\partial t} 
-%          + \vecv \cdot \grad \rho
-%    & = & - \rho \div \vecv,
-%        \label{eq:mass} \\
-%%
-%\frac{\partial \vecv }{ \partial t} 
-%          + ( \vecv \cdot \grad ) \vecv 
-%    & = & - \frac{1}{\rho} \grad p
-%          - \grad \phi,
-%        \label{eq:momentum} \\
-%%
-% \frac{\partial E}{\partial t} + \vecv \cdot \grad E
-%    & = & - \frac{1}{\rho} \div (p \vecv) 
-%          - \vecv \cdot \grad \phi
-%%\nonumber          \\  & &     % uncomment for 2-column
-%     + \Gamma - \Lambda
-%        \label{eq:total_energy}
-%\end{eqnarray}
-%
+
 In these equations, $E$, $\rho$, $\vecv$, and $\vecB$ are the comoving
 total fluid energy density, comoving gas density, peculiar
 velocity, and comoving magnetic field strength, respectively. The
@@ -165,47 +131,6 @@ below; however, it is not universal,
 and is slightly different from that used both in \citet{Li08a}
 and in the MHD-Dedner solver (see section~\ref{sec.num.hydro-muscl}
 for more details).
-%These definitions result in the following comoving equivalents to eqs. 
-%(\ref{eq:mass})-(\ref{eq:potential}).
-%%
-%
-%\begin{eqnarray} 
-%\frac{\partial \rhop}{\partial t} 
-%          + \frac{1}{a} \vecvp \cdot \grad \rhop 
-%    & = & - \frac{1}{a} \rhop \div \vecvp, 
-%        \label{eq:mass_prime} \\
-%%
-%\frac{\partial \vecvp}{\partial t}  
-%          + \frac{1}{a} ( \vecvp \cdot \grad ) \vecvp 
-%    & = & - \frac{\dot{a}}{a} \vecvp 
-%          - \frac{1}{a \rhop} \grad \pp 
-%          - \frac{1}{a} \grad \phip, 
-%        \label{eq:momentum_prime} \\
-%%
-%\frac{\partial \Ep}{\partial t} 
-%         + \frac{1}{a} \vecvp \cdot \grad \Ep 
-%   & = & - \frac{\dot{a}}{a} (3 \frac{\pp}{\rhop} + {\vecvp \cdot \vecvp} )
-%         - \frac{1}{a \rhop } \div (p \vecvp) 
-%%\nonumber   & &   %uncomment for 2-column
-%         - \frac{1}{a} \vecvp \cdot \grad \phip 
-%                + \Gamma - \Lambda.
-%       \label{eq:total_energy_prime} \\
-%%
-%\Ep  & = & \ep + \frac{1}{2} {\vecvp \cdot \vecvp},
-%        \label{eq:total_energy_def_prime} \\
-%%
-%\ep                  & = & 
-%        \pp/\left[ \left( \gamma - 1 \right) \rhop \right],
-%      \label{eq:state_prime} \\ 
-%{\nabla}^2 \phip    & = & 
-%        \frac{4\pi G}{a} ( \rhop_{total} - \rhop_0 ).
-%      \label{eq:poisson}
-%\end{eqnarray}
-%%
-%%We use the proper peculiar baryonic velocity $\vecv_b \equiv a(t) d\vecx / dt$, proper pressure $p$, and modified gravitational potential $ \phi $ which is related to the potential in proper coordinates $\Phi$ by 
-%%$$\phi \equiv \Phi + \frac{1}{2} a \ddot{a} \vecx^2. $$
-%%The density, however, is comoving:
-%%$$\rho_b \equiv \rho_{b,proper}a(t)^3, $$
 The expansion parameter $a \equiv 1/(1 + z)$ follows the expansion of
 a smooth, homogeneous background, where $z$, the redshift, is a
 function only of $t$.  All spatial derivatives are determined with
@@ -225,10 +150,6 @@ spatially homogeneous and isotropic universe
 Here $\rho_0$ is the mean comoving mass density (including both
 baryonic and dark matter), $p_0$ is the comoving background pressure
 contribution, and $\Lambda_c$ is the cosmological constant.
-%$\gamma$ is the ratio of specific heats, and $\Lambda$ is the cosmological constant.
-%We note that if $\gamma$ is not $5/3$ then $E$ in the first term on
-%the right side of eq.~(ref{eq:total_energy}) must be replaced with 
-%eq.~(\ref{eq:state}).
 This system of equations is limited to the non-relativistic regime and
 assumes that curvature effects are not important --- both assumptions
 are reasonable as long as the size of the simulated region is small
@@ -243,7 +164,6 @@ historically the code was written with cosmological situations in mind
 (e.g., galaxy clusters), in more recent years it has been used to
 simulate a much broader range of astrophysical environments.
 
-%\subsubsection{Particles}
 
 Any collisionless components (such as dark matter and stars) are modeled
 by N-body particles, whose dynamics are governed by Newton's equations
@@ -261,8 +181,6 @@ in comoving coordinates:
 %
 The particles contribute to the gravitational potential through
 Poisson's equation (Equation \ref{eq:potential}).
-
-%\subsubsection{Chemistry}
 
 In addition, \enzo\ can solve the mass conservation equations for a set of
 chemical species and their reactions.  For any species $i$ with comoving
@@ -311,8 +229,6 @@ absorption ($\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$), and the
 second term emission ($j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$) from any
 sources of radiation (whether point or diffuse).
 
-%\subsubsection{Radiation transport: moment method}
-
 As an alternative to the ray-casting strategy, \enzo\ can also solve
 the angle-averaged radiative transfer equation through a
 flux-limited diffusion approximation, with couplings to both the gas
@@ -324,18 +240,10 @@ energy and chemical number densities. The equations solved are
   \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
   \label{eq:fld_heating}
   \frac{\partial e_c}{\partial t} &=& -\frac{2\dot{a}}{a} e_c + \Gamma - \Lambda,
-%  \label{eq:fld_chemistry}
-%  \partial_t {\mathrm n}_i + 
-%    \frac1a \div\left({\mathrm n}_i \vecv_b\right) &=& 
-%    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
-%    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
 \end{eqnarray}
 where $E_r = E_r(\vecx,t)$ is a grey radiation energy density and
 $e_c$ is the internal energy correction due to photo-heating and
 chemical cooling.
-%and ${\mathrm n}_i$ correspond to the chemical number densities of
-%HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
-%number density.  
 Here, we define $E_r$ through first assuming a fixed frequency
 spectrum, i.e.  $E_{\nu}(\nu,\vecx,t) = \tilde{E}_r(\vecx,t)
 \chi(\nu)$, and then defining the integrated quantity
@@ -350,11 +258,6 @@ square-root flux-limiter \citep[see][]{Morel2000}, $\kappa$ is  the
 total opacity, $\eta$ is the field of radiation sources, $\Gamma$ is
 the radiation-induced photo-heating rate, and $\Lambda$ is the
 chemical cooling rate.
-%, $\alpha_{i,j}$ are the reaction rate coefficients defining
-%the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
-%and $\Gamma_i^{ph}$ are the radiation induced photo-ionization rates. 
-
-%\subsubsection{Thermal conduction}
 
 Finally, \enzo\ implements the equations of isotropic heat conduction
 in a manner similar to that of \citet{2007ApJ...664..135P}, where the isotropic heat flux is given by
@@ -419,8 +322,6 @@ The grid hierarchy begins with the root grid, which covers the entire
 domain of interest with a coarse uniform Cartesian grid. Then, as
 the solution evolves and interesting regions start to develop, finer grids are
 placed within these coarse regions.
-% (we use the notation `below' to refer to
-% finer grids and `above' for coarser grids). 
 We restrict the ratio between cell sizes of parent and child grids to be an integer, typically 2
 or 4, and refer to a level as all grids with the same cell size.  For simplicity, the edges of subgrids must
 coincide with the cell edge of its immediate parent (coarser)
@@ -449,10 +350,6 @@ being simulated; see Section~\ref{sec:refinement_criteria} for more
 details.  Once a grid has a set of flagged cells, we apply a
 machine-vision based algorithm \citep{Berger91} to find edges and
 determine a good placement of subgrids.
-%  These subgrids must not overlap one another, must cover all flagged
-% cells and their neighbouring cells, and be above a preset efficiency
-% threshold, where the efficiency of a cell is defined as the ratio of
-% flagged cells to total cells. 
 Once these new subgrids have been identified, the solution from the
 next coarser grid is interpolated in order to initialize the values on
 the new grids.  Finally, any overlap between new subgrids and old ones
@@ -481,19 +378,13 @@ explicit, higher-order accurate version of Godunov's method for ideal
 gas dynamics with the spatially third-order accurate piecewise parabolic monotonic
 interpolation and a nonlinear Riemann solver for shock capturing.  It
 advances the hydrodynamic equations in the following steps:
-%\begin{enumerate}
-% \item 
 (i) Construct monotonic parabolic interpolation of cell average data,
 for each fluid quantity;
-% \item 
 (ii) Compute interface states by averaging the parabola over the
 domain of dependence for each interface;
-% \item 
 (iii) Use interface data to solve the Riemann problem;
- %\item 
 (iv) Difference the interface fluxes to update the cell average
 quantities.
-%\end{enumerate}
 
 The PPM implementation does an excellent job of capturing strong
 shocks across a few cells.  Multidimensional schemes are built up by
@@ -592,11 +483,6 @@ subgrids are included from the beginning in order to improve the
 initial spatial and baryonic mass resolution, and these subgrids are
 populated with lower-mass particles to correspondingly improve the
 collisionless mass resolution.
-%% One particle per initial grid point seems to provide approximately
-%% equal sampling between the dark matter and gas. \mqk{This
-%% contradicts the conclusions of O'Shea et al. 2005 that an initial
-%% grid twice as fine as the mean particle separation is necessary to
-%% properly capture the abundance of low mass halos.}
 
 \subsubsection{Chemistry}
 \label{sec.ov.chem}
@@ -608,9 +494,6 @@ helium (H, H$^+$, He, He$^+$, He$^{++}$, e$^-$), and more complete
 models adding first species important for gas-phase molecular hydrogen
 formation (H$^-$, H$_2$ and H$_2^+$), and then HD formation (HD, D,
 D$^+$).
-%(We note that a reduced version
-%of the chemistry, used only with the flux-limited diffusion radiation
-%transport, includes only hydrogen species.)
 The cooling and heating due to these species is included (see the next
 section). The solution of the rate equations is carried out using one
 Jacobi iteration of an implicit Euler time discretization to ensure
@@ -705,8 +588,3 @@ allowed for each cell and for each physical process separately (except
 for chemistry and heat conduction, which are sub-cycled).  The level
 is then advanced with a timestep equal to the minimum over all of
 these $\Delta t$.
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "ms"
-%%% End: 

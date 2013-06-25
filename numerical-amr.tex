@@ -1,9 +1,6 @@
 \section{The Structured Adaptive Mesh Refinement (SAMR) Method}
 \label{sec.amr}
 
-%\subsubsection{SAMR Overview}
-
-%Unlike moving mesh methods \citep{1995ApJS..100..269P,1995ApJS...97..231G} or  methods that subdivide individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid patches at varying levels of resolution.  The SAMR method described here is similar to \citet{Berger89}.  A more complete discussion of the history and development of this type of algorithm is available in \citet{Neeman96}.
 
 The back-bone of the SAMR idea is the patch, or grid, which we take to be rectilinear to simplify bookkeeping (in practice, the lower-level routines such as the hydro solvers all assume Cartesian coordinates).  The single root grid covers the entire computational domain and plays the role of the root node in the grid hierarchy.  Subgrids are placed such that they cover (hopefully small) sub-volumes of the root grid at higher resolution.  This structure forms a tree that may be extended to arbitrary depths by adding additional grids to refine regions in the subgrids.  We use the following notation to describe grid relationships.  A grid's \textit{parent} is the coarse grid that completely contains it.  The \textit{root grid} is the most coarsely-resolved grid, and it has no parent.  A \textit{child grid} is a grid completely contained by its parent grid (note that a grid may have many children but only one parent), while sibling grids are those that have the same resolution, but not necessarily the same parent.  We also refer to levels of the hierarchy, where the root grid is labeled level zero and all grids with the same resolution are on the
 same level.
@@ -16,8 +13,6 @@ In order to simplify bookkeeping, a number of restrictions are imposed on the su
 \end{itemize}
 
 The AMR grid patches are the primary data structure in \enzo.  Each patch is treated as an individual object that can contain both field variables and particle data.  Individual grids are organized into a  dynamic, distributed hierarchy of mesh patches.  
-%See Figure~\ref{fig.2.amrhierdens} for an example of an \enzo\ simulation performed using this AMR scheme where both the baryon density and AMR grid hierarchy are shown together. 
-% GB: I think this figure is too application-specific
 
 \begin{figure}
 \begin{center}
@@ -36,7 +31,6 @@ From the point of view of the hydro solver, each grid is solved as an independen
 
 \begin{figure}
 \begin{center}
-%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
 \includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
 \end{center}
 \caption{\emph{Left:} Example of the timesteps on a 2-level AMR
@@ -135,8 +129,6 @@ then adjusts the interpolation parameters in such a way as to satisfy the fifth.
 While the result is not necessarily optimal, it does appear to perform
 adequately in our tests.
 
-%The same procedure can be used for face-centered quantities; however, for the velocity variable in zeus, we drop the extrema constraint.
-
 \subsection{Solving the hydrodynamic equations on a grid}
 \label{sec:solve_hydro}
 
@@ -150,13 +142,6 @@ interfaces.  This is required in the flux-correction step (see
 \ref{sec:flux_correction}).  There is also the issue of centering,
 which refers to the position of physical quantities within a cell (the
 primary types are cell-centered, face-centered, and node-centered). 
-%In this description we will employ the direct Eulerian version of the piecewise
-%parabolic method \citep{1984JCoPh..54..174C,1995CoPhC..89..149B}, which
-%assumes cell-centering for all quantities (actually they are
-%cell-averages).  
-%However, it is also possible to use other schemes,
-%which employ different centering for different variables
-%\citep[e.g.,][]{Stone92a}.  
 The interpolation step, described in
 Section~\ref{sec:interpolation}, must correctly interpolate with the
 selected centering.
@@ -223,9 +208,6 @@ super-Lagrangian or sub-Lagrangian refinement.
 
 \item{\em Shocks.}  In this method, we identify and refine cells that contain shocks using the following criteria:
 \begin{eqnarray}
-%% (p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) & > & 0.33,  \nonumber \\
-%% u_{i-1} - u_{i+1} & > & 0, \quad\text{and} \\
-%% e_i / E_i & > & 0.1.  \nonumber
 (p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) > 0.33,  \qquad
 u_{i-1} - u_{i+1} > 0, \quad\text{and} \qquad
 e_i / E_i > 0.1.  \nonumber
@@ -246,9 +228,6 @@ where $J_J$ is the required number of cells per Jeans length (4 by default).
 
 \item{\em Shear.} As described in \citet{Kritsuk06}, turbulence calculations can be successfully modeled with AMR if the shear is used as a refinement parameter; in particular, refinement occurs when the finite difference version of the following inequality holds:
 \begin{equation}
-%\left(\frac{du}{dy}\right)^2 + \left(\frac{du}{dz}\right)^2 + 
-%\left(\frac{dv}{dx}\right)^2 + \left(\frac{dv}{dz}\right)^2 + 
-%\left(\frac{dw}{dx}\right)^2 + \left(\frac{dw}{dy}\right)^2 
 \sum_i \sum_j \left( \frac{\partial v_i}{\partial x_j} \right)^2 -  \sum_i \left( \frac{\partial v_i}{\partial x_i} \right)^2
 > \epsilon_s \frac{c_s^2}{\Delta x^2},
 \end{equation}
@@ -299,139 +278,3 @@ is always refined by at least N$_R$ cells locally (i.e.~we refine a given cell f
 
 Finally, it is also possible to specify a rectangular region that is statically refined to a certain level.  These static refined regions are in place throughout the simulation regardless of the grid quantities and can be used for testing purposes, or for multiply-zoomed initial conditions (in cosmology simulations, for example) that would not otherwise be refined.
 
-%GB: The following section has now been worked into the main text above and, I think, can be removed.
-%
-%\subsection{Adaptive mesh refinement}\label{sec.ov.amr}
-%\dcc{removed most of the notes.  Added intro blurb.  moved parallelism
-%  stuff. Re-worded the bit on ghost zones.  Summary of 'grid as
-%  independent update + syncing with neighbors and parents,' W-cycle. Added
-%  sentence on subgrid creation.  Made timestepping its own subsection.}
-%\red{Talk about reasonable refinement factors - which 
-%ones are usable, etc?}
-
-%The primary purpose of the \enzo\ code is its Adaptive Mesh Refinement
-%capability, which allows it to reach extremely large dynamical ranges
-%with limited computational resources, opening doors previously closed
-%by finite memory and computational time. Unlike moving mesh methods
-%\citep{1995ApJS..100..269P,1995ApJS...97..231G} or  
-%methods that subdivide 
-%individual cells \citep{Adjerid}, Berger \& Collela's AMR (also referred 
-%to as \emph{structured} AMR) utilizes an adaptive hierarchy of grid 
-%patches at varying levels of resolution.  Each rectangular grid patch 
-%(referred to as a ``grid'') covers some region of space in its 
-%\emph{parent grid} which requires higher resolution, and can itself 
-%become the parent grid to an even more highly resolved \emph{child grid}. 
-%ENZO's implementation of structured AMR places no restrictions on 
-%the number of grids at a given level of refinement, or on the number of 
-%levels of refinement.  However, owing to limited computational resources 
-%it is practical to institute a maximum level of refinement $\Lmax$.  
-
-%The \enzo\ implementation of AMR allows arbitrary integer ratios of parent and
-%child grid resolution.  However, in practice 
-%refinement factors (defined as the ratio of parent grid resolution to child grid resolution) 
-%of two or four are typically used, with a refinement factor
-%of two being most commonly used for cosmological simulations for reasons of
-%efficiency. The ratio of
-%box size to the maximum grid resolution of a given simulation is
-%therefore $L/e = \Nroot \times 2^{\Lmax}$, where $\Nroot$ is the
-%number of cells along one edge of the root grid, $\Lmax$ is the
-%maximum level of refinement allowed, and L and e are the box size
-%and grid resolution of the most highly refined region, respectively.
-
-%The AMR grid patches are the primary data structure in \enzo.  Each
-%patch is treated as an individual object which can contain both field
-%variables and particle data.  Individual grids are organized into a 
-%dynamic, distributed hierarchy of mesh patches.  
-%See 
-%Figure~\ref{fig.2.amrhierdens} for an example of an \enzo\
-%simulation performed using this AMR scheme where both the baryon density
-%and AMR grid hierarchy are shown together. 
-
-%\begin{figure}
-%\begin{center}
-%\includegraphics[width=0.4\textwidth]{figures/amr-hier-dens.eps}
-%\caption{Example of an \enzo\ simulation showing the AMR grid hierarchy.  
-%This is a simulation of the collapse of a single massive halo with a 
-%$32^3$ root grid and two $32^3$ static nested grids.  AMR is only allowed
-%within the most highly refined static nested grid.  Log baryon density is shown
-%by colored isocontours with values corresponding to the legend at center left.  
-%The rectangular solid wire frames correspond to individual 
-%AMR grids, with different colors corresponding to level as indicated by the
-%legend at top left.}
-%\label{fig.2.amrhierdens}
-%\end{center}
-%\end{figure}
-
-%Each grid patch in \enzo\ contains arrays of values for baryon and 
-%particle quantities.   Grids are 
-%partitioned into a core of \emph{real zones} and a surrounding layer 
-%of \emph{ghost zones}.  The real zones store field values and ghost 
-%zones are used to temporarily store values which have been obtained 
-%directly from neighboring grids or interpolated from a parent grid.  
-%These zones are necessary to accommodate the computational stencil of 
-%the hydrodynamics solvers (Sections~\ref{sec.ov.hydro.ppm} and~\ref{sec.ov.hydro.zeus}) 
-%and the gravity solver (Section~\ref{sec.ov.nbody}).  
-%The PPM and \zeus\ hydro solvers require 3 layers of ghost zones,  and the gravity
-%solver requires 6.  This can lead to significant memory 
-%and computational overhead, particularly for smaller grid patches
-%at high levels of refinement.  More information on filling of ghost
-%zones can be found in the appendix.
-
-%From the point of view of the hydro solver, each grid is solved as an
-%independent CFD problem, with Dirichlet boundary conditions stored in
-%the ghost zones.  At the end of each timestep, cells on a given level
-%fill ghost zones by interpolating from the parent and copying from
-%neighbors on the same level.  Grids then correct the flux at the interface boundary between
-%fine and coarse zones, and finally project their real zone data to the
-%parent grid. 
-
-%Timesteps are determined on each level as
-%described in \ref{sed.timestepping}, and the hierarchy is advanced on
-%a level by level basis in what's known as a W-Cycle.    Beginning with
-%the coarsest level, $L$, all grids on that level are advanced one
-%timestep.  Then one timestep is taken on all grids at the next level
-%of refinement, $L+1$, and so on until the finest level is resolved.
-%The finest level is then advanced, using as many steps as it takes to
-%reach the level immediately above.  The finest level is then synced
-%to the level above it, which then proceeds forewards one more step.
-%\red{Needs a picture of the W cycle.}
-
-%At the end of every timestep on every level each grid updates 
-%its ghost zones by exchanging information with its neighboring grid patches 
-%(if any exist) and/or by interpolating from a parent grid.  
-%In addition, cells are examined to see if they should be refined or 
-%de-refined, and the entire grid hierarchy is rebuilt at that 
-%level (including all more highly refined levels).  The timestepping and 
-%hierarchy advancement/rebuilding process described here is repeated 
-%recursively on every level to the specified maximum level of 
-%refinement in the simulation. 
-
-%Since the addition of more highly refined grids is adaptive,  
-%the conditions for refinement must be specified.  The criteria of 
-%refinement can be set by the threshold value of the overdensity of 
-%baryon gas or dark matter in a cell (which is really a refinement on
-%the mass of gas or DM in a cell), the local Jeans length, the 
-%local density gradient, or local pressure and energy gradients.  
-%A cell reaching any or all of these criteria 
-%will then be flagged for refinement.  
-%Once all cells at a given level have been examined, rectangular boundaries 
-%are determined which minimally encompass the flagged cells. The set of
-%flagging cells is then further fractured into smaller bounding
-%rectangles to ensure computational 
-%efficiency.  More details on subgrid creation can be found in Appendix
-%\ref{app.subgrid_creation}.  A refined grid patch is 
-%introduced within each such bounding rectangle. Thus the cells needing 
-%refinement, as well as adjacent cells within the patch which do not need 
-%refinement, are refined. While this approach is not as memory efficient as 
-%cell-splitting AMR schemes, it offers more freedom with 
-%finite difference stencils. For example, PPM requires a stencil of seven 
-%cells per dimension. This cannot easily be accommodated in cell-splitting 
-%AMR schemes. 
-
-
-
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "ms"
-%%% End: 

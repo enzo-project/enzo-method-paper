@@ -14,10 +14,6 @@ The divergence of the magnetic field, \Divb, is
 identically zero in reality due to the fact that the evolution of the magnetic field is the
 curl of a vector, and the divergence of the curl of a vector is identically
 zero.
-%\begin{eqnarray}
-%\partial \Bvec/\partial t & =& \frac{1}{a} \curl \Evec\\
-%\Divb & =& 0.
-%\end{eqnarray}
 The Constrained Transport (CT) method \citep{Evans88, Balsara99} for
 magnetohydrodynamic (MHD) evolution employs this same vector property
 to evolve the magnetic field in a manner that preserves $\Divb=0$.  
@@ -64,45 +60,7 @@ grids (rather than the magnetic field), and is then used to re-update
 the parent magnetic field.  This is described in detail in
 \citet{Balsara99} and \citet{Collins10}.
 
-%Cosmological MHD can be treated in a number of ways.  As described in 
-%the previous section, and equation~\ref{eq:induction} the MUSCL with Dedner
-%method treats the cosmological dilution of
-%$\vecB$ with a source term,  However, one can eliminate the right hand side of equation 
-%\ref{eq:induction} by defining
-%$\vecB^\prime = \vecB / \sqrt{a}.$
-%Then equation~\ref{eq:induction} becomes
-%$$ 
-%\frac{\partial \vecB^\prime}{\partial t} - \frac{1}{a}  \curl (\vecv \times
-%\vecB^\prime)  = 0, \label{eq:induction_cosmo_prime_nosource}
-%$$
-%and we can reuse each part of the non-cosmological algorithm (hyperbolic solver,
-%electric field creation, interpolation, projection, and flux correction) without
-%modification.  
-%GB: I removed the above because the rest of the paper now uses the definition
-% of B in MHD-CT.
-
 The dual energy formalism has also been incorporated in two possible
 ways -- one that uses internal
 energy, as described in Section \ref{sec.hydro.ppm}, and one that
 uses entropy \cite{TVD93, Collins10}.
-
-%The additional equations are
-%\begin{eqnarray}
-%\end{eqnarray}
-%\begin{eqnarray}
-%  \frac{\partial S}{\partial t} +\frac{1}{a} \div (S \vecv) & = &  -
-%  \frac{ 3 (\gamma - 1) \dot{a}}{a} S \\
-%  \frac{\partial \rho e}{\partial t} + \frac{1}{a} \div (\rho e \vecv) &
-%  = & -\frac{ 3(\gamma -1 ) \dot{a}}{a} + \frac{p}{a} \div \vecv,
-%\end{eqnarray}
-%where $e$ is the internal energy and $S=p/\rho^{\gamma-1}$ is the entropy.  If
-%the ratio of thermal to kinetic energy, $\eta$, is below a certain value, the
-%alternative energy is used.  As in \citet{Li08a}, we use $\eta=0.008$.
-
-%
-%\enzo's MHD-CT has been used in a variety of contexts, from galaxy
-%cluster evolution \citep{Xu11,Xu12}, synthetic observations of radio
-%halos \citep{Skillman13}, primordial star formation \citep{Xu08}, and
-%present-day star formation \citep{Collins11, Collins12a}.
-% GB NOTE: incorporate these elsewhere
-

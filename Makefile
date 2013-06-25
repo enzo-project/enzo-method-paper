@@ -4,7 +4,7 @@ SECTIONS=code-tests.tex conclusions.tex \
 	numerical-amr.tex numerical-analysis.tex numerical-chemistry.tex \
 	numerical-cooling.tex numerical-gravity.tex \
         numerical-mhd-ct.tex \
-	numerical-muscl.tex numerical-overview.tex numerical-particle.tex \
+	numerical-particle.tex \
 	numerical-ppm.tex numerical-radiation-fld.tex \
 	numerical-radiation-homogeneous.tex numerical-radiation-raytracing.tex \
 	numerical-starformation.tex numerical-timestep.tex numerical-zeus.tex \

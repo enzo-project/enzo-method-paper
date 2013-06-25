@@ -51,24 +51,4 @@ We next examine the transport step, which is conservative.  Once again, we dimen
 \end{equation}
 Here $\rho^*_j$ is the correctly upwinded value of $\rho$ evaluated at the cell-face corresponding to $v_j$, making $\rho^*_j v_j$ the mass flux at the cell boundary and guaranteeing mass conservation.   This requires interpolating each cell-centered quantity to the cell edge.  As recommended in \citet{Stone92a}, we use the second-order van Leer scheme, which uses piecewise linear functions.  These are given by Equations (48) and (49) of \citet{Stone92a}.  The transport steps for the other variables are similar.  Note that we advect the specific energy and specific momenta using the mass flux, as dictated by the principle of consistent transport.  This requires appropriate averaging for the momenta in the perpendicular directions as outlined in equations (57)-(72) of \citet{Stone92a}.
 
-%GB: the following is not correct (it is based on the Anninos & Norman paper which uses a
-%GB: different set of definitions for the comoving coordinates).
-%\begin{eqnarray}
-%Q_{ii} & = & \left\{ 
-%   \begin{array}{ll}
-%      Q_{\rm AV} \rho_b  (a \Delta v_{i} + \dot{a} \Delta x_i)^2 \quad
-%       & \textrm{for $a \Delta v_{i} + \dot{a} \Delta x_i < 0$}  \\
-%      0 & \textrm{otherwise}\\
-%\end{array} \right. \\
-%%\end{eqnarray}
-%%and
-%%\begin{equation}
-%Q_{ij} & = & 0  \;\;\;{\rm for}\;\; i \ne j . 
-%%\end{equation}
-%\end{eqnarray}
-%$\Delta x_i$ and $\Delta v_{i}$ refer to the comoving width of the grid cell
-%along the $i$-th axis and the corresponding difference in gas
-%peculiar velocities across the grid cell, respectively, and $a$ is the
-%cosmological scale factor.  
-
 A limitation of a technique that uses an artificial viscosity is that, while the correct Rankine-Hugoniot jump conditions are achieved, shocks are broadened over 3-4 mesh cells. This may cause unphysical pre-heating of gas upstream of the shock wave, as discussed in \citet{1994ApJ...429..434A}.  On the other hand, it is much more robust than PPM and is easy to add additional physics.  We also note that this method solves only the internal energy equation rather than total energy, so the dual energy formulation discussed in Section~\ref{sec.hydro.ppm} is unnecessary.

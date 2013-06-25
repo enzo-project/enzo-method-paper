@@ -1,14 +1,6 @@
 \subsection{Radiation transport: Flux-limited diffusion}
 \label{sec.num.rad-fld}
 
-%% With regards to the numerical method section, we're really looking for
-%% something that's no more than a page long: a few relevant equations,
-%% maybe a finite difference equation or two if you feel that it's
-%% relevant, but primarily a description of the algorithms used for the
-%% FLD solve and a brief explanation of how it's coupled to the
-%% chemistry, as well as references to the relevant method paper(s).
-%% Working in a reference or two to science papers is also great! 
-
 In addition to the ray-tracing approach for radiation transport
 described in Section~\ref{sec.num.raytracing}, \enzo\ currently includes
 a field-based radiation transport solver for problems posed on uniform
@@ -23,40 +15,7 @@ radiation transport solvers may be found in \cite{IlievEtAl2009}.
 a flux-limited diffusion approximation for cosmological radiative
 transfer, with couplings to both the gas energy and chemical number
 densities.
-%\begin{eqnarray}
-%  \label{eq:fld_radiation}
-%  \partial_t E_r + \frac1a \div \left(E_r \myvec{v}_b\right) &=& 
-%    \div\left(D\grad E_r\right) -
-%    \frac{\dot{a}}{a} E_r - c\kappa E_r + \eta, \\
-%  \label{eq:fld_heating}
-%  \partial_t e_c &=& -\frac{2\dot{a}}{a} e_c + G - \Lambda, \\
-%  \label{eq:fld_chemistry}
-%  \partial_t {\mathrm n}_i + 
-%    \frac1a \div\left({\mathrm n}_i \myvec{v}_b\right) &=& 
-%    \alpha_{i,j} {\mathrm n}_e {\mathrm n}_j - {\mathrm n}_i
-%    \Gamma_i^{ph}, \quad i=1,\ldots,N_s,
-%\end{eqnarray}
-%where $E_r$ is a grey radiation energy density, $e_c$ is the
-%internal energy correction due to photo-heating and chemical cooling,
-%and ${\mathrm n}_i$ correspond to the chemical number densities of
-%HI, HII, HeI, HeII and HeIII, and ${\mathrm n}_e$ is the electron
-%number density.  Here, we define the grey radiation energy density
-%through first assuming a fixed frequency spectrum, i.e.
-%$E_{\nu}(\nu,\myvec{x},t) = \tilde{E}_r(\myvec{x},t) \chi(\nu)$, and then
-%defining the integrated quantity
-%\begin{equation}
-%\label{eq:grey_radiation_energy}
-%   E_r(\myvec{x},t) \equiv \int_{\nu_0}^{\infty}
-%   E_{\nu}(\nu,\myvec{x},t)\,\mathrm d\nu \  = \ 
-%   \tilde{E}_r(\myvec{x},t) \int_{\nu_0}^{\infty} \chi(\nu)\,\mathrm d\nu.
-%\end{equation}
-%In addition, $D$ in (\ref{eq:fld_radiation}) is the {\em Larsen
-%square-root flux-limiter} (see \cite{Morel2000}), $\kappa$ is the total
-%opacity, $\eta$ is the field of radiation sources, $G$ provides the
-%radiation induced photo-heating, $\Lambda$ provides the chemical
-%cooling, $\alpha_{i,j}$ are the reaction rate coefficients defining
-%the interactions between species ${\mathrm n}_i$ and ${\mathrm n}_j$,
-%and $\Gamma_i^{ph}$ are the radiation induced photo-ionization rates. 
+
 
 The system of equations
 (\ref{eq:fld_radiation}-\ref{eq:fld_heating}) along with the chemical network 
