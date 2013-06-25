@@ -11,7 +11,7 @@ contained on a single processor\footnote{In this context, we use the
 word {\it processor} to mean a basic distribution unit; this could be
 either a core or a node, depending on details of the system.  Note
 that the current version of \enzo\ is not threaded, although a hybrid
-MPI + OpenMP version is currently under development.}.  
+MPI + OpenMP version is under development.}.  
 Parallelization is
 accomplished by distributing grids amongst processors.  This is done
 on the root grid using a simple tiling system, where the root grid is
@@ -40,7 +40,8 @@ up the grids into $N_p$ groups (with the division taking place as
 equally as possible).  Load balancing is done separately for each
 level.  Clearly load balancing is most successful if there are
 significantly more grids than processors; however, small grids are
-less efficient (because of their ghost zones), and so the code uses a
+less efficient because of the large number of ghost zones compared to
+active zones, and so the code uses a
 simple heuristic in order to split up grids until there are of order
 10 grids per processor.  This generally results in good load-balancing
 while not producing grids that are wastefully small.
@@ -50,7 +51,7 @@ communication strategy that allows overlap of communication and
 computation.  This can be done efficiently because each processor
 retains a copy of the entire hierarchy of grids, except that grids
 that do not `live' on a given processor only contain meta data
-(essentially location and size of the grid; such grids are denoted as
+(essentially just the location and size of the grid; such grids are denoted as
 `ghost' grids).  Replicating the hierarchy means that all
 communication of data from one grid to another can be identified by
 each processor independently.  The metadata for `ghost' grids are
@@ -61,7 +62,7 @@ Figure~\ref{fig.amr_hierarchy}.
 
 Data is transferred through a three-step procedure that takes
 advantage of the capabilities of the MPI library: (i) as the code
-progresses, and data is needed from another grid on another processor,
+progresses and data is needed from another grid on another processor,
 the receiving processor posts an MPI non-blocking receive indicating
 that it is expecting data; this outstanding receive is recorded in a
 table, (ii) the sending processor calls the MPI non-blocking send
@@ -95,7 +96,7 @@ and contribute minimal computational, memory, and IO overhead.
 At each complete root grid timestep (or less often if specified),
 each timer is then communicated to the root processor where it
 calculates the mean, standard deviation, minimum, and maximum for each
-of the timers across all processors.  For level timers, there are additional
+of the timers of that name across all processors.  For level timers, there are additional
 attributes such as the number of cell updates, the current number of
 grids, and the average cells updates per second per MPI process.  This
 information is then 
@@ -140,7 +141,7 @@ metal-enriched gas from galaxies into the intergalactic medium
 scaling of the code in unigrid mode is relatively straightforward --
 upon initialization, unigrid simulations are decomposed such that each
 MPI process has a roughly equal subvolume (and thus an equal number of grid
-cells), meaning that work is evenly distributed.  Communication
+cells), meaning that work is evenly distributed among computational elements.  Communication
 patterns for both the gravity solve (which uses a fast Fourier
 transform) and the fluid solves (which transfer boundary information
 between subvolumes) are predictable and straightforward, and
@@ -194,13 +195,14 @@ Broadly, excellent scaling in \enzo's unigrid mode is seen for a
 variety of problems as long as each compute core is given an adequate
 amount of work to do.  For cosmological simulations, this value has
 been empirically determined to be roughly $128^3$ cells per core.  If
-fewer cells per core are used, the CPU is essentially data-starved,
+fewer cells per core are used, the CPU is essentially data-starved 
 and poor scaling is observed due to computing units being idle while
 waiting for information to be communicated from other processes (for,
 e.g., boundary information or gravity solves).  Substantially larger
 cell counts per core would in principle help scaling by reducing the
 amount of inter-process communication needed, but larger cell counts
-are typically impractical on most machines due to memory limits.
+are typically impractical on most machines due to the amount of memory
+available on each node.
 
 As a final point, we observe that scaling at larger core counts has
 been measured, but only with an experimental hybrid-parallel (MPI +
@@ -210,7 +212,7 @@ on the NICS Kraken XT5 (an upgraded version of the XT4 machine used
 for the scaling study shown in the figure), using 2-8 OpenMP threads
 per MPI process.  Hybrid parallelism has the potential to
 substantially improve scaling by reducing the amount of communication
-per grid tile (as described in the previous paragraph); however, the
+per grid tile, as described in the previous paragraph; however, the
 optimal ratio of OpenMP threads per MPI task seems to vary
 substantially between computational platforms and astrophysical
 problems/required \enzo\ physics modules, and thus we hesitate to
@@ -322,8 +324,8 @@ major routines in \enzo.  The local physics routines, for example
 \texttt{SolveHydroEquations}, exhibit perfect strong scaling because
 they involve no communication.  By investigating the scaling behavior
 in each routine, it is clear that the communication in the
-\texttt{SetBoundaryConditions}, \texttt{SolveForPotential} (multi-grid
-solver in AMR levels), and \texttt{RebuildHierarchy} are responsible
+\texttt{SetBoundaryConditions}, \texttt{SolveForPotential} (the multi-grid
+solver in AMR subgrids), and \texttt{RebuildHierarchy} are responsible
 for the lack of strong scaling at $N_{\rm core} \ga$~4,096 in this
 particular simulation.  The transpose of the root grid tiles are
 responsible for the performance decrease because it is not optimized
@@ -352,9 +354,10 @@ of the simulation when the densities are nearly uniform, only the
 static grid is required and the calculation progresses rapidly.
 However, as structure forms and dense clumps are generated, the number
 of grid points swells by orders of magnitude (an increase of $10^3$ is
-not uncommon) and most of the CPU time is consumed at late times.
+not uncommon) and most of the CPU time is consumed at late physical
+time in the simulation.
 Therefore, simply performing a few steps at the beginning of the
-calculation does produce a good estimate of the required CPU time.
+calculation does not produce a good estimate of the required CPU time.
 
 Nevertheless, we can try to determine how the compute time scales for
 a given run as we increase the resolution.  First, we neglect
@@ -451,7 +454,7 @@ less-than-ideal parallel scaling).
 
 The physical reason for the $f_{l+1}/f_l$ ratios found in the
 cosmological simulations appears to be due to a combination of the
-density structure of individual clouds, and the distribution of the
+density structure of individual clouds and to the distribution of the
 clouds themselves.  In particular, we note that for a $\rho \propto
 r^{-2}$ density profile, the Lagrangian refinement criteria typically used in
 such simulations produces an $f_{l+1}/f_l$ ratio of 1/8 for a single,
@@ -498,7 +501,8 @@ compute times for \enzo\ calculations.
 
 \subsection{GPU parallelization and scaling}
 
-Many of today's leading supercomputers use a heterogeneous structure:
+Many of today's leading supercomputers use a heterogeneous
+computing platform:
 on a single node of a distributed-memory platform, a multi-core CPU is
 often paired with one or more many-core accelerators.  One programming
 model that has been shown to successfully take advantage of these
@@ -540,8 +544,8 @@ The key step in porting to many-core architectures such as the GPU is
 exposing the massive parallelism inherent in the algorithm. Due to the
 explicit, directionally-split stencil pattern of both the PPM and
 Dedner MHD solvers, they are inherently massively parallel and thus
-should be good fit for hardware acceleration. Both solvers essentially
-contain basically two parts -- computation of fluxes, and cell update.
+should be a good fit for hardware acceleration. Both solvers essentially
+contain two parts -- computation of fluxes, and a cell update.
 When computing fluxes, the basic procedure is to compute the flux at
 each cell-interface given the inputs from neighboring cells. In the
 cell update part, the fundamental computation is updating the
@@ -549,7 +553,7 @@ cell-centered values using the previously-computed fluxes. In the CPU
 serial code, a loop over the grid is used, where the loop body
 contains these basic computations. In both parts,
 algorithmically-different loop iterations are completely independent
-of each other. Thus, the parallelization scheme is naturally mapping
+of each other. Thus, the natural parallelization scheme is to map
 one GPU thread to one iteration of the loop. However, the original CPU
 code, which operates on each grid as a serial process, does not
 completely expose this parallelism as some small temporary arrays are
@@ -559,21 +563,21 @@ parallelization.  Because of this re-use of arrays, the main change in
 porting the serial CPU solvers to allow massively parallel GPU
 computation was replacing those shared temporary arrays by larger
 temporary arrays that are not shared among loop iterations. This
-change exposed the massive parallelism in the algorithm, which can
+change exposed the massive parallelism in the algorithm, which could
 then be accelerated in a straightforward manner using CUDA.
 
 To illustrate the speedup provided by porting two solvers to GPUs, we
 show the results of a weak scaling test of driven MHD turbulence on a
 uniform mesh in Figure~\ref{fig:gpu_scaling}.  This particular problem
-type contains no physics other than solving the equations of ideal
-MHD, and thus is representative of the type of calculation than can
+type contains no physics other than the equations of ideal
+MHD, and thus is representative of the type of calculation than can currently
 benefit from the GPU-optimized solvers in \enzo.  In this scaling
 test, we use the Dedner MHD solver, which runs on both CPUs and GPUs
 and has been tuned to maximize performance on both platforms.  The
 benchmarking platform is a Cray XK6 system with a Gemini
 interconnect. Each node has a 16-core AMD Opteron 6272 CPU and a
 single NVIDIA Tesla K20 GPU, which has 2,496 CUDA cores and a maximum
-theoretical speed of 1.17 Tflops when used in double precision.  For
+theoretical speed of 1.17 Tflops for double-precision computations.  For
 the CPU run, all the 16 cores in each node are used by launching 16
 MPI processes per node. For the GPU run, 16 MPI processes are also
 launched per node, and all processes on this node share the single GPU
@@ -590,7 +594,7 @@ roughly 5 times better overall on this system than the equivalent
 CPU-only calculation run on the same number of nodes.  We note,
 however, that this somewhat mis-represents the speedup obtained by
 porting the MHD code to GPUs -- in the GPU simulation case, the 16 CPU
-cores on each node are effectively idle, as they are used only for
+cores on each node are mostly idle, as they are used only for
 timestep calculation and boundary condition transmission (which are
 both computationally inexpensive compared to the fluid solve).  This
 means that, effectively, the GPU simulation is 80 times faster than a
