@@ -116,15 +116,14 @@ p^* = p + \frac{B^2}{2a},
 \end{equation}
 and the quantity $p$ is the thermal pressure.  We use units such that the magnetic
 permeability is unity ($\mu_0=1$).  The equations are closed by an
-equation of state and Poisson's equation (in the Newtonian limit) for
-the gravitational potential $\phi$:
+equation of state and Poisson's equation for the gravitational potential $\phi$:
 %
 \begin{eqnarray}
 %
   e &=& \frac{p}{(\gamma - 1)},
   \label{eq:eq_of_state} \\
 %
-  \nabla^2 \phi &=& 4 \pi G \left( \rho_{\rm total} - \rho_0 \right)
+  \nabla^2 \phi &=& \frac{4 \pi G}{a} \left( \rho_{\rm total} - \rho_0 \right)
 %                   + 3 p_{total}/c^2) - \Lambda. 
   \label{eq:potential}
 \end{eqnarray}
@@ -163,8 +162,8 @@ We note that the definition of comoving $\vecB$ used here is such
 that a uniform field is constant in a homogeneous expanding universe
 and is also the quantity used in the MHD-CT solver described
 below; however, it is not universal,
-and in particular is slightly different from that used both in \citet{Li08a}
-and used in the MHD-Dedner solver (see section~\ref{sec.num.hydro-muscl}
+and is slightly different from that used both in \citet{Li08a}
+and in the MHD-Dedner solver (see section~\ref{sec.num.hydro-muscl}
 for more details).
 %These definitions result in the following comoving equivalents to eqs. 
 %(\ref{eq:mass})-(\ref{eq:potential}).
@@ -275,7 +274,7 @@ number density $n_i$, these equations have the form:
   \label{eq:species_evolution}
 \end{equation}
 where $k_{ij}$ are the rate coefficients for the two-body reactions
-and are usually functions of only the gas species (we will
+and are usually functions of only temperature (we will
 specifically note the cases where we either include three-body
 reactions or have density-dependent rates).  The $\Gamma^{\rm ph}_j$
 are destruction/creation rates due to photoionizations and/or
@@ -309,7 +308,7 @@ term represents the propagation of radiation, where the factor $a_{\rm
 The third term describes both the cosmological redshift and dilution
 of radiation.  On the right hand side, the first term captures
 absorption ($\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$), and the
-second term emission ($j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ from any
+second term emission ($j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$) from any
 sources of radiation (whether point or diffuse).
 
 %\subsubsection{Radiation transport: moment method}
@@ -362,6 +361,7 @@ in a manner similar to that of \citet{2007ApJ...664..135P}, where the isotropic 
 %
 \begin{equation}
 \fcond = -\kappa_{\rm cond} \grad T.
+\label{eq:conduction}
 \end{equation}
 %
 Here $\kappa_{\rm cond} = f_{\rm sp} \, \kappa_{\rm sp}$ is the heat
@@ -374,12 +374,13 @@ clusters) is taken into account.
 
 Thermal conduction in a plasma can be strongly affected by the
 presence of magnetic field lines, which may strongly suppress heat
-flow perpendicular to the magnetic field.  To include this physics, it
+flow perpendicular to the magnetic field.  To include this effect, it
 is possible to allow heat transport only along (not across) magnetic
 field lines, as follows:
 
 \begin{equation}
 \fcond= -\kappa_{\rm cond} \,\myvec{b} ( \myvec{b} \cdot \grad T),
+\label{eq:anisotropic_conduction}
 \end{equation}
 where $\myvec{b}$ is the unit vector denoting the direction of
 the magnetic field.
@@ -430,29 +431,13 @@ Given the hierarchy at some time $t$, we advance the solution in the
 manner of a W-cycle in a multigrid solver.  First, we determine the
 maximum timestep allowed for the coarsest grid based on a variety of
 accuracy and stability criteria and advance the grid by that time
-interval, $\Delta t_0$.  We then move down to the next level and
-advance all the grids on that level by a timestep $\Delta t_1 \leq
-\Delta t_0$, which is the minimum of all the allowed timesteps for
-those grids.  If there are more levels, we repeat this procedure until
+interval.  We then move down to the next level and
+advance all the grids on that level.  If there are more levels, we repeat this procedure until
 the bottom level of the hierarchy has been reached.  Once there, we
 continue advancing the grids on the lowest level until they have
-``caught up'' to the coarser parent grids (i.e., $\sum \Delta t_l =
-\Delta t_{l-1}$).  This procedure repeats itself until all grids have
-been advanced by a total time of $\Delta t_0$ (see
-Figure~\ref{fig:wcycle} for a schematic).
+``caught up'' to the coarser parent grids.  This procedure repeats itself until all grids have
+been advanced by the desired time.
 
-
-\begin{figure}
-\begin{center}
-%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
-\includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
-\end{center}
-\caption{\emph{Left:} Example of the timesteps on a 2-level AMR
-  hierarchy.  \enzo\ does not restrict the timesteps on the finer levels
-  to be a factor of $1/2^n$ smaller.  \emph{Right:} The order in which
-  the AMR grids are evaluated on each level.\vspace{1ex}}
-\label{fig:wcycle}
-\end{figure}
 
 Since interesting regions on the grid may move, the hierarchy must
 adapt itself. This happens whenever a level has caught up to its
@@ -520,7 +505,7 @@ Riemann solvers have been implemented.
 As described in \citet{1995CoPhC..89..149B}, we modify the method for use in
 hypersonic flows when the thermal energy $e$ is extremely small
 compared to the total energy $E$.  This situation presents a problem
-because in the total energy method the temperature is computed by
+because in the total energy method the thermal energy is computed by
 subtracting one large number from another (i.e. the kinetic energy
 from the total energy), which tends to generate large numerical
 inaccuracies. We overcome this difficulty by additionally solving a
@@ -583,8 +568,7 @@ other subgrid). The Poisson equation is then solved on every timestep
 using a multigrid technique on one subgrid at a time. Aside from
 self-consistently calculating the gravitational potential arising from
 the baryon fields and particles in the simulation, there are also a
-number of options for specifying static gravitational fields, and in
-fact including self-gravity is optional.
+number of options for specifying static gravitational fields.
 
 \subsubsection{N-body Dynamics}
 
@@ -605,7 +589,7 @@ exception of star particles, which can lose mass in the feedback
 process), we can create them with any initial set of masses and
 positions.  For example, in many cosmological simulations static
 subgrids are included from the beginning in order to improve the
-initial spatial and baryonic mass resolution, and these subgrid are
+initial spatial and baryonic mass resolution, and these subgrids are
 populated with lower-mass particles to correspondingly improve the
 collisionless mass resolution.
 %% One particle per initial grid point seems to provide approximately

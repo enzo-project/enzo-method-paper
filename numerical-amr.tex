@@ -8,9 +8,9 @@
 The back-bone of the SAMR idea is the patch, or grid, which we take to be rectilinear to simplify bookkeeping (in practice, the lower-level routines such as the hydro solvers all assume Cartesian coordinates).  The single root grid covers the entire computational domain and plays the role of the root node in the grid hierarchy.  Subgrids are placed such that they cover (hopefully small) sub-volumes of the root grid at higher resolution.  This structure forms a tree that may be extended to arbitrary depths by adding additional grids to refine regions in the subgrids.  We use the following notation to describe grid relationships.  A grid's \textit{parent} is the coarse grid that completely contains it.  The \textit{root grid} is the most coarsely-resolved grid, and it has no parent.  A \textit{child grid} is a grid completely contained by its parent grid (note that a grid may have many children but only one parent), while sibling grids are those that have the same resolution, but not necessarily the same parent.  We also refer to levels of the hierarchy, where the root grid is labeled level zero and all grids with the same resolution are on the
 same level.
 
-In order to simplify bookeeping, a number of restrictions are imposed on the subgrids:
+In order to simplify bookkeeping, a number of restrictions are imposed on the subgrids:
 \begin{itemize}
- \item The refinement factor $r$, or the ratio of the coarse cell width to the fine cell width, must be an integer.  In practice, \enzo\ almost always uses $r=2$, since tests have shown this typically provides the best performance.
+ \item The refinement factor $r$, or the ratio of the coarse cell width to the fine cell width, must be an integer.  In practice, we generally adopt $r=2$, since tests have shown this typically provides the best performance.
  \item Each subgrid must begin and end on the boundary of a coarse cell.  This means that the number of cells in a patch will be a multiple of the refinement factor.
  \item A subgrid must be completely enclosed by its parent.
 \end{itemize}
@@ -31,7 +31,20 @@ showing real and ghost zones, as needed for the PPM hydro stencil. }
 
 Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig.amr_hierarchy}.  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} through~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and \zeus\ hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
 
-From the point of view of the hydro solver, each grid is solved as an independent computational fluid dynamics (CFD) problem, with Dirichlet boundary conditions stored in the ghost zones.  At the end of each timestep, cells on a given level fill ghost zones by interpolating from the parent and copying from neighbors on the same level.  Grids then correct the flux at the interface boundary between fine and coarse zones, and finally project their active zone data to the parent grid. 
+From the point of view of the hydro solver, each grid is solved as an independent computational fluid dynamics (CFD) problem, with Dirichlet boundary conditions stored in the ghost zones.  At the beginning of each timestep, cells on a given level fill ghost zones by interpolating from the parent and copying from neighbors on the same level.  Grids then correct the flux at the interface boundary between fine and coarse zones, and finally project their active zone data to the parent grid. 
+
+
+\begin{figure}
+\begin{center}
+%\includegraphics[width=0.6\textwidth]{figures/wcycle.eps}
+\includegraphics[width=0.6\textwidth]{figures/timestepping.eps}
+\end{center}
+\caption{\emph{Left:} Example of the timesteps on a 2-level AMR
+  hierarchy.  \enzo\ does not restrict the timesteps on the finer levels
+  to be a factor of $1/2^n$ smaller.  \emph{Right:} The order in which
+  the AMR grids are evaluated on each level.\vspace{1ex}}
+\label{fig:wcycle}
+\end{figure}
 
 Timesteps are determined on each level as described in Section~\ref{sec.timestepping}, and the hierarchy is advanced on
 a level-by-level basis in a W-Cycle.    Beginning with the coarsest level, $l$, all grids on that level are advanced one
@@ -42,7 +55,7 @@ At the end of every timestep on every level, each grid updates its ghost zones b
 The basic control algorithm looks very much like any used in a grid-based code of a single resolution, and can be written schematically as:
 \begin{verbatim}
 InitializeHierarchy
-While (Time < StopTime)
+While (Time < StopTime):
    dt = ComputeTimeStep(0)
    EvolveLevel(0, dt)
    Time = Time + dt
@@ -52,9 +65,9 @@ The AMR control algorithm is contained within the recursive
 EvolveLevel algorithm, which takes the level upon which to operate as an
 argument.  This looks something like the following pseudo-code:
 \begin{verbatim}
-EvolveLevel(level)
+EvolveLevel(level):
    SetBoundaryValues
-   while (Time < ParentTime)
+   while (Time < ParentTime):
       dt = ComputeTimeStep(level)
       SolveHydroEquations(dt)
       SolveOtherEquations(dt)
@@ -74,7 +87,7 @@ Each function operates on all the grids on the given level.  In the following se
 In order to solve the hydrodynamic equations on a patch, it is necessary to specify the boundary conditions on that patch.  There are two cases.  The first is that the boundary is external to the computational domain.  This occurs for all the boundaries of the root grid.  The second possibility is that the boundary is within the computational domain, which is true for most, but not all, subgrids.
 
 In the first case, we allow for four types of boundary conditions
-(represented here as being at $x=0$, with positive $x$ interior and
+(for simplicity, represented here as being at $x=0$, with positive $x$ interior and
 negative $x$ exterior to the domain):
 \begin{enumerate}
   \item{\em Reflecting.} In this case, the boundary behaves like a mirror, with the solution on the boundary reflecting the solution in the computational domain ($q(-x) = q(+x)$) but with the velocity normal to the boundary reversed: $v_x(-x) = -v_x(+x)$.
@@ -206,7 +219,7 @@ spacing, $r$ is the refinement factor, $l$ is the level and
 $\epsilon_l$ is a parameter that can be used to make the refinement
 more aggressive ($\epsilon_l < 0$) or less aggressive ($\epsilon_l >
 0$) than pure Lagrangian refinement --- in other words,
-super-Lagrangian or sub-Lagrangian in refinement.
+super-Lagrangian or sub-Lagrangian refinement.
 
 \item{\em Shocks.}  In this method, we identify and refine cells that contain shocks using the following criteria:
 \begin{eqnarray}
@@ -241,7 +254,8 @@ where $J_J$ is the required number of cells per Jeans length (4 by default).
 \end{equation}
 where $\epsilon_s$ is a dimensionless parameter.
 
-\item{\em Optical depth.} This refinement criterion, typically used for simulations using radiation transport, ensures that cells on the highest level of refinement have an \ion{H}{1} optical depth lower than unity.  The optical depth of a cell is estimated to be:
+\item{\em Optical depth.} This refinement criterion, typically used for simulations using radiation transport, 
+flags cells for refinement if they have an \ion{H}{1} optical depth lower than unity.  The optical depth of a cell is estimated to be:
 \begin{equation}
 \tau = \sigma_{\rm HI} n_{\rm HI} \Delta x 
 \end{equation}

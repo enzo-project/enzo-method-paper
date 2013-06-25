@@ -24,9 +24,10 @@ The conserved variable $U$ is given by
 \end{equation} 
 where $\rho$ is density, $v_i$ are the three components of velocity
 for $i={x,y,z}$, $E=v^2/2 + e$ denotes the specific total energy and $e$ the
-specific internal energy.
+specific internal energy (note that in this section only, we use the specific
+energy).
 
-For the generalized Lagrange multiplier formulation of the MHD
+For the generalized Lagrange multiplier (GLM) formulation of the MHD
 equations \citep{2002JCoPh.175..645D}, we consider these 
 conserved variables
 \begin{equation}
@@ -47,8 +48,8 @@ formulation for the divergence cleaning.  The fluxes then are
     &&  -v_yB_z+v_zB_y, v_zB_x-v_xB_z,\psi, c_h^2B_z)^{T},
 \end{eqnarray}
 where $c_h$ is a constant controlling the propagation speed and
-damping rate of $\div B$, and $h=e+p/\rho$ denotes the enthalpy.
-All quantities are cell-centered.
+damping rate of $\div B$, and $h=e+p/\rho$ denotes the specific 
+enthalpy.  All quantities are cell-centered.
 
 The method is dimensionally un-split in that the fluxes are computed
 for all dimensions first and the conserved quantities are updated in
@@ -62,7 +63,7 @@ slightly different definition of the magnetic field than used in the
 rest of the paper.  In particular, the field is defined as $\vecB =
 a^{3/2} \vecB^{\prime}$ (where $\vecB^{\prime}$ is the proper field
 strength).  This adds a source term of $-\dot{a}/(2a) \vecB$ on the
-right-hand side of Equation~\ref{eq:induction} and removes the factor
+right-hand side of Equation~(\ref{eq:induction}) and removes the factor
 of $a$ in the $\vecB$ term in the energy equation
 (Eq.~\ref{eq:total_energy_def}) and in the definition of the isotropic
 pressure $p^*$.

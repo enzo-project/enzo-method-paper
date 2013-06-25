@@ -200,9 +200,7 @@ and poor scaling is observed due to computing units being idle while
 waiting for information to be communicated from other processes (for,
 e.g., boundary information or gravity solves).  Substantially larger
 cell counts per core would in principle help scaling by reducing the
-amount of inter-process communication needed, but larger cell counts
-are typically impractical on most machines due to the amount of memory
-available on each node.
+amount of inter-process communication needed.
 
 As a final point, we observe that scaling at larger core counts has
 been measured, but only with an experimental hybrid-parallel (MPI +
@@ -212,11 +210,7 @@ on the NICS Kraken XT5 (an upgraded version of the XT4 machine used
 for the scaling study shown in the figure), using 2-8 OpenMP threads
 per MPI process.  Hybrid parallelism has the potential to
 substantially improve scaling by reducing the amount of communication
-per grid tile, as described in the previous paragraph; however, the
-optimal ratio of OpenMP threads per MPI task seems to vary
-substantially between computational platforms and astrophysical
-problems/required \enzo\ physics modules, and thus we hesitate to
-provide strict guidelines here.
+per grid tile, as described in the previous paragraph.
 
 \subsubsection{AMR scaling}
 
@@ -350,7 +344,7 @@ computational effort per timestep is constant.  However, for an AMR
 calculation, the number of grids that will be generated during the run
 is not known in advance, and so the CPU time per problem time can vary
 drastically throughout the calculation.  For example, at the beginning
-of the simulation when the densities are nearly uniform, only the
+of a cosmological simulation, when the densities are nearly uniform, only the
 static grid is required and the calculation progresses rapidly.
 However, as structure forms and dense clumps are generated, the number
 of grid points swells by orders of magnitude (an increase of $10^3$ is
@@ -430,7 +424,7 @@ on the ``refine-everywhere" cosmological runs, which both show similar
 behavior despite the different box sizes and redshifts at which we
 collect the data.  In fact, we find these results are very typical for
 cosmological runs, with only slight variations depending on the exact
-problem that is being simulated.  The top-left panel
+problem that is being simulated.  The top-right panel
 shows the ratio of $f_{l}/f_{l+1}$ which, remarkably, hovers around
 the critical value of 0.0625 determined earlier.  This implies that
 the relative CPU usage of each level, shown in the lower-left panel,
@@ -474,7 +468,7 @@ slightly larger than the critical 0.0625 value, indicating that the
 CPU time is dominated by the most refined levels, as shown in the
 bottom-left panel.  The memory usage is dominated by levels 2 and 3,
 the static levels, as the bottom-right panel demonstrates.  In this
-case, adding more levels of refinement would somewhat increase the
+case, adding more levels of refinement would substantially increase the
 cost of the simulation.
 
 We have focused thus far on scaling when increasing $l_{\rm max}$, but
@@ -488,7 +482,7 @@ the root grid where $f_0$ is already 1) by a factor linearly
 proportional to the increase in the mass resolution.  This is because
 the refinement criteria typically boosts the number of refined cells
 on the first and subsequent levels by this factor.  Again, we have
-empirically demonstrated that this scaling is approximately valid,
+empirically tested that this scaling is approximately valid,
 provided that we keep the maximum level constant.
 
 Putting this together, we find an approximate scaling for the

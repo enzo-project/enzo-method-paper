@@ -15,7 +15,7 @@ molecular hydrogen and deuterium.
 The primordial non-equilibrium chemistry routines used in \enzo\ were first
 described by \citet{abel97} and \citet{anninos97}, but have
 since been extended with updated reaction rates and the inclusion of
-deuterium species \citep{2009PhDT.........5T}.  These routines follow the
+deuterium species \citep{McGreer2008, 2009PhDT.........5T}.  These routines follow the
 non-equilibrium chemistry of a gas of primordial composition with 12 total
 species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp, and HD.  \enzo\
 also computes the radiative heating and cooling of the gas from atomic and
@@ -63,7 +63,7 @@ somewhat undesirable for large, three-dimensional simulations.
 \enzo\ solves the rate equations using a method based on a semi-implicit
 formulation in order to provide a stable, positive definite and first-order
 accurate solution.  The update discretization splits chemical changes into
-formation components and destruction components and updated with a mixed set of
+formation components and destruction components and updates with a mixed set of
 time states, as described in \citet{anninos97}.  The formation components of
 species $S_i$ are computed at the current subcycle time, where the contribution
 of species $S_i$ to its own destruction components are computed at the updated
@@ -74,15 +74,17 @@ Euler solve.  This technique is optimized by taking the chemical intermediaries
 \Hm and \HHp, which have large rate coefficients and low concentrations, and
 grouping them into a separate category of equations.  Due to their fast
 reactions, these species are very sensitive to small changes in the more
-abundant species and are at all times in astrophysical calculations close to
+abundant species and are (at almost all times in astrophysical calculations) close to
 their equilibrium values.  Attempting to resolve their formation and destruction
-times would necessitate extremely small timesteps, and while these species
-provide necessary channels to facilitate the formation of molecular hydrogen at
-low densities, they do not otherwise significantly influence the abundance of
-species with higher concentrations.  Therefore, reactions governing these two
+times would necessitate extremely small timesteps.
+%and while these species
+%provide necessary channels to facilitate the formation of molecular hydrogen at
+%low densities, they do not otherwise significantly influence the abundance of
+%species with higher concentrations.  
+Therefore, reactions governing these two
 species can be decoupled from the rest of the network and treated independently
-through analytic solutions for equilibrium values.  This allows a large speedup
-in solution as the timestepping scheme is applied only to the slower 7- or
+through analytic solutions for equilibrium values.  This allows a significant speedup
+in the solution speed, as the timestepping scheme is applied only to the slower 7- or
 10-species network (depending on whether deuterium is included or not), which
 will be much closer to the overall hydrodynamic timestep of the simulation.
 
@@ -97,7 +99,7 @@ cooling and from  chemical heating due to the formation of molecular hydrogen.
 It is important to note the regime in which this model is valid.
 According to \citet{abel97} and \citet{anninos97},
 the reaction network is valid for temperatures between $10^0 - 10^8$
-K.  The original model discussed in these two references is only valid
+K.  The original model discussed in these two references was only claimed to be valid
 up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the 3-body
 \HH~formation process (equation 20 in Table~\ref{table.collisional})
 allows correct modeling of the chemistry of the gas up until the point

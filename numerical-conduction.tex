@@ -3,11 +3,9 @@
 
 \enzo\ implements the equations of isotropic heat conduction in a manner
 similar to that of \citet{2007ApJ...664..135P}.  
-The isotropic flux of heat is given by
-\begin{equation}
-\myvec{F} = -\kappa_{\rm sp} \grad T
-\end{equation}
-where $\kappa_{\rm sp}$ is the Spitzer conduction coefficient, $4.6 \times 10^{-7}$~T$^{5/2}$ erg
+The isotropic flux of heat is given by equation~(\ref{eq:conduction}) and we
+use a value for the Spitzer conduction coefficient, 
+$\kappa_{\rm sp} = 4.6 \times 10^{-7}$~T$^{5/2}$ erg
 s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}.  In this
 situation we are using a
 value for the Coulomb logarithm, $\log \Lambda = 37.8$, that is
@@ -26,7 +24,7 @@ To ensure a smooth transition between
 the Spitzer and saturated regimes, we define an effective
 conductivity using the formalism of \citet{1988xrec.book.....S}
 \begin{equation}
-\kappa_{eff} = \frac{\kappa_{\rm sp}}{1 + 4.2 \lambda_e / \ell_T} \; ,
+\kappa_{eff} = \frac{\kappa_{\rm cond}}{1 + 4.2 \lambda_e / \ell_T} \; ,
 \end{equation}
 where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 / |\grad T|$ is the characteristic length scale of the local
@@ -42,14 +40,11 @@ Thermal conduction in a plasma can be strongly affected by the
 presence of magnetic field lines, which may suppress heat
 flow perpendicular to the magnetic field.  In that case, we allow for
 heat transport only parallel to the magnetic field lines in
-magnetohydrodynamic simulations.  Mathematically, this is treated as:
-\begin{equation}
-\myvec{F} = -\kappa_{\rm sp} \myvec{b} (\myvec{b} \cdot \grad T)
-\end{equation}
-where $\myvec{b}$ is the unit vector denoting the direction of the
-magnetic field.  As with the isotropic thermal conduction, we allow a
+magnetohydrodynamic simulations.  Mathematically, this is given
+by equation~(\ref{eq:anisotropic_conduction}.
+As with the isotropic thermal conduction, we allow a
 multiplicative factor f$_{\rm sp}$ to take into account the possible
-behavior of magnetic fields below the resolution limit of the
+suppression of magnetic fields below the resolution limit of the
 simulation.
 
 Both isotropic and anisotropic thermal conduction in \enzo\ are treated

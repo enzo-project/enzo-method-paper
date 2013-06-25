@@ -57,14 +57,14 @@ locally and compared to any other version of the code.  In
 Section~\ref{sec.tests.problems}, we describe some of the key test
 problems that are used to verify proper behavior.  All of these test
 problems, as well as the scripts to generate the figures from them,
-are available at \url{http://bitbucket.org/bwoshea/enzo-method-paper},
+are available at \url{http://bitbucket.org/enzo/enzo-method-paper},
 the Bitbucket repository for the \enzo\ method paper.  The
 \texttt{test\_problems} subdirectory in this repository contains all of
 the files necessary to regenerate all of the figures in
 Section~\ref{sec.tests.problems}.  We note for completeness that 
 the figures in Section~\ref{sec.tests.problems} were generated using \texttt{yt} version 2.5.3 and the
 \url{https://bitbucket.org/enzo/enzo-dev} repository of \enzo\ with
-changeset \texttt{5d8c412}.
+changeset \texttt{5d8c412}, which corresponds to \enzo\ 2.3.
 
 \subsubsection{Code comparisons}
 \label{sec.tests.compare}
@@ -87,8 +87,8 @@ small-scale self-gravitating structures (for an equivalent dark matter
 particle count and nominally equivalent force resolution), but does
 comparably well as a tree-based code for larger structure, and is
 typically superior in terms of resolving fluid features due to its
-higher-order (and artificial viscosity-free) Piecewise Parabolic
-Method hydrodynamics solver.  When examining classical test cases such
+higher-order (and artificial viscosity-free) PPM hydrodynamics 
+solver.  When examining classical test cases such
 as the Santa Barbara project \citep{SantaBarbara}, \enzo\ forms galaxy
 clusters with very similar density, temperature, and entropy profiles
 to other grid-based codes that use Godunov-type hydro methods, which
@@ -116,12 +116,12 @@ other grid-based hydrodynamics codes involved in the comparison, and
 provide useful information on the sort of practical challenges that a
 user of an
 AMR code such as \enzo\ may experience.  More specific comparisons, including one
-specifically testing the linear and nonlinear growth of the
+testing the linear and nonlinear growth of the
 Kelvin-Helmholz instability \citep{2012ApJS..201...18M}, as well as a
 comparison that more
 broadly examines Galilean invariance in grid-based codes
 \citep{2010MNRAS.401.2463R}, show that \enzo, and in particular its
-implementation of the Piecewise Parabolic Method hydrodynamics solver,
+implementation of the PPM hydrodynamics solver,
 converge to the correct solution as expected, and generally provide
 less diffusive solutions than lower-order codes, including those that
 use artificial viscosity.  Finally, there have been two code comparison
@@ -145,7 +145,7 @@ results similar to both the analytical solutions and results obtained by
 other codes.  We note, however, that there were minor differences throughout
 the comparison between various codes, and the majority of the codes differed
 in at least a subset of the tests.
-\citet{2011ApJ...726...55T} shows the results of varied reaction rate
+\citet{2011ApJ...726...55T} show the result of varying reaction rate
 coefficients for the formation of molecular hydrogen via the 3-body
 process in both the \enzo\ and GADGET-2 codes, observing similar trends between
 the two codes. However, at nominally equivalent resolution

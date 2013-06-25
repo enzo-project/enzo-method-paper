@@ -47,9 +47,9 @@ in conservative form as,
      0 \label{eq:mass1d} \\
 \frac{\partial \rho v}{\partial t}  + \frac{1}{a} \frac{\partial \rho v^2}{\partial x}   + 
       \frac{1}{a} \frac{\partial p}{ \partial x} & = & 
-      \rho \frac{1}{a} \frac{\partial \phi}{ \partial x}  \label{eq:momentum1d}  \\
+      \rho \frac{g}{a}  \label{eq:momentum1d}  \\
 \frac{\partial \rho E}{\partial t}  + \frac{1}{a} \frac{\partial \rho v E}{\partial x}  & =  &
-      \rho v \frac{1}{a} \frac{\partial \phi}{\partial x}. \label{eq:total_energy1d}
+      \rho v \frac{g}{a} \label{eq:total_energy1d}
 \end{eqnarray}
 %
 Here $x$ and $v$ refer to the one dimensional comoving position and 
@@ -168,21 +168,22 @@ We note that the acceleration required in Equation~(\ref{eq:momentum_diff}) is a
 acceleration felt by the entire zone and not just at the zone center.
 Therefore, it is possible to find the mass-weighted average acceleration over the zone
 by expanding the density and acceleration distributions and
-retaining all terms up to second-order in $\Delta x$:
+retaining all terms up to second-order in $\Delta x$ \citep{1995CoPhC..89..149B}, although we find that
+the potential is so slowly varying that this is unnecessary.
 %
-\begin{equation}
-g_j^{n+1/2} = 
-       \frac{1}{2 a^{n+1/2} \delta x_j} \left[ 
-             \phi_{j+1}^{n+1/2} 
-           - \phi_{j-1}^{n+1/2} 
-           + \frac{1}{12} \left(    \phi^{n+1/2}_{j+1} 
-                                 - 2\phi^{n+1/2}_j 
-                                 + \phi^{n+1/2}_{j-1} \right) 
-                                   {\delta d_j \over d_j}
-       \right].
-       \label{eq:accel}
-\end{equation}
-Generally we find that the potential is so slowly varying that this change is unnecessary.
+%\begin{equation}
+%g_j^{n+1/2} = 
+%       \frac{1}{2 a^{n+1/2} \delta x_j} \left[ 
+%             \phi_{j+1}^{n+1/2} 
+%           - \phi_{j-1}^{n+1/2} 
+%           + \frac{1}{12} \left(    \phi^{n+1/2}_{j+1} 
+%                                 - 2\phi^{n+1/2}_j 
+%                                 + \phi^{n+1/2}_{j-1} \right) 
+%                                   {\delta d_j \over d_j}
+%       \right].
+%       \label{eq:accel}
+%\end{equation}
+%Generally we find that the potential is so slowly varying that this change is unnecessary.
 
 % ------------------------------------------------------------
 
@@ -299,7 +300,7 @@ analogous scheme for choosing which variable to employ.
 \subsubsection{Riemann Solvers and Fallback}
 \label{sec.riemann}
 
-In this section, we describe the methods we adopt to solving the Riemann
+In this section, we describe the methods we adopt to solve the Riemann
 problem, which is generally required to compute the fluxes in 
 any Godunov-based scheme.  This section therefore applies to all three of our 
 Godunov-based schemes.  The Riemann problem we are solving
@@ -317,7 +318,7 @@ While there exists an exact solution to this problem, finding it is expensive.  
 possible combination of left- and right- traveling shocks and rarefactions,
 only one of which is fully consistent with the initial conditions.  Once the
 correct physical state is determined, the pressure in the central region can
-only be determined by finding the root to an algebraic equation, which is necessarily
+only be computed by finding the root to an algebraic equation, which is necessarily
 an iterative process.  Thus a series of \emph{approximate} Riemann solvers are
 typically used.  There are four approximate Riemann solvers in \enzo: two-shock
 \citep{toro-1997},

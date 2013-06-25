@@ -24,18 +24,18 @@ expressions, showing the one-dimensional case for clarity:
 \end{equation}
 
 \begin{equation}
-\Delta t_{\rm accel} = \min \left( \sqrt{\frac{\Delta x}{\myvec{g}}} \right)_L ,
+\Delta t_{\rm accel} = \min \left( \sqrt{\frac{\Delta x}{|\myvec{g}|}} \right)_L ,
 \label{eqn:dtaccel}
 \end{equation}
 
 \begin{equation}
-\Delta t_{\rm rad} = \min \left(  \sqrt{\frac{\Delta x}{\myvec{a}_{rad}}} \right)_L,
+\Delta t_{\rm rad} = \min \left(  \sqrt{\frac{\Delta x}{|\myvec{a}_{rad}|}} \right)_L,
 \label{eqn:dtrad}
 \end{equation}
 
 \begin{equation}
-\Delta t_{\rm cond} = \min \left(  \frac{ \kappa_{\rm cond}}{f_{\rm sp}} \frac{\Delta x^2
-    n_b}{\kappa(T)} \right)_L,
+\Delta t_{\rm cond} = \min \left(  \frac{ k_{\rm cond}}{f_{\rm sp}} \frac{\Delta x^2
+    n_b}{\kappa_{\rm sp}(T)} \right)_L,
 \label{eqn:dtcond}
 \end{equation}
 
@@ -134,12 +134,12 @@ solution to the equation of heat conduction.  In this expression,
 $n_b$ is the baryon number density, 
 %defined as $n_b = \rho_b / \mu
 %m_p$, where $\mu$ is the mean molecular weight, 
-$\kappa(T)$ is the Spitzer thermal conductivity, and f$_{\rm sp}$ is a
+$\kappa_{\rm sp}(T)$ is the Spitzer thermal conductivity, and f$_{\rm sp}$ is a
 user-defined, dimensionless
 conduction suppression factor whose value must be f$_{\rm sp} \leq 1$.  
 %Both are defined in Section~\ref{sec.num.conductions}.  
-$\kappa_{\rm cond}$ is a dimensionless prefactor whose
-value must be $0 < \kappa_{\rm cond}  \leq 0.5$, and is exactly 0.5 for the
+$k_{\rm cond}$ is a dimensionless prefactor whose
+value must be $0 < k_{\rm cond}  \leq 0.5$, and is exactly 0.5 for the
 implemention in \enzo.
 From a practical
 perspective, it is useful to note that, unlike other timestep criteria
