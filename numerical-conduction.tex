@@ -3,14 +3,17 @@
 
 \enzo\ implements the equations of isotropic heat conduction in a manner
 similar to that of \citet{2007ApJ...664..135P}.  
-The isotropic flux of heat is given by:
+The isotropic flux of heat is given by
 \begin{equation}
 \myvec{F} = -\kappa_{\rm sp} \grad T
 \end{equation}
 where $\kappa_{\rm sp}$ is the Spitzer conduction coefficient, $4.6 \times 10^{-7}$~T$^{5/2}$ erg
-s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}, here we are using a
+s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}.  In this
+situation we are using a
 value for the Coulomb logarithm, $\log \Lambda = 37.8$, that is
-appropriate for the intracluster medium \citep{1988xrec.book.....S}.
+appropriate for the intracluster medium \citep{1988xrec.book.....S} --
+in astrophysically-relevant, fully ionized plasmas this value varies
+by no more than 50\% (see, e.g., Smith et al. 2013, submitted).
 It is quite possible that the local heat flux computed in this way 
 can become unphysically large in
 the high-temperature, low-density cluster regime when using this
@@ -30,9 +33,9 @@ where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 temperature gradient.  We also assume that the conductivity of the
 plasma can be described in terms of an effective conductivity, which
 can be expressed as a fraction f$_{\rm sp}$ of the Spitzer conductivity
-(where f$_{\rm sp} \leq 1.0$ are considered physical values).  This takes
+(where f$_{\rm sp} \leq 1.0$ are considered physically realistic values).  This takes
 into account physical processes below the resolution limit of the
-simulation (such as tangled magnetic fields) that can suppress heat
+simulation, such as tangled magnetic fields, that can suppress heat
 transport.
 
 Thermal conduction in a plasma can be strongly affected by the

@@ -54,7 +54,7 @@ Broadly speaking, these methods all work in similar
 ways: At a specified time interval, all grid cells that are at the
 highest local level of refinement (i.e., that have no child cells) are
 examined to see if they meet a set of criteria for star formation.
-This may simply be a baryon density threshold, but may include more
+This may simply be a baryon density threshold, but can also include more
 complex tests, such as an examination of local cooling and dynamical
 time scales, molecular hydrogen fraction, metallicity, and converging
 gas flows.  If the star formation criteria are met, some mass of gas
@@ -177,7 +177,7 @@ During this timestep, the star particle returns
 metal-enriched gas and thermal energy from supernovae and from stellar
 winds.  Since massive stars have very short lifetimes, we assume that
 there is an immediate feedback of some fraction $f_{\rm SN}$ of the rest
-energy from the stars into the baryon gas, such
+energy from the stars into the gas, such
 that $E_{\rm add} = f_{\rm SN} \Delta m_{\rm sf} c^2$, where c is the speed of
 light.  In addition, a fraction $f_{Z*}$ of the stellar mass is fed back 
 in the form of metals.  Finally, a fraction of the mass $f_{m*}$
@@ -186,11 +186,11 @@ along with momentum in order to simulate the mass ejection from
 all stars (not just supernovae).
 
 There are six user-defined parameters in this algorithm: three deal
-with the star formation ($\eta$, $m_{\rm *min}$ and $t_{\rm
+with star formation ($\eta$, $m_{\rm *min}$ and $t_{\rm
   dyn,min}$), and three deal with feedback ($f_{\rm SN}$, $f_{Z*}$ and
 $f_{m*}$).  Some of these parameters are completely free, while others
 can be guided by observation or theory.  For example, the supernova
-feedback parameter, $f_{\rm SN}$, can be constrained assuming that, for
+feedback parameter, $f_{\rm SN}$, can be constrained by assuming that, for
 every $200 M_\odot$ of stars created, one supernova occurs, and this
 event feeds back approximately $10^{51}$ ergs of thermal energy,
 giving:
@@ -305,7 +305,7 @@ molecular clouds can be resolved, thus rendering these approximations
 invalid.  To that end, \citet{2012ApJ...749...36K} have implemented
 a star formation algorithm that is specifically geared to
 high-resolution cosmological simulations of galaxy formation, where
-the formation of molecular hydrogen is followed directly, and stars
+the formation of molecular hydrogen is followed directly and stars
 are allowed to form at the highest level of refinement when the local
 H$_2$ fraction exceeds a pre-determined threshold.  Cells are examined
 every root grid timestep, $\Delta t_0$, and cells at the highest level
