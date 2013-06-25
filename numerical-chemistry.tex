@@ -22,9 +22,9 @@ also computes the radiative heating and cooling of the gas from atomic and
 molecular line excitation, recombination, collisional excitation, free-free
 transitions, Compton scattering of the cosmic microwave background, as well as
 several models for a metagalactic UV background that heat the gas via
-photoionization and photodissociation; see Section~\ref{sec.num.cooling} for
-more details.  The chemical and thermal states of the gas can be updated either
-at the same hydrodynamical timestep (i.e., de-coupled and operator-split) or
+photoionization and photodissociation (see Section~\ref{sec.num.cooling} for
+more details).  The chemical and thermal states of the gas can be updated either
+at the same hydrodynamical timestep (i.e., decoupled and operator-split) or
 through the same subcycling system (i.e., a coupled chemical and thermal
 system).  The default behavior of \enzo\ is to couple these two systems at
 subcycles of the hydrodynamic timestep; this results in updates to both the
@@ -75,7 +75,7 @@ Euler solve.  This technique is optimized by taking the chemical intermediaries
 grouping them into a separate category of equations.  Due to their fast
 reactions, these species are very sensitive to small changes in the more
 abundant species and are at all times in astrophysical calculations close to
-equilibrium values.  Attempting to resolve their formation and destruction
+their equilibrium values.  Attempting to resolve their formation and destruction
 times would necessitate extremely small timesteps, and while these species
 provide necessary channels to facilitate the formation of molecular hydrogen at
 low densities, they do not otherwise significantly influence the abundance of
@@ -90,8 +90,9 @@ Even so, the accuracy and stability of the scheme is maintained by subcycling
 the rate solver within a single hydrodynamic timestep.  These subcycle
 timesteps are determined so that the estimated fractional change in the
 electron concentration is limited to no more than $10\%$ per timestep;
-additional criteria may be applied based on the expected change from radiative
-cooling, chemical heating from the formation of molecular hydrogen.
+additional criteria may be applied based on the expected change in
+internal energy from radiative
+cooling and from  chemical heating due to the formation of molecular hydrogen.
 
 It is important to note the regime in which this model is valid.
 According to \citet{abel97} and \citet{anninos97},
