@@ -3,9 +3,10 @@
 
 In \enzo, the integration of the equations being solved is generally adaptive in time 
 as well as in space.  The timestep $\Delta t$ is set on a level-by-level
-basis by finding the largest timestep such that all of the criteria listed below are
-satisfied.  The timestep criteria are given by the following expressions
-(where we show the one-dimensional case for clarity):
+basis by finding the largest timestep such that all of the criteria
+listed below (that are relevant for the simulation in question) are
+satisfied.  The timestep criteria are given by the following
+expressions, showing the one-dimensional case for clarity:
 
 \begin{equation}
 \Delta t_{\rm hydro} = \min \left( \kappa_{\rm hydro} \frac{a \Delta x}{c_{s} + |v_x|} \right)_L ,
@@ -55,7 +56,7 @@ satisfied.  The timestep criteria are given by the following expressions
 
 In equations~(\ref{eqn:dthydro})-(\ref{eqn:dtcond}), the $\min ( \ldots)_L$ 
 formalism means that this value is calculated for all cells or
-particles on a given level l and the minimum overall value is taken as the timestep.
+particles on a given level L and the minimum overall value is taken as the timestep.
 
 Equation~(\ref{eqn:dthydro}) ensures that all cells satisfy the
 Courant-Freidrichs-Levy (CFL) condition for accuracy and stability of
@@ -63,13 +64,14 @@ an explicit finite difference discretization of the Euler equations.
 %Effectively this condition forces the timestep to be small enough such
 %that any changes in the fluid propagate less than a single grid
 %spacing, $\Delta x$.  
-In this equation, $\kappa_{\rm hydro}$ is a
+In this equation, $\kappa_{\rm hydro}$ is a dimensionless
 numerical constant with a value of $0 < \kappa_{\rm hydro} \leq 1$
 (with a typical value of $\kappa_{\rm hydro} \sim 0.3-0.5$) that
 ensures that the CFL condition is always met, and $c_s$ and $v_x$ are
 the sound speed and peculiar baryon velocity in a given cell.
 
-Equation~(\ref{eqn:dthydro}) is valid for one dimension.  For 2 or 3
+Equation~(\ref{eqn:dthydro}) is valid for one dimension, and is used
+when the equations of hydrodynamics are being solved.  For 2 or 3
 dimensions, it was shown by \cite{Godunov1959}  that using the
 harmonic average of the timestep found along each of the coordinate
 axes yields a maximum $\kappa_{\rm hydro} = 0.8$.  So letting $\Delta
@@ -86,7 +88,8 @@ repeating the one dimensional criterion along each axis, and taking the minimum.
 Equation~(\ref{eqn:dtMHD}) is only enforced when the equations of
 magnetohydrodynamics are being solved, and is directly analogous to
 equation~(\ref{eqn:dthydro}) in that it ensures that the CFL condition
-is being enforced at all times.  In this equation, $\kappa_{\rm MHD}$ is a
+is being enforced at all times.  In this equation, $\kappa_{\rm MHD}$
+is a dimensionless
 numerical constant with a value of $0 < \kappa_{\rm MHD} \leq 1$ (with a
 typical value of $\kappa_{\rm MHD} \sim 0.5$) that ensures that the CFL
 condition is always met, and $v_f$ and $v_x$ are the ``fast wave
@@ -107,7 +110,8 @@ Equation~(\ref{eqn:dtdarkmatter}) is analogous to
 equation~(\ref{eqn:dthydro}) and helps to ensure accuracy in the N-body solver
 by requiring that no particle travels more than one cell
 width.  The parameter $\kappa_{\rm dm}$ is like $\kappa_{\rm
-hydro}$, with a similar range of values.
+hydro}$, with a similar range of values.  This criterion is used when
+massive particles are included in a simulation.
 
 Equations~(\ref{eqn:dtaccel}) and~(\ref{eqn:dtrad}) are supplementary to equation~(\ref{eqn:dthydro}) in that they
 take into account the possibility of large accelerations due to either
@@ -127,18 +131,20 @@ packet direction.
 
 Equation~(\ref{eqn:dtcond}) is the stability condition for an explicit
 solution to the equation of heat conduction.  In this expression,
-$n_b$ is the baryon number density. 
+$n_b$ is the baryon number density, 
 %defined as $n_b = \rho_b / \mu
 %m_p$, where $\mu$ is the mean molecular weight, 
-$\kappa(T)$ is the Spitzer thermal conductivity, and f$_{\rm sp}$ is a user-defined
+$\kappa(T)$ is the Spitzer thermal conductivity, and f$_{\rm sp}$ is a
+user-defined, dimensionless
 conduction suppression factor whose value must be f$_{\rm sp} \leq 1$.  
 %Both are defined in Section~\ref{sec.num.conductions}.  
-$\kappa_{\rm cond}$ is a prefactor whose
-value must be $0 < \kappa_{\rm cond}  < 0.5$, and is exactly 0.5 for the
+$\kappa_{\rm cond}$ is a dimensionless prefactor whose
+value must be $0 < \kappa_{\rm cond}  \leq 0.5$, and is exactly 0.5 for the
 implemention in \enzo.
 From a practical
 perspective, it is useful to note that, unlike other timestep criteria
-discussed above (which effectively scale as $\Delta x / \sqrt{T}$),
+discussed above (which effectively scale as $\Delta x / \sqrt{T}$ with
+the grid cell size $\Delta x$ and temperature $T$),
 the timestep criterion due to thermal conduction scales as $\Delta x^2
 / T^{2.5}$, which can result in a rapid decrease in timestep in
 regions of high resolution and/or temperature.
@@ -152,8 +158,9 @@ because the expansion of the universe and its first derivative with
 respect to time both appear in the equations of cosmological
 (magneto)hydrodynamics and particle motion, and some limit is required
 for the stability of the PPM algorithm in comoving coordinates.  This
-criterion typically limits the timestep
-only at high redshifts, when densities are relatively homogeneous.
+criterion typically limits the simulation's timestep
+only during the earliest phases of a cosmological simulation, before
+substantial structure has formed.
 
 %%% Local Variables: 
 %%% mode: latex
