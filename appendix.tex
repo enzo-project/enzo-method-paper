@@ -5,9 +5,8 @@
 In this appendix, we provide details for the various interpolation
 methods available in the code.  We assume throughout that we are
 dealing with Cartesian coordinates and cells of equal sizes, although
-we allow for arbitrary an refinement factor $r$ between cells at
+we allow for an arbitrary refinement factor $r$ between cells at
 different levels.
-
 
 \vspace{0.5cm}\noindent
 {\bf SecondOrderA} 
@@ -44,7 +43,7 @@ In two dimensions, the procedure is very similar in that we linearly
 interpolate parent values to the four cell corners: $Q_{-1/2, -1/2}$,
 $Q_{-1/2, 1/2}$, $Q_{1/2, -1/2}$, $Q_{1/2, 1/2}$ (by averaging parent
 cell-centered parent values).  We then compute monotonic slopes across
-the two diagonals, since for a linear function, extrema occur at
+the two diagonals, since for a linear function extrema occur at
 corners:
 
 \begin{eqnarray}
@@ -63,7 +62,7 @@ q_{i,j} = Q_0 + \frac{i+(1-r)/2}{r} f_x + \frac{j+(1-r)/2}{r} f_y
 Finally, we write down the three-dimensional version -- unfortunately,
 here the number of monotonicity constraints is four (the 4 diagonals
 across the 8 opposing corners of the cube), while the number of slopes
-is three, so the problem is over constrained.  Somewhat arbitrarily,
+is three, so the problem is over-constrained.  Somewhat arbitrarily,
 we adopt the following procedure.  As before, we compute $\Delta Q_0$,
 $\Delta Q_1$, $\Delta Q_2$, and $\Delta Q_3$ with the minmod limiter
 across the 4 diagonals.  We then define
@@ -115,7 +114,7 @@ are computed directly rather than with the minmod limiter
 (e.g. $\Delta Q_0 = (Q_{1/2,1/2,1/2} - Q_{-1/2,-1/2,-1/2})/2$).  To
 ensure positivity in the resulting interpolation when applied to
 positive conserved quantities, the slopes are limited so that the
-smallest corner value is 0.2 the cell center value.  The procedure
+smallest corner value is 0.2 of the cell center value.  The procedure
 described above is then applied to turn these four slopes into a
 linear interpolation.
 
@@ -186,7 +185,7 @@ $Q_0/\tilde{Q_0}$).  Unfortunately, the result of this procedure does
 not preserve monotonicity -- it can introduce local minima and maxima
 at parent cell boundaries.  We can then attempt to correct that by
 taking a weighted average between the interpolated values on the
-subgrid and the parent value with weights computed such that the
+subgrid and the parent value, with weights computed such that the
 interpolated values at the edge of the parent cell are not local
 maxima compared to the interpolated values in the neighboring parent
 cell.
