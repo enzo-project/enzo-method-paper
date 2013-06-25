@@ -2,26 +2,27 @@
 \label{sec.tests.suite}
 
 \enzo\ is capable of simulating a large variety of problems types,
-with all but a few of these types requiring only a parameter file as an
-input.  The most notable exception is the cosmology simulation, which takes
-as input initial conditions created by other codes.  The suite of test
-problems spans a wide range in complexity.  At one end of this spectrum
-are simple problems that utilize only a single component of \enzo\ and
-for which analytic solutions exist for comparison with the simulation
-results.  At the opposite end are problems that exercise a large
-portion of \enzo's machinery in concert.  Together, the available
-problem types fully cover all of \enzo's functionality.  This enables
-them to serve as a vehicle for verifying that the code's behavior
-remains stable over time, on new computing platforms, and after modification of the codebase.
+with all but a few of these types requiring only a parameter file as
+an input.  The most notable exception is the cosmology simulation,
+which takes as input initial conditions created by other codes.  The
+suite of test problems spans a wide range in complexity.  At one end
+of this spectrum are simple problems that utilize only a single
+component of \enzo\ and for which analytic solutions exist for
+comparison with the simulation results.  At the opposite end are
+problems that exercise a large portion of \enzo's machinery in
+concert.  Together, the available problem types fully cover all of
+\enzo's functionality.  This enables them to serve as a vehicle for
+verifying that the code's behavior remains stable over time, on new
+computing platforms, and after modification of the codebase.
 
 \enzo\ uses an automated testing framework that allows a user to run,
 with a single command, a set of test problems and compare the results
 against results produced by any other version of the code.  Within the
-\enzo\ source distribution, the test problem parameter files are stored
-in a nested directory structure organized according to the primary
-functionality tested (e.g., hydrodynamics, gravity, cooling, etc.).
-Each parameter file is accompanied by a text file containing various
-descriptive keywords, such as the machinery tested, the
+\enzo\ source distribution, the test problem parameter files are
+stored in a nested directory structure organized according to the
+primary functionality tested (e.g., hydrodynamics, gravity, cooling,
+etc.).  Each parameter file is accompanied by a text file containing
+various descriptive keywords, such as the machinery tested, the
 dimensionality, and the approximate run time.  A test runner script is
 responsible for taking as input from the user a series of keywords
 that are used to select a subset of all available test problems.  The
@@ -38,125 +39,128 @@ respectively, on a relatively new desktop computer (circa 2013).
 
 After the test problems are selected by the test runner script, they
 are run in succession using either the \enzo\ executable contained
-within that distribution or an external executable built from another \enzo\
-version and specified by the user.  This allows for any version of the
-code to be tested with an identical set of test problems.  After
-running the test problem simulations, the test runner then performs a
-series of basic analysis tasks using the \texttt{yt} analysis toolkit
-\citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.  The default
-analysis performed on all test problems includes calculation of
-various statistics (such as extrema, mean, and variance) on the fields
-present in the output data.  Custom analysis provided by scripts that
-accompany the test problem parameter files is run for special cases,
-such as when an analytical solution exists that can be compared
-against the simulation data.  After the analysis is performed, the
-results are compared against a set of gold standard results that are
-maintained on a website and downloaded on the fly by the test runner
-script.  Alternately, results from any version of \enzo\ can be stored
-locally and compared to any other version of the code.  In
-Section~\ref{sec.tests.problems}, we describe some of the key test
-problems that are used to verify proper behavior.  All of these test
-problems, as well as the scripts to generate the figures from them,
-are available at \url{http://bitbucket.org/enzo/enzo-method-paper},
-the Bitbucket repository for the \enzo\ method paper.  The
-\texttt{test\_problems} subdirectory in this repository contains all of
-the files necessary to regenerate all of the figures in
-Section~\ref{sec.tests.problems}.  We note for completeness that 
-the figures in Section~\ref{sec.tests.problems} were generated using \texttt{yt} version 2.5.3 and the
-\url{https://bitbucket.org/enzo/enzo-dev} repository of \enzo\ with
-changeset \texttt{5d8c412}, which corresponds to \enzo\ 2.3.
+within that distribution or an external executable built from another
+\enzo\ version and specified by the user.  This allows for any version
+of the code to be tested with an identical set of test problems.
+After running the test problem simulations, the test runner then
+performs a series of basic analysis tasks using the \texttt{yt}
+analysis toolkit \citep{2011ApJS..192....9T, 2011arXiv1112.4482T}.
+The default analysis performed on all test problems includes
+calculation of various statistics (such as extrema, mean, and
+variance) on the fields present in the output data.  Custom analysis
+provided by scripts that accompany the test problem parameter files is
+run for special cases, such as when an analytical solution exists that
+can be compared against the simulation data.  After the analysis is
+performed, the results are compared against a set of gold standard
+results that are maintained on a website and downloaded on the fly by
+the test runner script.  Alternately, results from any version of
+\enzo\ can be stored locally and compared to any other version of the
+code.  In Section~\ref{sec.tests.problems}, we describe some of the
+key test problems that are used to verify proper behavior.  All of
+these test problems, as well as the scripts to generate the figures
+from them, are available at
+\url{http://bitbucket.org/enzo/enzo-method-paper}, the Bitbucket
+repository for the \enzo\ method paper.  The \texttt{test\_problems}
+subdirectory in this repository contains all of the files necessary to
+regenerate all of the figures in Section~\ref{sec.tests.problems}.  We
+note for completeness that the figures in
+Section~\ref{sec.tests.problems} were generated using \texttt{yt}
+version 2.5.3 and the \url{https://bitbucket.org/enzo/enzo-dev}
+repository of \enzo\ with changeset \texttt{5d8c412}, which
+corresponds to \enzo\ 2.3.
 
 \subsubsection{Code comparisons}
 \label{sec.tests.compare}
 
 Over the course of its existence, \enzo\ has been involved in numerous
 comparisons with other astrophysical codes used for self-gravitating
-fluid dynamics.  In general, \enzo\ behaves in a manner similar to other
-grid-based (and particularly AMR-based) codes, as we will summarize below.
+fluid dynamics.  In general, \enzo\ behaves in a manner similar to
+other grid-based (and particularly AMR-based) codes, as we will
+summarize below.
 
 \enzo\ has been involved in multiple cosmological code comparisons,
 including the Santa Barbara Cluster code comparison project
 \citep{SantaBarbara}, a large comparison of N-body simulations
 \citep{2008CS&D....1a5003H}, as well as several direct comparisons
-between \enzo\ and the GADGET SPH code in a variety of
-set-ups, including N-body and adiabatic hydrodynamics
+between \enzo\ and the GADGET SPH code in a variety of set-ups,
+including N-body and adiabatic hydrodynamics
 \citep{2005ApJS..160....1O,2005MNRAS.364..909V, 2011MNRAS.418..960V}
 and simulations of the Lyman-alpha forest \citep{2007MNRAS.374..196R}.
-Compared to the other codes involved in these projects, the \enzo\ code typically has a more difficult time resolving
-small-scale self-gravitating structures (for an equivalent dark matter
-particle count and nominally equivalent force resolution), but does
-comparably well as a tree-based code for larger structure, and is
-typically superior in terms of resolving fluid features due to its
-higher-order (and artificial viscosity-free) PPM hydrodynamics 
-solver.  When examining classical test cases such
-as the Santa Barbara project \citep{SantaBarbara}, \enzo\ forms galaxy
-clusters with very similar density, temperature, and entropy profiles
-to other grid-based codes that use Godunov-type hydro methods, which
-systematically differed from particle-based codes using SPH in this
-code comparison.  Similarly, in galaxy cluster simulations that look
-specifically at the properties of cosmological shocks
-\citep[e.g.][]{2011MNRAS.418..960V}, \enzo\ produces results that are
-similar to other high-order grid-based hydrodynamics codes, and a far
-superior performance of \enzo\ is observed (in terms of resolution of
-fluid features and shock detection) in low-density regions when
-compared to a particle-based code.  In tests of the Lyman-alpha forest
-that include radiative cooling and a uniform metagalactic ultraviolet
-background, \enzo\ and GADGET provide results on metrics such as the
-matter power spectrum that are comparable to within 5\%
-\citep{2007MNRAS.374..196R}.
+Compared to the other codes involved in these projects, the \enzo\
+code typically has a more difficult time resolving small-scale
+self-gravitating structures (for an equivalent dark matter particle
+count and nominally equivalent force resolution), but does comparably
+well as a tree-based code for larger structure, and is typically
+superior in terms of resolving fluid features due to its higher-order
+(and artificial viscosity-free) PPM hydrodynamics solver.  When
+examining classical test cases such as the Santa Barbara project
+\citep{SantaBarbara}, \enzo\ forms galaxy clusters with very similar
+density, temperature, and entropy profiles to other grid-based codes
+that use Godunov-type hydro methods, which systematically differed
+from particle-based codes using SPH in this code comparison.
+Similarly, in galaxy cluster simulations that look specifically at the
+properties of cosmological shocks \citep[e.g.][]{2011MNRAS.418..960V},
+\enzo\ produces results that are similar to other high-order
+grid-based hydrodynamics codes, and a far superior performance of
+\enzo\ is observed (in terms of resolution of fluid features and shock
+detection) in low-density regions when compared to a particle-based
+code.  In tests of the Lyman-alpha forest that include radiative
+cooling and a uniform metagalactic ultraviolet background, \enzo\ and
+GADGET provide results on metrics such as the matter power spectrum
+that are comparable to within 5\% \citep{2007MNRAS.374..196R}.
 
 Several comparisons have been made that focus specifically on
 hydrodynamics solvers and fluid behavior.  In particular, the work of
-\citet{2007MNRAS.380..963A} and \citet{Tasker2008} perform
-direct comparisons between several grid- and particle-based
-codes for a variety of fluid-centric test problems (including shocked gas clouds,
+\citet{2007MNRAS.380..963A} and \citet{Tasker2008} perform direct
+comparisons between several grid- and particle-based codes for a
+variety of fluid-centric test problems (including shocked gas clouds,
 self-gravitating, translating clouds, and Sedov-Taylor explosions),
 and show that \enzo\ is comparable or superior in behavior to the
 other grid-based hydrodynamics codes involved in the comparison, and
 provide useful information on the sort of practical challenges that a
-user of an
-AMR code such as \enzo\ may experience.  More specific comparisons, including one
-testing the linear and nonlinear growth of the
-Kelvin-Helmholz instability \citep{2012ApJS..201...18M}, as well as a
-comparison that more
-broadly examines Galilean invariance in grid-based codes
-\citep{2010MNRAS.401.2463R}, show that \enzo, and in particular its
-implementation of the PPM hydrodynamics solver,
+user of an AMR code such as \enzo\ may experience.  More specific
+comparisons, including one testing the linear and nonlinear growth of
+the Kelvin-Helmholz instability \citep{2012ApJS..201...18M}, as well
+as a comparison that more broadly examines Galilean invariance in
+grid-based codes \citep{2010MNRAS.401.2463R}, show that \enzo, and in
+particular its implementation of the PPM hydrodynamics solver,
 converge to the correct solution as expected, and generally provide
 less diffusive solutions than lower-order codes, including those that
-use artificial viscosity.  Finally, there have been two code comparison
-projects that focus on turbulence simulations.  The first studied the
-behavior of decaying isothermal supersonic turbulence
+use artificial viscosity.  Finally, there have been two code
+comparison projects that focus on turbulence simulations.  The first
+studied the behavior of decaying isothermal supersonic turbulence
 \citep{2009A&A...508..541K}, and the second examined supersonic
 magnetohydrodynamical turbulence \citep{2011ApJ...737...13K}.  Both
 included the \enzo\ code, with the former testing the PPM
 hydrodynamics and the latter both the constrained transport MHD
-implementation of \citet{Collins10} and the Dedner method of \citet{WangAbelZhang08}.  In both cases, \enzo\ performed similarly to other
-grid-based codes that use Godunov-based fluid solvers, and typically
-had better effective resolution than particle-based codes when using the
-same number of particles as the number of grid cells in the \enzo\ simulation.
+implementation of \citet{Collins10} and the Dedner method of
+\citet{WangAbelZhang08}.  In both cases, \enzo\ performed similarly to
+other grid-based codes that use Godunov-based fluid solvers, and
+typically had better effective resolution than particle-based codes
+when using the same number of particles as the number of grid cells in
+the \enzo\ simulation.
 
 Three other comparisons between the \enzo\ code and other simulation
 tools have been performed that focus on physics other than gravity and
 fluid flow.  The flux-limited diffusion radiation transport scheme was
-measured against several test problems by \citet{IlievEtAl2009},
-which involved tests with and without analytical solutions.  \enzo\ produced
-results similar to both the analytical solutions and results obtained by 
-other codes.  We note, however, that there were minor differences throughout
-the comparison between various codes, and the majority of the codes differed
-in at least a subset of the tests.
+measured against several test problems by \citet{IlievEtAl2009}, which
+involved tests with and without analytical solutions.  \enzo\ produced
+results similar to both the analytical solutions and results obtained
+by other codes.  We note, however, that there were minor differences
+throughout the comparison between various codes, and the majority of
+the codes differed in at least a subset of the tests.
 \citet{2011ApJ...726...55T} show the result of varying reaction rate
 coefficients for the formation of molecular hydrogen via the 3-body
-process in both the \enzo\ and GADGET-2 codes, observing similar trends between
-the two codes. However, at nominally equivalent resolution
-where the particle and cell gas masses are comparable, 
-\enzo\ simulations typically displayed a
-substantially higher level of gas structure.  This is unsurprising due
-to \enzo's higher-order hydro solver.  Finally,
-\citet{2012ApJ...744...52P} show the results of comparing \enzo\ in
-its non-AMR mode to a smoothed-particle hydrodynamics code, SNSPH, in
-the context of common-envelope binary stellar interactions.  The
-authors show that the codes display reasonable convergence properties
-as a function of simulation resolution, and also agree quite well with
-each other. However, the observed mass-loss rates do not agree
-particularly well with observations.
+process in both the \enzo\ and GADGET-2 codes, observing similar
+trends between the two codes. However, at nominally equivalent
+resolution where the particle and cell gas masses are comparable,
+\enzo\ simulations typically displayed a substantially higher level of
+gas structure.  This is unsurprising due to \enzo's higher-order hydro
+solver.  Finally, \citet{2012ApJ...744...52P} show the results of
+comparing \enzo\ in its non-AMR mode to a smoothed-particle
+hydrodynamics code, SNSPH, in the context of common-envelope binary
+stellar interactions.  The authors show that the codes display
+reasonable convergence properties as a function of simulation
+resolution, and also agree quite well with each other. However, the
+observed mass-loss rates do not agree particularly well with
+observations.

@@ -1,123 +1,134 @@
 \subsection{Chemistry}
 \label{sec.num.chemistry}
 
-While it is often safe to assume that species (both chemical and ionization)
-within a gas can be treated as being in equilibrium, in some regimes that are
-found in astrophysics this assumption leads to considerable error.  For
-example, the cooling and collapse of primordial gas in Population III star
-formation is dominated by molecular hydrogen, which in the absence of dust
-forms via an inefficient pair of collisional processes that depend heavily on
-the local, highly non-equilibrium population of free electrons.  As a result,
-when modeling primordial star formation it is critical to follow the
-non-equilibrium evolution of the chemical species of hydrogen, including
-molecular hydrogen and deuterium.
+While it is often safe to assume that species (both chemical and
+ionization) within a gas can be treated as being in equilibrium, in
+some regimes that are found in astrophysics this assumption leads to
+considerable error.  For example, the cooling and collapse of
+primordial gas in Population III star formation is dominated by
+molecular hydrogen, which in the absence of dust forms via an
+inefficient pair of collisional processes that depend heavily on the
+local, highly non-equilibrium population of free electrons.  As a
+result, when modeling primordial star formation it is critical to
+follow the non-equilibrium evolution of the chemical species of
+hydrogen, including molecular hydrogen and deuterium.
 
-The primordial non-equilibrium chemistry routines used in \enzo\ were first
-described by \citet{abel97} and \citet{anninos97}, but have
+The primordial non-equilibrium chemistry routines used in \enzo\ were
+first described by \citet{abel97} and \citet{anninos97}, but have
 since been extended with updated reaction rates and the inclusion of
-deuterium species \citep{McGreer2008, 2009PhDT.........5T}.  These routines follow the
-non-equilibrium chemistry of a gas of primordial composition with 12 total
-species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp, \HH, e$^-$, D, \Dp, and HD.  \enzo\
-also computes the radiative heating and cooling of the gas from atomic and
-molecular line excitation, recombination, collisional excitation, free-free
-transitions, Compton scattering of the cosmic microwave background, as well as
-several models for a metagalactic UV background that heat the gas via
-photoionization and photodissociation (see Section~\ref{sec.num.cooling} for
-more details).  The chemical and thermal states of the gas can be updated either
-at the same hydrodynamical timestep (i.e., decoupled and operator-split) or
-through the same subcycling system (i.e., a coupled chemical and thermal
-system).  The default behavior of \enzo\ is to couple these two systems at
-subcycles of the hydrodynamic timestep; this results in updates to both the
-chemical and thermal states of the gas (which also inform the temperature, the
-reaction rate coefficients and the cooling functions of the gas) on timescales
-that are faster than those of the gas dynamics.  The gamma used by \enzo\ to
-compute the temperature of the gas from the energy and density characteristics
-utilizes a variable gamma that includes effects of the rotational state of
-molecular hydrogen, enabling it to vary from $5/3$ (fully-atomic) to $7/5$
-(fully molecular).  This further coupling of the chemical and thermal states of
-the gas underscores the need for coupled chemistry and radiative cooling
-solutions.
+deuterium species \citep{McGreer2008, 2009PhDT.........5T}.  These
+routines follow the non-equilibrium chemistry of a gas of primordial
+composition with 12 total species: H, \Hp, He, \Hep, \Hepp, \Hm, \HHp,
+\HH, e$^-$, D, \Dp, and HD.  \enzo\ also computes the radiative
+heating and cooling of the gas from atomic and molecular line
+excitation, recombination, collisional excitation, free-free
+transitions, Compton scattering of the cosmic microwave background, as
+well as several models for a metagalactic UV background that heat the
+gas via photoionization and photodissociation (see
+Section~\ref{sec.num.cooling} for more details).  The chemical and
+thermal states of the gas can be updated either at the same
+hydrodynamical timestep (i.e., decoupled and operator-split) or
+through the same subcycling system (i.e., a coupled chemical and
+thermal system).  The default behavior of \enzo\ is to couple these
+two systems at subcycles of the hydrodynamic timestep; this results in
+updates to both the chemical and thermal states of the gas (which also
+inform the temperature, the reaction rate coefficients and the cooling
+functions of the gas) on timescales that are faster than those of the
+gas dynamics.  The gamma used by \enzo\ to compute the temperature of
+the gas from the energy and density characteristics utilizes a
+variable gamma that includes effects of the rotational state of
+molecular hydrogen, enabling it to vary from $5/3$ (fully-atomic) to
+$7/5$ (fully molecular).  This further coupling of the chemical and
+thermal states of the gas underscores the need for coupled chemistry
+and radiative cooling solutions.
 
-Input parameters to \enzo\ govern the chemical species that are updated during
-the course of the simulation.  This can include only the atomic species (H,
-\Hp, He, \Hep, \Hepp, and e$^-$), those species relevant for molecular hydrogen
-formation (\HH, \HHp, and \Hm), and can further include deuterium and its
-species (D, \Dp, and HD).  A total of 9 kinetic equations are solved for the
-12 species mentioned above, including
-29 kinetic and radiative processes.  See
+Input parameters to \enzo\ govern the chemical species that are
+updated during the course of the simulation.  This can include only
+the atomic species (H, \Hp, He, \Hep, \Hepp, and e$^-$), those species
+relevant for molecular hydrogen formation (\HH, \HHp, and \Hm), and
+can further include deuterium and its species (D, \Dp, and HD).  A
+total of 9 kinetic equations are solved for the 12 species mentioned
+above, including 29 kinetic and radiative processes.  See
 Table~\ref{table.collisional} for the collisional processes and
 Table~\ref{table.radiative} for the radiative processes solved.
 
-The chemical reaction equation network is technically challenging to solve due
-to the huge range of reaction timescales involved.  The characteristic times
-for creation and destruction of the various species and reactions can differ by
-many orders of magnitude and are often very sensitive to the chemical and
-thermal state of the gas.  This makes a fully-implicit scheme, with convergence
-criteria and error tolerance, strongly preferable for such a set of equations.
-However, most implicit schemes require an iterative procedure to converge, and
-for large networks (such as this one) an iterative, fully-implicit method can
-be very time-consuming and computationally costly for a relatively small
-increase in accuracy.  At the present time, this makes fully-implicit methods
-somewhat undesirable for large, three-dimensional simulations.
+The chemical reaction equation network is technically challenging to
+solve due to the huge range of reaction timescales involved.  The
+characteristic times for creation and destruction of the various
+species and reactions can differ by many orders of magnitude and are
+often very sensitive to the chemical and thermal state of the gas.
+This makes a fully-implicit scheme, with convergence criteria and
+error tolerance, strongly preferable for such a set of equations.
+However, most implicit schemes require an iterative procedure to
+converge, and for large networks (such as this one) an iterative,
+fully-implicit method can be very time-consuming and computationally
+costly for a relatively small increase in accuracy.  At the present
+time, this makes fully-implicit methods somewhat undesirable for
+large, three-dimensional simulations.
 
-\enzo\ solves the rate equations using a method based on a semi-implicit
-formulation in order to provide a stable, positive definite and first-order
-accurate solution.  The update discretization splits chemical changes into
-formation components and destruction components and updates with a mixed set of
-time states, as described in \citet{anninos97}.  The formation components of
-species $S_i$ are computed at the current subcycle time, where the contribution
-of species $S_i$ to its own destruction components are computed at the updated
-time; all other contributions to the destruction component are computed at the
-current time.  This mixed state improves accuracy, ensures species values
-are positive definite, and is equivalent to one Jacobi iteration of an implicit
-Euler solve.  This technique is optimized by taking the chemical intermediaries
-\Hm and \HHp, which have large rate coefficients and low concentrations, and
-grouping them into a separate category of equations.  Due to their fast
-reactions, these species are very sensitive to small changes in the more
-abundant species and are (at almost all times in astrophysical calculations) close to
-their equilibrium values.  Attempting to resolve their formation and destruction
-times would necessitate extremely small timesteps.
-Therefore, reactions governing these two
-species can be decoupled from the rest of the network and treated independently
-through analytic solutions for equilibrium values.  This allows a significant speedup
-in the solution speed, as the timestepping scheme is applied only to the slower 7- or
-10-species network (depending on whether deuterium is included or not), which
-will be much closer to the overall hydrodynamic timestep of the simulation.
+\enzo\ solves the rate equations using a method based on a
+semi-implicit formulation in order to provide a stable, positive
+definite and first-order accurate solution.  The update discretization
+splits chemical changes into formation components and destruction
+components and updates with a mixed set of time states, as described
+in \citet{anninos97}.  The formation components of species $S_i$ are
+computed at the current subcycle time, where the contribution of
+species $S_i$ to its own destruction components are computed at the
+updated time; all other contributions to the destruction component are
+computed at the current time.  This mixed state improves accuracy,
+ensures species values are positive definite, and is equivalent to one
+Jacobi iteration of an implicit Euler solve.  This technique is
+optimized by taking the chemical intermediaries \Hm and \HHp, which
+have large rate coefficients and low concentrations, and grouping them
+into a separate category of equations.  Due to their fast reactions,
+these species are very sensitive to small changes in the more abundant
+species and are (at almost all times in astrophysical calculations)
+close to their equilibrium values.  Attempting to resolve their
+formation and destruction times would necessitate extremely small
+timesteps.  Therefore, reactions governing these two species can be
+decoupled from the rest of the network and treated independently
+through analytic solutions for equilibrium values.  This allows a
+significant speedup in the solution speed, as the timestepping scheme
+is applied only to the slower 7- or 10-species network (depending on
+whether deuterium is included or not), which will be much closer to
+the overall hydrodynamic timestep of the simulation.
 
-Even so, the accuracy and stability of the scheme is maintained by subcycling
-the rate solver within a single hydrodynamic timestep.  These subcycle
-timesteps are determined so that the estimated fractional change in the
-electron concentration is limited to no more than $10\%$ per timestep;
-additional criteria may be applied based on the expected change in
-internal energy from radiative
-cooling and from  chemical heating due to the formation of molecular hydrogen.
+Even so, the accuracy and stability of the scheme is maintained by
+subcycling the rate solver within a single hydrodynamic timestep.
+These subcycle timesteps are determined so that the estimated
+fractional change in the electron concentration is limited to no more
+than $10\%$ per timestep; additional criteria may be applied based on
+the expected change in internal energy from radiative cooling and from
+chemical heating due to the formation of molecular hydrogen.
 
 It is important to note the regime in which this model is valid.
-According to \citet{abel97} and \citet{anninos97},
-the reaction network is valid for temperatures between $10^0 - 10^8$
-K.  The original model discussed in these two references was only claimed to be valid
-up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the 3-body
-\HH~formation process (equation 20 in Table~\ref{table.collisional})
-allows correct modeling of the chemistry of the gas up until the point
-where collisionally-induced emission from molecular hydrogen becomes
-an important cooling process, which occurs at $n_{\rm H} \sim
-10^{14}$~cm$^{-3}$.  A further concern is that the optically thin
-approximation for radiative cooling eventually breaks down, which occurs before
-$n_{\rm H} \sim 10^{16} - 10^{17}$~cm$^{-3}$ in gas of primordial composition.  Beyond this point,
-modifications to the cooling function that take into account the
-non-negligible opacity in the gas must be made, as discussed by
+According to \citet{abel97} and \citet{anninos97}, the reaction
+network is valid for temperatures between $10^0 - 10^8$ K.  The
+original model discussed in these two references was only claimed to
+be valid up to $n_H \sim 10^4$~cm$^{-3}$.  However, addition of the
+3-body \HH~formation process (equation 20 in
+Table~\ref{table.collisional}) allows correct modeling of the
+chemistry of the gas up until the point where collisionally-induced
+emission from molecular hydrogen becomes an important cooling process,
+which occurs at $n_{\rm H} \sim 10^{14}$~cm$^{-3}$.  A further concern
+is that the optically thin approximation for radiative cooling
+eventually breaks down, which occurs before $n_{\rm H} \sim 10^{16} -
+10^{17}$~cm$^{-3}$ in gas of primordial composition.  Beyond this
+point, modifications to the cooling function that take into account
+the non-negligible opacity in the gas must be made, as discussed by
 \citet{2004MNRAS.348.1019R}, and was put into \enzo\ for the work
-published in \citep{2009Sci...325..601T,2009PhDT.........5T}.   The formation
-of molecular hydrogen as catalyzed by dust was recently added to \enzo\ to
-enable studies of low-metallicity gas, as well as the inclusion of appropriate
-timestepping criteria to account for the input of ionizing radiation.  Even
-with these modifications, a completely correct description of the cooling of
-primordial gas at very high densities requires some form of radiation
-transport, which will greatly increase the cost of the simulations.
-Furthermore, at very high densities, the stiffness of the molecular hydrogen
-reaction rates may require better than a first-order accurate solution; as
-such, the transition to this regime will likely necessitate a fully-implicit,
-iterative solver.
+published in \citep{2009Sci...325..601T,2009PhDT.........5T}.  The
+formation of molecular hydrogen as catalyzed by dust was recently
+added to \enzo\ to enable studies of low-metallicity gas, as well as
+the inclusion of appropriate timestepping criteria to account for the
+input of ionizing radiation.  Even with these modifications, a
+completely correct description of the cooling of primordial gas at
+very high densities requires some form of radiation transport, which
+will greatly increase the cost of the simulations.  Furthermore, at
+very high densities, the stiffness of the molecular hydrogen reaction
+rates may require better than a first-order accurate solution; as
+such, the transition to this regime will likely necessitate a
+fully-implicit, iterative solver.
 
 %---------------- table of collisional processes
 

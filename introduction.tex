@@ -1,8 +1,8 @@
 \section{Introduction}\label{sec.intro}
 
 Due to the high spatial and temporal dynamical ranges involved,
-astrophysical and cosmological phenomena present a taxing challenge for
-simulators. To tackle such situations, a number of numerical
+astrophysical and cosmological phenomena present a taxing challenge
+for simulators. To tackle such situations, a number of numerical
 techniques have been developed that can be broadly split into
 gridless, Lagrangian methods and grid-based, Eulerian schemes. The
 most commonly used is an example of the first type known as Smoothed
@@ -38,28 +38,28 @@ similar aim. For example, the N-body solver developed by
 resolution in pre-selected regions. This static approach was later
 used extensively when applied to hydrodynamics
 \citep[e.g.,][]{Ruffert94, Anninos94}. Adding adaptivity is a more
-recent enhancement, and there are now a number of codes that
-possess this feature, both with and without hydrodynamics
-\citep{Couchman91, Jessop94, Suisalu95, Splinter96, Gelato97, ART97,
-Truelove98, flash_method, MLAPM01, Yahagi01, RAMSES, Quilis04,
-Ziegler05, Zhang06, Astrobear09, Pluto-amr, GAMER, Nyx}. Of these,
-perhaps the most comparable and widely used are FLASH
-\citep{flash_method}, which uses grid blocks of fixed size, and RAMSES
-\citep{RAMSES} and ART \citep{ART97}, both of which refine individual
-cells. It is also possible to deform the grid to obtain high
-resolution \citep[e.g.,][]{Gnedin95, Xu97, Pen98}, and more recently a
-few codes have adopted an unstructured approach based on a moving
-Voronoi mesh \citep{Arepo10, Tess11}.
+recent enhancement, and there are now a number of codes that possess
+this feature, both with and without hydrodynamics \citep{Couchman91,
+Jessop94, Suisalu95, Splinter96, Gelato97, ART97, Truelove98,
+flash_method, MLAPM01, Yahagi01, RAMSES, Quilis04, Ziegler05, Zhang06,
+Astrobear09, Pluto-amr, GAMER, Nyx}. Of these, perhaps the most
+comparable and widely used are FLASH \citep{flash_method}, which uses
+grid blocks of fixed size, and RAMSES \citep{RAMSES} and ART
+\citep{ART97}, both of which refine individual cells. It is also
+possible to deform the grid to obtain high resolution
+\citep[e.g.,][]{Gnedin95, Xu97, Pen98}, and more recently a few codes
+have adopted an unstructured approach based on a moving Voronoi mesh
+\citep{Arepo10, Tess11}.
 
-In this paper, we present \enzo\ 2.3, a structured adaptive mesh refinement
-(SAMR) code. Originally developed for cosmological hydrodynamics,
-\enzo\ has since been used on a wide variety of problems.  It has
-grown to become a general tool for astrophysical fluid dynamics and is
-intended to be efficient, accurate and easily extended to include new
-capabilities.  Although many of the components of the \enzo\ code have
-been described in previous publications \citep{1995CoPhC..89..149B,
-BryanThesis96, Bryan97a, Bryan97b, Norman99, BryanCompSci99, Bryan01,
-Oshea04, 2007arXiv0705.1556N,
+In this paper, we present \enzo\ 2.3, a structured adaptive mesh
+refinement (SAMR) code. Originally developed for cosmological
+hydrodynamics, \enzo\ has since been used on a wide variety of
+problems.  It has grown to become a general tool for astrophysical
+fluid dynamics and is intended to be efficient, accurate and easily
+extended to include new capabilities.  Although many of the components
+of the \enzo\ code have been described in previous publications
+\citep{1995CoPhC..89..149B, BryanThesis96, Bryan97a, Bryan97b,
+Norman99, BryanCompSci99, Bryan01, Oshea04, 2007arXiv0705.1556N,
 WangAbelZhang08,ReynoldsHayesPaschosNorman2009,Collins10,Wise11_Moray},
 there has previously been no systematic and complete description of
 the code.  In this paper we provide that description, filling in many
@@ -68,18 +68,18 @@ variety of test problems.
 
 The \enzo\ code has been extensively used over the last two decades in
 a wide variety of problems, resulting in the publication of more than
-100 peer-reviewed papers. The
-variety of astrophysical systems that \enzo\ has been used for include
-galaxies \citep{2003ApJ...587...13T, 2012MNRAS.425..641L,
-  2013MNRAS.432.1989S}, galaxy
-clusters \citep{Loken02, Xu11, Skillman13}, the interstellar medium
-\citep{Slyz05}, the intergalactic medium \citep{Fang01, 
+100 peer-reviewed papers. The variety of astrophysical systems that
+\enzo\ has been used for include galaxies \citep{2003ApJ...587...13T,
+2012MNRAS.425..641L, 2013MNRAS.432.1989S}, galaxy clusters
+\citep{Loken02, Xu11, Skillman13}, the interstellar medium
+\citep{Slyz05}, the intergalactic medium \citep{Fang01,
 2011ApJ...731....6S}, the circumgalactic
-medium~\citep{2013MNRAS.430.1548H}, cooling flows \citep{Li12, 2013ApJ...763...38S},
-turbulence \citep{Kritsuk04, 2007ApJ...665..416K, 2009JPhCS.180a2020K, Collins11}, the
-formation of the first stars \citep{ABN02, 2007ApJ...654...66O,
-2009Sci...325..601T, Xu08}, and the formation of stars in our own Galaxy
-\citep{Collins11, 2011ApJ...727L..20K, Collins12a}.
+medium~\citep{2013MNRAS.430.1548H}, cooling flows \citep{Li12,
+2013ApJ...763...38S}, turbulence \citep{Kritsuk04,
+2007ApJ...665..416K, 2009JPhCS.180a2020K, Collins11}, the formation of
+the first stars \citep{ABN02, 2007ApJ...654...66O,
+2009Sci...325..601T, Xu08}, and the formation of stars in our own
+Galaxy \citep{Collins11, 2011ApJ...727L..20K, Collins12a}.
 
 Numerical simulations of astronomical phenomena now play a key role,
 along with observations and analytic theory, in pushing forward our
@@ -91,9 +91,9 @@ community as a whole, much in the way that astronomical data are now
 regularly made publicly available.  The second is to document, test
 and refine those methods so that they can be critically evaluated and
 expanded upon by others.  Our public release of the \enzo\ code (which
-can be found at \url{http://enzo-project.org}) represents our
-attempt to meet the first of these obligations; this paper represents
-our attempt to meet the second.
+can be found at \url{http://enzo-project.org}) represents our attempt
+to meet the first of these obligations; this paper represents our
+attempt to meet the second.
 
 The structure of this paper is as follows.  In
 Section~\ref{sec.overview}, we first provide a top-level overview of

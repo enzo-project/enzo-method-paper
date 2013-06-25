@@ -1,66 +1,68 @@
 \subsection{Thermal conduction}
 \label{sec.num.conductions}
 
-\enzo\ implements the equations of isotropic heat conduction in a manner
-similar to that of \citet{2007ApJ...664..135P}.  
-The isotropic flux of heat is given by equation~(\ref{eq:conduction}) and we
-use a value for the Spitzer conduction coefficient, 
-$\kappa_{\rm sp} = 4.6 \times 10^{-7}$~T$^{5/2}$ erg
-s$^{-1}$~cm$^{-1}$~K$^{-1}$ \citep{1962pfig.book.....S}.  In this
-situation we are using a
-value for the Coulomb logarithm, $\log \Lambda = 37.8$, that is
-appropriate for the intracluster medium \citep{1988xrec.book.....S} --
-in astrophysically-relevant, fully ionized plasmas this value varies
-by no more than 50\% (see, e.g., Smith et al. 2013, submitted).
-It is quite possible that the local heat flux computed in this way 
-can become unphysically large in
-the high-temperature, low-density cluster regime when using this
-formulation; therefore, we take into account the saturation of the heat
-flux \citep{1977ApJ...211..135C} at a maximum level of
+\enzo\ implements the equations of isotropic heat conduction in a
+manner similar to that of \citet{2007ApJ...664..135P}.  The isotropic
+flux of heat is given by equation~(\ref{eq:conduction}) and we use a
+value for the Spitzer conduction coefficient, $\kappa_{\rm sp} = 4.6
+\times 10^{-7}$~T$^{5/2}$ erg s$^{-1}$~cm$^{-1}$~K$^{-1}$
+\citep{1962pfig.book.....S}.  In this situation we are using a value
+for the Coulomb logarithm, $\log \Lambda = 37.8$, that is appropriate
+for the intracluster medium \citep{1988xrec.book.....S} -- in
+astrophysically-relevant, fully ionized plasmas this value varies by
+no more than 50\% (see, e.g., Smith et al. 2013, submitted).  It is
+quite possible that the local heat flux computed in this way can
+become unphysically large in the high-temperature, low-density cluster
+regime when using this formulation; therefore, we take into account
+the saturation of the heat flux \citep{1977ApJ...211..135C} at a
+maximum level of
+
 \begin{equation}
 F_{sat} \simeq 0.4 n_e k_b T \left( \frac{2 k_b T}{\pi m_e} \right)^{1/2}.
 \end{equation}
-To ensure a smooth transition between
-the Spitzer and saturated regimes, we define an effective
-conductivity using the formalism of \citet{1988xrec.book.....S}
+
+To ensure a smooth transition between the Spitzer and saturated
+regimes, we define an effective conductivity using the formalism of
+\citet{1988xrec.book.....S}
+
 \begin{equation}
 \kappa_{eff} = \frac{\kappa_{\rm cond}}{1 + 4.2 \lambda_e / \ell_T} \; ,
 \end{equation}
+
 where $\lambda_e$ is the electron mean free path and $\ell_T \equiv T
 / |\grad T|$ is the characteristic length scale of the local
 temperature gradient.  We also assume that the conductivity of the
 plasma can be described in terms of an effective conductivity, which
-can be expressed as a fraction f$_{\rm sp}$ of the Spitzer conductivity
-(where f$_{\rm sp} \leq 1.0$ are considered physically realistic values).  This takes
-into account physical processes below the resolution limit of the
-simulation, such as tangled magnetic fields, that can suppress heat
-transport.
+can be expressed as a fraction f$_{\rm sp}$ of the Spitzer
+conductivity (where f$_{\rm sp} \leq 1.0$ are considered physically
+realistic values).  This takes into account physical processes below
+the resolution limit of the simulation, such as tangled magnetic
+fields, that can suppress heat transport.
 
 Thermal conduction in a plasma can be strongly affected by the
-presence of magnetic field lines, which may suppress heat
-flow perpendicular to the magnetic field.  In that case, we allow for
-heat transport only parallel to the magnetic field lines in
-magnetohydrodynamic simulations.  Mathematically, this is given
-by equation~(\ref{eq:anisotropic_conduction}.
-As with the isotropic thermal conduction, we allow a
-multiplicative factor f$_{\rm sp}$ to take into account the possible
-suppression of magnetic fields below the resolution limit of the
-simulation.
+presence of magnetic field lines, which may suppress heat flow
+perpendicular to the magnetic field.  In that case, we allow for heat
+transport only parallel to the magnetic field lines in
+magnetohydrodynamic simulations.  Mathematically, this is given by
+equation~(\ref{eq:anisotropic_conduction}.  As with the isotropic
+thermal conduction, we allow a multiplicative factor f$_{\rm sp}$ to
+take into account the possible suppression of magnetic fields below
+the resolution limit of the simulation.
 
-Both isotropic and anisotropic thermal conduction in \enzo\ are treated
-in an operator-split manner.  Furthermore, within the heat transport
-module, transport along the x, y, and z directions are computed in a
-directionally-split fashion, with heat flux along each direction
-calculated at the + and - faces of the cell using the arithmetic mean
-of the cell-centered temperature in cells $n$ and $n+1$ or $n-1$ and
-$n$, respectively (empirically, this is more stable than taking the
-geometric mean of the cell-centered temperatures).  The addition of
-transport along magnetic field lines requires the calculation of
-cross-terms in the temperature derivatives at cell faces, which can
-result in spurious oscillations in the temperature field in regions
-where the temperature gradient is strong in more than one spatial
-direction.  Controlling these oscillations requires the addition of a
-flux limiter for calculations of the temperature field.  In this case,
-we choose the monotonized central difference flux limiter
-\citep{1977JCoPh..23..263V}, which serves to maintain numerical
-stability without sacrificing substantial speed or accuracy.
+Both isotropic and anisotropic thermal conduction in \enzo\ are
+treated in an operator-split manner.  Furthermore, within the heat
+transport module, transport along the x, y, and z directions are
+computed in a directionally-split fashion, with heat flux along each
+direction calculated at the + and - faces of the cell using the
+arithmetic mean of the cell-centered temperature in cells $n$ and
+$n+1$ or $n-1$ and $n$, respectively (empirically, this is more stable
+than taking the geometric mean of the cell-centered temperatures).
+The addition of transport along magnetic field lines requires the
+calculation of cross-terms in the temperature derivatives at cell
+faces, which can result in spurious oscillations in the temperature
+field in regions where the temperature gradient is strong in more than
+one spatial direction.  Controlling these oscillations requires the
+addition of a flux limiter for calculations of the temperature field.
+In this case, we choose the monotonized central difference flux
+limiter \citep{1977JCoPh..23..263V}, which serves to maintain
+numerical stability without sacrificing substantial speed or accuracy.

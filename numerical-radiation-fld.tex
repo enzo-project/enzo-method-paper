@@ -2,44 +2,45 @@
 \label{sec.num.rad-fld}
 
 In addition to the ray-tracing approach for radiation transport
-described in Section~\ref{sec.num.raytracing}, \enzo\ currently includes
-a field-based radiation transport solver for problems posed on uniform
-(i.e.~non-AMR, non-static mesh refinement) grids, which has been tuned for large-scale simulations
-involving many ionizing sources.  Detailed explanations of the model and
-solution approach may be found in
-\citet{NBHBROW2007}, \citet{ReynoldsHayesPaschosNorman2009},
-\citet{NRS2009}, and \citet{2013arXiv1306.0645N}, the salient features of which are reproduced here. 
-In addition, comparisons of this solver with other astrophysical
-radiation transport solvers may be found in \cite{IlievEtAl2009}.  
-\enzo's field-based radiation solver focuses on
+described in Section~\ref{sec.num.raytracing}, \enzo\ currently
+includes a field-based radiation transport solver for problems posed
+on uniform (i.e.~non-AMR, non-static mesh refinement) grids, which has
+been tuned for large-scale simulations involving many ionizing
+sources.  Detailed explanations of the model and solution approach may
+be found in \citet{NBHBROW2007},
+\citet{ReynoldsHayesPaschosNorman2009}, \citet{NRS2009}, and
+\citet{2013arXiv1306.0645N}, the salient features of which are
+reproduced here.  In addition, comparisons of this solver with other
+astrophysical radiation transport solvers may be found in
+\cite{IlievEtAl2009}.  \enzo's field-based radiation solver focuses on
 a flux-limited diffusion approximation for cosmological radiative
 transfer, with couplings to both the gas energy and chemical number
 densities.
 
 
-The system of equations
-(\ref{eq:fld_radiation}-\ref{eq:fld_heating}) along with the chemical network 
-(Equation~\ref{eq:species_evolution}) is solved
-independently of \enzo's hydrodynamics, gravity and dark-matter solvers
-(Sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}), thereby allowing
-the advective portions of Equations (\ref{eq:fld_radiation}) and
-(\ref{eq:species_evolution}) to be taken care of by the fluid solvers.
-Due to the disparate time scales between radiation transport and chemical
-ionization and heating, the remainder of these equations is solved
-using an operator-split algorithm.  Within a given timestep to evolve
-$(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1}, {\mathrm
-n}_i^{n+1})$, we first evolve equation (\ref{eq:fld_radiation}):
-$(E_r^n, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n}, {\mathrm
-  n}_i^{n})$.  This uses an implicit Euler time discretization, and a
-second-order centered finite difference spatial discretization,
-resulting in a large linear system of equations.  These are solved
-using a preconditioned conjugate gradient iteration, where the
-preconditioner consists of a geometric multigrid solver.  Both of
-these linear solvers are provided by the HYPRE linear solver library
-\citep[see][]{FalgoutYang2002, hypre-manual}. 
+The system of equations (\ref{eq:fld_radiation}-\ref{eq:fld_heating})
+along with the chemical network (Equation~\ref{eq:species_evolution})
+is solved independently of \enzo's hydrodynamics, gravity and
+dark-matter solvers (Sections \ref{sec.hydro.ppm}-\ref{sec.ov.nbody}),
+thereby allowing the advective portions of Equations
+(\ref{eq:fld_radiation}) and (\ref{eq:species_evolution}) to be taken
+care of by the fluid solvers.  Due to the disparate time scales
+between radiation transport and chemical ionization and heating, the
+remainder of these equations is solved using an operator-split
+algorithm.  Within a given timestep to evolve $(E_r^n, e_c^n, {\mathrm
+n}_i^n) \to (E_r^{n+1}, e_c^{n+1}, {\mathrm n}_i^{n+1})$, we first
+evolve equation (\ref{eq:fld_radiation}): $(E_r^n, e_c^n, {\mathrm
+n}_i^n) \to (E_r^{n+1}, e_c^{n}, {\mathrm n}_i^{n})$.  This uses an
+implicit Euler time discretization, and a second-order centered finite
+difference spatial discretization, resulting in a large linear system
+of equations.  These are solved using a preconditioned conjugate
+gradient iteration, where the preconditioner consists of a geometric
+multigrid solver.  Both of these linear solvers are provided by the
+HYPRE linear solver library \citep[see][]{FalgoutYang2002,
+hypre-manual}.
 
-We then evolve the heating and chemistry system, Equations~(\ref{eq:fld_heating})
-and (\ref{eq:species_evolution}):  
+We then evolve the heating and chemistry system,
+Equations~(\ref{eq:fld_heating}) and (\ref{eq:species_evolution}):
 $(E_r^{n+1}, e_c^n, {\mathrm n}_i^n) \to (E_r^{n+1}, e_c^{n+1},
 {\mathrm n}_i^{n+1})$.  Due to the lack of spatial derivatives (since
 advection is handled elsewhere), this system is a coupled system of
@@ -90,6 +91,6 @@ fixed point iteration,
 \]
 where $U$ is a vector containing the solutions to equations
 (\ref{eq:fld_heating_qss_fe}-\ref{eq:fld_chemistry_qss_fn}).  In this
-iteration, for the first 50 sweeps we use $\lambda=1$. For more 
-challenging problems where this does not converge, we switch to a damping
-parameter of $\lambda=0.1$.
+iteration, for the first 50 sweeps we use $\lambda=1$. For more
+challenging problems where this does not converge, we switch to a
+damping parameter of $\lambda=0.1$.

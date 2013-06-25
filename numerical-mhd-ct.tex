@@ -6,33 +6,34 @@
 \def\Evec{{\bf E}}
 \def\Divb{\ensuremath{\div \Bvec}}
 
-The third solver we describe is an MHD method developed by 
-\citet{Collins10}.  Since a full description and suite of test problems can be
-found in that reference, we only describe the method briefly here.
+The third solver we describe is an MHD method developed by
+\citet{Collins10}.  Since a full description and suite of test
+problems can be found in that reference, we only describe the method
+briefly here.
 
-The divergence of the magnetic field, \Divb, is
-identically zero in reality due to the fact that the evolution of the magnetic field is the
-curl of a vector, and the divergence of the curl of a vector is identically
-zero.
-The Constrained Transport (CT) method \citep{Evans88, Balsara99} for
-magnetohydrodynamic (MHD) evolution employs this same vector property
-to evolve the magnetic field in a manner that preserves $\Divb=0$.  
-The electric field is computed using
+The divergence of the magnetic field, \Divb, is identically zero in
+reality due to the fact that the evolution of the magnetic field is
+the curl of a vector, and the divergence of the curl of a vector is
+identically zero.  The Constrained Transport (CT) method
+\citep{Evans88, Balsara99} for magnetohydrodynamic (MHD) evolution
+employs this same vector property to evolve the magnetic field in a
+manner that preserves $\Divb=0$.  The electric field is computed using
 the fluxes from the Riemann solver.  The curl of that electric field
 is then used to update the magnetic field.  The advantage of this
 method is that it preserves \Divb\ to machine precision.  The primary
-drawback is increased algorithm complexity.  Note also that since 
-only the update of the magnetic field is divergence free, any monopoles 
-created by other numerical sources (such as ill-chosen initial conditions) persist.
+drawback is increased algorithm complexity.  Note also that since only
+the update of the magnetic field is divergence free, any monopoles
+created by other numerical sources (such as ill-chosen initial
+conditions) persist.
 
-The base Godunov method, described in \citet{Li08a}, uses spatially and
-temporally second-order reconstruction (both MUSCL-Hancock and
+The base Godunov method, described in \citet{Li08a}, uses spatially
+and temporally second-order reconstruction (both MUSCL-Hancock and
 Piecewise Linear Method), and a selection of Riemann solvers including
-HLLC and HLLD \citep{Mignone07}, as described earlier.  
-The constrained transport methods
-are the first-order method described by \citet{Balsara99} and the
-second-order methods described in \citet{Gardiner05}.  The AMR
-machinery is described by \citet{Balsara01} and \citet{Collins10}.
+HLLC and HLLD \citep{Mignone07}, as described earlier.  The
+constrained transport methods are the first-order method described by
+\citet{Balsara99} and the second-order methods described in
+\citet{Gardiner05}.  The AMR machinery is described by
+\citet{Balsara01} and \citet{Collins10}.
 
 The increased complexity of the constrained transport scheme comes in
 the form of area-averaged face and length-averaged edge-centered
@@ -48,19 +49,19 @@ update the face-centered field; finally, the cell-centered magnetic
 field is updated with an average of the face-centered field.
 
 Divergence-free AMR is somewhat more complex than the AMR employed
-elsewhere in \enzo.  First, the interpolation must be constrained to be
-divergence free.  Thus, all three face-centered field components are
-interpolated in concert.  Second, any magnetic field information from
-the previous timestep must be included in the interpolation, making the
-interpolation more complex than the simple parent-child relation used
-for other fields.  Third, the flux correction involves more possible
-grid relations than traditional AMR.  In order to circumvent this last
-complexity, the electric field is projected from fine grids to parent
-grids (rather than the magnetic field), and is then used to re-update
-the parent magnetic field.  This is described in detail in
-\citet{Balsara99} and \citet{Collins10}.
+elsewhere in \enzo.  First, the interpolation must be constrained to
+be divergence free.  Thus, all three face-centered field components
+are interpolated in concert.  Second, any magnetic field information
+from the previous timestep must be included in the interpolation,
+making the interpolation more complex than the simple parent-child
+relation used for other fields.  Third, the flux correction involves
+more possible grid relations than traditional AMR.  In order to
+circumvent this last complexity, the electric field is projected from
+fine grids to parent grids (rather than the magnetic field), and is
+then used to re-update the parent magnetic field.  This is described
+in detail in \citet{Balsara99} and \citet{Collins10}.
 
 The dual energy formalism has also been incorporated in two possible
-ways -- one that uses internal
-energy, as described in Section \ref{sec.hydro.ppm}, and one that
-uses entropy \cite{TVD93, Collins10}.
+ways -- one that uses internal energy, as described in Section
+\ref{sec.hydro.ppm}, and one that uses entropy \cite{TVD93,
+Collins10}.

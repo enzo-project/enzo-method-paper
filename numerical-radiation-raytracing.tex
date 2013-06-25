@@ -1,31 +1,32 @@
 \subsection{Radiation transport: ray tracing}
 \label{sec.num.raytracing}
 
-Stars and black holes strongly affect their surroundings through radiation.
-Radiation transport is a well-studied problem; however, its treatment in
-multidimensional calculations is difficult because of the dependence on seven
-variables -- three spatial, two angular, frequency, and time.  The non-local
-nature of the thermal and hydrodynamical response to radiation sources further
-adds to the difficulty.  Here we briefly describe \enzo's ray tracing
+Stars and black holes strongly affect their surroundings through
+radiation.  Radiation transport is a well-studied problem; however,
+its treatment in multidimensional calculations is difficult because of
+the dependence on seven variables -- three spatial, two angular,
+frequency, and time.  The non-local nature of the thermal and
+hydrodynamical response to radiation sources further adds to the
+difficulty.  Here we briefly describe \enzo's ray tracing
 implementation \moray, which is presented in full detail in
 \citet{Wise11_Moray} with seven code tests and six applications.
 
-We solve the radiative transfer equation in comoving coordinates (given by Equation~\ref{eq:rteqn}).
-We can make some appropriate approximations to reduce the complexity
-of this equation in order to include radiation transport
-in numerical calculations.  Typically timesteps in dynamic
-calculations are small enough so that $\Delta a/a \ll 1$, therefore
-$a_{em}/a \approx 1$ in any given timestep, reducing the second term to
-$\hat{n} \partial I_\nu/\partial \mathbf{x}$.  To determine the
-importance of the third term, we evaluate the ratio of the third term
-to the second term.  This is $HL/c$, where $L$ is the simulation box
-length.  If this ratio is $\ll 1$, we can ignore the third term.  For
-example at $z=5$, this ratio is 0.1 when $L = c/H(z=5)$ = 53 proper
-Mpc.  In large boxes where the light crossing time is comparable to
-the Hubble time, then it becomes important to consider cosmological
-redshifting and dilution of the radiation.  Thus equation
-(\ref{eq:rteqn}) reduces to the non-cosmological form in this local
-approximation,
+We solve the radiative transfer equation in comoving coordinates
+(given by Equation~\ref{eq:rteqn}).  We can make some appropriate
+approximations to reduce the complexity of this equation in order to
+include radiation transport in numerical calculations.  Typically
+timesteps in dynamic calculations are small enough so that $\Delta a/a
+\ll 1$, therefore $a_{em}/a \approx 1$ in any given timestep, reducing
+the second term to $\hat{n} \partial I_\nu/\partial \mathbf{x}$.  To
+determine the importance of the third term, we evaluate the ratio of
+the third term to the second term.  This is $HL/c$, where $L$ is the
+simulation box length.  If this ratio is $\ll 1$, we can ignore the
+third term.  For example at $z=5$, this ratio is 0.1 when $L =
+c/H(z=5)$ = 53 proper Mpc.  In large boxes where the light crossing
+time is comparable to the Hubble time, then it becomes important to
+consider cosmological redshifting and dilution of the radiation.  Thus
+equation (\ref{eq:rteqn}) reduces to the non-cosmological form in this
+local approximation,
 %
 \begin{equation}
   \frac{1}{c} \frac{\partial I_\nu}{\partial t} + 
@@ -54,20 +55,20 @@ where $R$ is the radius from the source to the cell and $\Delta x$ is
 the cell width.  If one were to trace $N_{ray}$ rays out to $R$, the
 cells at a smaller radius $r$ would be sampled by, on average,
 $(r/R)^2$ rays, which is computationally wasteful because only a few
-rays per cell  are required to provide an accurate calculation
-of the radiation field (as we will show later).
+rays per cell are required to provide an accurate calculation of the
+radiation field (as we will show later).
 
 We avoid this inefficiency by utilizing adaptive ray tracing
-\citep{Abel02_RT}, which is based on Hierarchical Equal Area isoLatitude
-Pixelation \citep[HEALPix;][]{HEALPix} and progressively splits rays when the sampling
-becomes too coarse.  In this approach, the rays are
-traced along normal directions of the centers of the HEALPix pixels that 
-evenly divide a sphere into equal areas.  The rays are initialized at
-each point source with the photon luminosity (photon s$^{-1}$) equally
-spread across $N_{\rm pix} = 12 \times 4^l$ rays, where $l$ is the
-initial HEALPix level.  We usually find $l$ = 0 or 1 is sufficient
-because these coarse rays will usually be split before traversing
-the first cell.
+\citep{Abel02_RT}, which is based on Hierarchical Equal Area
+isoLatitude Pixelation \citep[HEALPix;][]{HEALPix} and progressively
+splits rays when the sampling becomes too coarse.  In this approach,
+the rays are traced along normal directions of the centers of the
+HEALPix pixels that evenly divide a sphere into equal areas.  The rays
+are initialized at each point source with the photon luminosity
+(photon s$^{-1}$) equally spread across $N_{\rm pix} = 12 \times 4^l$
+rays, where $l$ is the initial HEALPix level.  We usually find $l$ = 0
+or 1 is sufficient because these coarse rays will usually be split
+before traversing the first cell.
 
 The rays are traced through the grid in a typical fashion
 \citep[e.g.][]{Abel99_RT}, in which we calculate the next cell
@@ -102,25 +103,25 @@ vectors of the pixels, (2) retain the same radius of the parent ray,
 and (3) get a quarter of the photon flux of the parent ray.
 Afterward, the parent ray is discontinued.
 
-A ray propagates and splits until at least one of the following conditions is met: (1) the photon has traveled $c
-\times dt_P$, where $dt_P$ is the radiative transfer timestep; (2) its
-photon flux is almost fully absorbed ($>99.9\%$) in a single cell,
-which significantly reduces the computational time if the radiation
-volume filling fraction is small; (3) the photon leaves the
-computational domain with isolated boundary conditions; or (4) the
-photon travels $\sqrt{3}$ of the simulation box length with periodic
-boundary conditions.
-In the first case, the photon is halted at that position and saved,
-where it will be considered in the solution of $I_\nu$ at the next
-timestep.  In the next timestep, the photon will encounter a different
-hydrodynamical and ionization state, hence $\kappa$, in its path.
-Furthermore any time variations of the luminosities will be retained
-in the radiation field.  This is how this method retains the time
-derivative of the radiative transfer equation.  The last restriction
-prevents our method from considering sources external to the
-computational domain. However, a uniform radiation background can be used
-in conjunction with ray tracing that adds the background intensity to the
-local radiation field. 
+A ray propagates and splits until at least one of the following
+conditions is met: (1) the photon has traveled $c \times dt_P$, where
+$dt_P$ is the radiative transfer timestep; (2) its photon flux is
+almost fully absorbed ($>99.9\%$) in a single cell, which
+significantly reduces the computational time if the radiation volume
+filling fraction is small; (3) the photon leaves the computational
+domain with isolated boundary conditions; or (4) the photon travels
+$\sqrt{3}$ of the simulation box length with periodic boundary
+conditions.  In the first case, the photon is halted at that position
+and saved, where it will be considered in the solution of $I_\nu$ at
+the next timestep.  In the next timestep, the photon will encounter a
+different hydrodynamical and ionization state, hence $\kappa$, in its
+path.  Furthermore any time variations of the luminosities will be
+retained in the radiation field.  This is how this method retains the
+time derivative of the radiative transfer equation.  The last
+restriction prevents our method from considering sources external to
+the computational domain. However, a uniform radiation background can
+be used in conjunction with ray tracing that adds the background
+intensity to the local radiation field.
 
 The radiation field is calculated by integrating Equation
 (\ref{eqn:rtray}) along each ray, which is done by considering the
@@ -144,9 +145,9 @@ solution, and the photon flux of a ray is reduced by
 \end{equation}
 as it crosses a cell.  We equate the photo-ionization rate to the
 absorption rate, resulting in photon conservation \citep{Abel99_RT,
-  Mellema06}.  Thus the photo-ionization and
-photo-heating rates associated with a single ray ($k_{\rm ph}$ and
-$\Gamma_{\rm ph}$, respectively)  are
+Mellema06}.  Thus the photo-ionization and photo-heating rates
+associated with a single ray ($k_{\rm ph}$ and $\Gamma_{\rm ph}$,
+respectively) are
 %
 \begin{equation}
   \label{eqn:kph}
@@ -159,8 +160,8 @@ $\Gamma_{\rm ph}$, respectively)  are
 where $V_{\rm cell}$ is the cell volume, $E_{\rm ph}$ is the photon
 energy, and $E_i$ is the ionization energy of the absorbing material.
 In each cell, the photo-ionization and photo-heating rates from each
-ray in the calculation are summed. After the ray tracing is
-complete, these rates are used as inputs to the solver described in
-Section~\ref{sec.ov.chem} to update the ionization, chemical, and energy states
-of the gas in each cell.
+ray in the calculation are summed. After the ray tracing is complete,
+these rates are used as inputs to the solver described in
+Section~\ref{sec.ov.chem} to update the ionization, chemical, and
+energy states of the gas in each cell.
 
