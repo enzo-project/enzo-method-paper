@@ -15,11 +15,11 @@ sophisticated questions of the data and the ability to process vast quantities o
 data at high time-cadence.  As simulations grow in size and complexity, storing data
 for post-processing simply becomes intractable.  To cope with this, we have
 instrumented \enzo\ with the ability to conduct analysis during the course of a
-simulation.  This enables analysis with extremely high time cadence (even as often
+simulation.  This enables analysis with extremely high time cadence (as often
 as every subcycle of the finest refinement level), without
 attempting to write an entire checkpoint output to disk.  The current mechanism
 for conducting analysis in \enzo\ during the course of the simulation utilizes
-the same compute resources as used by the simulation itself by transferring their usage 
+the same computional resources as are used by the simulation itself by transferring their usage 
 from \enzo\ to the analysis routines; this is often
 referred to as \textit{in situ} analysis or visualization.  Utilizing a
 dynamically-scheduled second set of computing resources, often referred to as
@@ -68,7 +68,7 @@ star clusters, galaxy particle feedback parameters that have been influenced by
 merger-tree analysis, or even spectral energy distributions that are calculated
 within \texttt{yt} and provided to \enzo\ as input into radiative transfer
 calculations.  Future versions will include this, as well as the ability to
-dynamically allocate compute resources to \texttt{yt} such that the simulation
+dynamically allocate computional resources to \texttt{yt} such that the simulation
 may proceed asynchronously with analysis (\textit{co-scheduled} analysis).
 With this functionality will also come the ability to dynamically partition
 data, such that spatially-decomposed operations such as volume rendering become
@@ -103,16 +103,17 @@ position of the particle ($v^{\rm interp}$), and assigning it to that value.
 
 \enzo\ saves tracer particle data at user-specified intervals,
 independent of the intervals at which regular data sets are written.  The data written out
-typically includes the tracer particle's unique ID, position, velocity, density,
-and temperature, but is easily extensible to output any grid-based
+typically includes the tracer particle's unique ID and position, as
+well as the velocity, density,
+and temperature of the gas at its location, but is easily extensible to output any grid-based
 quantity that a user requires.  This capability has been used quite
 effectively in several papers, including \citet{2010ApJ...715.1575S}
 and \citet{2012ApJ...748...12S}. It is crucial to keep in mind that
 tracer particles model a fixed number of Lagrangian fluid trajectories. The fluid
 on the grid, however, models the motion of all the mass and represents
 the average quantity in a grid cell's volume. Consequently, after a period of
-evolution, tracer particles --even if they initially had the same
-density distribution as the gas-- will not have the same density
+evolution, tracer particles -- even if they initially had the same
+density distribution as the gas -- will not have the same density
 distribution as the fluid. For example, they tend to accumulate at stagnation points
 of the flow, and care has to be taken in using these particles
 appropriately. Tracer particles are very useful in studies such as the variety of
@@ -143,7 +144,7 @@ density, and $S=T/\rho^{\gamma-1}$ is the entropy.  $T_2$ and $T_1$ are the post
 and pre-shock~(upstream) temperatures, respectively. An optional temperature floor
 may be chosen, which is useful for situations such as cosmological simulations without a radiation
 background where underdense gas in the intergalactic medium (IGM) can cool adiabatically to
-very low temperatures.
+unphysically low temperatures.
 
 Once a cell is flagged, the local temperature gradient is calculated, which is 
 then used to traverse cells parallel to the gradient to search for the first
@@ -161,7 +162,7 @@ Shock finding in the context of AMR is applied grid-by-grid.  If a search for
 pre/post-shock cells goes outside the bounds of the grid ghost zones, the
 search is stopped for that particular shocked cell. In most situations this is
 adequate since the hydrodynamic shock is captured in fewer than the number of
-ghost zones.  Shock finding can be run either upon data output, or at each step
+ghost zones.  Shock finding can be run either upon data output or at each step
 in the evolution of an AMR level if the Mach and pre/post-shock quantities are
 needed for additional physics modules.
 
