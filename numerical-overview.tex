@@ -166,7 +166,7 @@ yields accurate pressures and temperatures in cosmological hypersonic
 flows.
 
 
-\subsubsection{The Zeus hydro method}\label{sec.ov.hydro.zeus}
+\subsubsection{The \zeus\ hydro method}\label{sec.ov.hydro.zeus}
 
 
 As a check on PPM, \enzo\ also includes an implementation of the
@@ -734,7 +734,7 @@ directly from neighboring grids or interpolated from a parent grid.
 These zones are necessary to accommodate the computational stencil of 
 the hydrodynamics solvers (Sections~\ref{sec.ov.hydro.ppm} and~\ref{sec.ov.hydro.zeus}) 
 and the gravity solver (Section~\ref{sec.ov.nbody}).  
-The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity
+The PPM and \zeus\ hydro solvers require 3 layers of ghost zones,  and the gravity
 solver requires 6.  This can lead to significant memory 
 and computational overhead, particularly for smaller grid patches
 at high levels of refinement.  More information on filling of ghost

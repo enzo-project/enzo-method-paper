@@ -29,7 +29,7 @@ showing real and ghost zones, as needed for the PPM hydro stencil. }
 \label{fig.amr_hierarchy}
 \end{figure}
 
-Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig.amr_hierarchy}.  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} through~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
+Each grid patch in \enzo\ contains arrays of values for baryon and particle quantities.   Grids are partitioned into a core of \emph{active zones} and a surrounding layer of \emph{ghost zones}, as shown in Figure~\ref{fig.amr_hierarchy}.  The active zones store field values and ghost zones are used to temporarily store values that have been obtained directly from neighboring grids or interpolated from a parent grid.  These zones are necessary to accommodate the computational stencil of the (magneto)hydrodynamics solvers (Sections~\ref{sec.hydro.ppm} through~\ref{sec.hydro.zeus}) and the gravity solver (Section~\ref{sec.gravity}).  The PPM and \zeus\ hydro solvers require 3 layers of ghost zones,  and the gravity solver requires 6 (although only for the density and potential fields).  This can lead to significant memory and computational overhead, particularly for smaller grid patches at high levels of refinement.  
 
 From the point of view of the hydro solver, each grid is solved as an independent computational fluid dynamics (CFD) problem, with Dirichlet boundary conditions stored in the ghost zones.  At the end of each timestep, cells on a given level fill ghost zones by interpolating from the parent and copying from neighbors on the same level.  Grids then correct the flux at the interface boundary between fine and coarse zones, and finally project their active zone data to the parent grid. 
 
@@ -357,7 +357,7 @@ Finally, it is also possible to specify a rectangular region that is statically 
 %These zones are necessary to accommodate the computational stencil of 
 %the hydrodynamics solvers (Sections~\ref{sec.ov.hydro.ppm} and~\ref{sec.ov.hydro.zeus}) 
 %and the gravity solver (Section~\ref{sec.ov.nbody}).  
-%The PPM and Zeus hydro solvers require 3 layers of ghost zones,  and the gravity
+%The PPM and \zeus\ hydro solvers require 3 layers of ghost zones,  and the gravity
 %solver requires 6.  This can lead to significant memory 
 %and computational overhead, particularly for smaller grid patches
 %at high levels of refinement.  More information on filling of ghost
