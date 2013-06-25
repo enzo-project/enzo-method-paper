@@ -147,12 +147,8 @@ The resulting formulae are straightforward but complicated and are not
 reproduced here, but see Equations 1.7 to 1.10 of CW84.
 We also optionally allow steepening as described in that reference.
 
-Once we have the reconstruction, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $C = u-c$, $u$, or $u+c$ (where $c$ is the sound speed in a cell):
-\begin{equation}
-      q^{C+}_{j+1/2} =
-          {1 \over \Delta t C^n_j} \int^{x_{j+1/2}}_{x_{j+1/2}-\Delta t C^n_j} q_j(x) dx
-\end{equation}
-where $q^{C+}$ refers to the left characteristic $C$ (and a similar integral is done for the right characteristic $q^{C-}$).  The linearized gas dynamics equations are then used to compute second-order accurate left and right states that take into account the multiple wave families.  This process is described in CW84 and we use their equations (3.6) and (3.7).
+Once we have the reconstruction, the primary quantities ($p$, $\rho$, $v$ and $E$) are averaged over the domains corresponding to the three characteristics $u-c$, $u$, or $u+c$ (where $c$ is the sound speed in a cell).
+The linearized gas dynamics equations are then used to compute second-order accurate left and right states that take into account the multiple wave families.  This process is described in CW84 and we use their equations (3.6) and (3.7).
 
 With these effective states, an approximation to the Riemann problem is found
 (see below for more detail about the Riemann solvers used), producing estimates for 
