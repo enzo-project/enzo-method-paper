@@ -1,3 +1,6 @@
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'STIXGeneral'
+mpl.rcParams['figure.figsize'] = 4, 3
 import matplotlib.pyplot as plt
 
 X = [1.0,2.0,4.0,8.0]
@@ -18,9 +21,10 @@ plt.plot(X,cpunode,color='blue',linewidth=2.0,marker='o')
 plt.plot(X,gpunode,color='red',linewidth=2.0,marker='o')
 plt.loglog()
 plt.axis([0,10,1e6,5e7])
+plt.xlim(0.8,10.2)
 plt.xlabel('N$_{node}$')
 plt.ylabel('Cells/s/node')
-plt.text(7.0, 2.0e7, 'CPU', size=15, color='blue')
-plt.text(7.0, 3.0e7, 'GPU', size=15, color='red')
+plt.text(7.0, 2.0e7, 'CPU', size=12, color='blue')
+plt.text(7.0, 3.0e7, 'GPU', size=12, color='red')
 plt.savefig('gpu_scaling.eps')
 
