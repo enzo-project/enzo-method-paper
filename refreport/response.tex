@@ -39,7 +39,39 @@ their feedback, and address each comment separately below.
 
 \section{Test problems}
 
-\red{(Add response regarding test problems here)}
+Regarding test problems, the referee's comment is:
+
+\begin{verbatim}
+However, the paper is let down due to the lack of tests presented for
+many of the algorithms presented in the paper. In particular, the only
+test presented for the MHD algorithm is the Orszag-Tang vortex test,
+which 'does not seem to be extremely discriminating for MHD
+algorithms' (Stone et al., 2008). In addition, results from some
+tests, such as the photo-evaporation test, do not seem to be properly
+compared to prior results in the literature (e.g. Jiang et
+al. 2012). Finally, no tests appear to be presented for some tests
+entirely, e.g. the Chemistry algorithms presented in Section 6.1.
+\end{verbatim}
+
+We have modified the test problem section as follows:
+
+\begin{itemize}
+\item \red{cooling Britton fill in here}
+\item \red{radiation John fill in here}
+\item \red{MHD Dave fill in here}
+\end{itemize}
+
+We also note that many of the fundamental \enzo\ algorithms are
+extensively tested in separate method papers that focus on a single
+algorithm/physics package, and a single test problem or small number
+of test problems are included in the full \enzo\ method paper as a
+demonstration that the algorithms behave sensibly.  In the subsection
+describing these test problems, we cite the full method paper for the
+appropriate algorithm and the direct the reader to it for more
+information.  These additional algorithm method papers include ones
+for both flavors of MHD contained in \enzo\ \citep{Wang:2009a,
+Collins10}, the ray-tracing code \citep{Wise11_Moray}, and the
+flux-limited diffusion \citep{ReynoldsHayesPaschosNorman2009}.
 
 \section{Paper length and breakdown}
 
@@ -102,7 +134,7 @@ of three ZEUS-2D papers \citep{1992ApJS...80..753S,
 1992ApJS...80..791S, 1992ApJS...80..819S}.  We argue, however, that
 this is not a useful comparison, as the three papers were published in
 the same issue of the Astrophysical Journal in 1992, and were
-published back-to-pack as consecutive articles in the same volume.  In
+published back-to-back as consecutive articles in the same volume.  In
 a time when the primary mode of consumption of articles was via paper
 journals, this is effectively a single paper (with a length of
 approximately 85 pages, no less).
