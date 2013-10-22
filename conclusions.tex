@@ -1,5 +1,3 @@
-% EJT added intro sentense to section on future developement and tweaked final sentense
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 \label{sec.conclusions}
@@ -35,11 +33,12 @@ memory usage and improve overall scaling behavior.
 \item The restructuring of \enzo's treatment of particles to
 accommodate a wider range of ``active'' particles that can easily
 interact with each other and with multiple grids, and include sink,
-source, and particle creation, destruction, splitting, and merging functionality.
+source, and particle creation, destruction, splitting, and merging
+functionality.
 \item A new HYPRE-based AMR gravity solver that is faster, more
 accurate, and more scalable than the current multigrid solver.
-\item New infrastructure for problem initialization, enabling
-  users to more quickly and easily create new types of simulations.
+\item New infrastructure for problem initialization, enabling users to
+more quickly and easily create new types of simulations.
 \end{itemize}
 
 With the continual rapid development of computer hardware, it makes
@@ -68,13 +67,13 @@ hundreds of millions (or more) is that the reliability of individual
 computing elements will become much more of an issue, requiring
 robustness to hardware failure to be built into the code at some
 level.  Furthermore, we are nearing the physical limits of transistor
-speed and interconnect latency~\citep{feynman1999feynman}, meaning that simple
-hardware improvements will not make these challenges disappear, and
-careful thought (and the rewriting of a great deal of code) must take
-place!  These challenges are not unique to the \enzo\ code, and in
-fact are faced by effectively all applications that wish to take
-advantage of new computational architectures. We therefore anticipate
-that \enzo\ (or a code that has the capabilities of \enzo, from a
-user's point of view) will continue to be usable at the
-largest scales on such machines.
+speed and interconnect latency~\citep{feynman1999feynman}, meaning
+that simple hardware improvements will not make these challenges
+disappear, and careful thought (and the rewriting of a great deal of
+code) must take place!  These challenges are not unique to the \enzo\
+code, and in fact are faced by effectively all applications that wish
+to take advantage of new computational architectures. We therefore
+anticipate that \enzo\ (or a code that has the capabilities of \enzo,
+from a user's point of view) will continue to be usable at the largest
+scales on such machines.
 

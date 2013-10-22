@@ -6,10 +6,10 @@
 \includegraphics[width=0.4\textwidth]{figures/sedov-ppm-slice.eps}
 \includegraphics[width=0.4\textwidth]{figures/sedov-zeus-slice.eps}
 \caption{Density slices from the Sedov Blast test at $t = 0.07$. Left:
-results using the Piecewise Parabolic Method hydro scheme.  Right: results using the \zeus\
-hydro method. Notably, the \zeus\ shock front has progressed less far
-than in the PPM run. This is due to energy loss when conserving only
-internal, and not total, energy.}
+results using the Piecewise Parabolic Method hydro scheme.  Right:
+results using the \zeus\ hydro method. Notably, the \zeus\ shock front
+has progressed less far than in the PPM run. This is due to energy
+loss when conserving only internal, and not total, energy.}
 \label{fig.sedov1}
 \end{center}
 \end{figure}
@@ -35,10 +35,11 @@ of gas. The result is a strong spherical shock wave centered on the
 point of energy injection.  This problem is a popular test of
 astrophysical simulation codes for three reasons.  First, this problem
 is representative of the astrophysical phenomenon of a supernova
-explosion.   Second, an analytical solution to the evolution of the
+explosion.  Second, an analytical solution to the evolution of the
 Sedov blast wave exists, allowing for a direct test of the accuracy of
 the code.  The radius of the shock front as a function of time is
 given by
+
 
 \begin{equation} r(t) =
 \left(\frac{E_0}{\alpha\rho_0}\right)^{1/5}t^{2/5}
@@ -50,27 +51,25 @@ ideal gas with $\gamma = 1.4$; for the full derivation see
 \citet{Sedov1959}.  Third, as the spherical shock expands, its
 symmetry, or lack thereof, serves to highlight any directional
 preferences of the hydrodynamics solvers.  The test presented here is
-the two-dimensional 
-version that is included in the \enzo\ distribution. The
-three-dimensional results from this test, both for \enzo\ and three
-other leading astrophysics codes, can be found in \citet{Tasker2008}.
+the two-dimensional version that is included in the \enzo\
+distribution. The three-dimensional results from this test, both for
+\enzo\ and three other leading astrophysics codes, can be found in
+\citet{Tasker2008}.
 
 In the initial state, the box contains a homogenous distribution of
 gas at a density of 1 (note that, in the absence of gravity or
-radiative cooling, this
-problem is scale-free and thus without units). Thermal energy is
-deposited into a single cell at the center of the box with $E_0 =
-10.0$. The problem is run in two dimensions with reflecting
-boundary conditions and a box having a length of
-$1$ in both directions.  We selecte a top grid of $100 \times 100$
-cells and a maximum of four levels of adaptive refinement, refining by
-factors of two on
-shocks and the slopes of the density and total energy fields. The
-exception to this scheme is in the initial conditions, where
-additional refinement is placed directly around the injection point to
-better resolve spherical geometry. The results are assessed
-at $t = 0.07$, which corresponds to a time just before the shock
-reaches the box edge (see Figure~\ref{fig.sedov1}).
+radiative cooling, this problem is scale-free and thus without
+units). Thermal energy is deposited into a single cell at the center
+of the box with $E_0 = 10.0$. The problem is run in two dimensions
+with reflecting boundary conditions and a box having a length of $1$
+in both directions.  We selecte a top grid of $100 \times 100$ cells
+and a maximum of four levels of adaptive refinement, refining by
+factors of two on shocks and the slopes of the density and total
+energy fields. The exception to this scheme is in the initial
+conditions, where additional refinement is placed directly around the
+injection point to better resolve spherical geometry. The results are
+assessed at $t = 0.07$, which corresponds to a time just before the
+shock reaches the box edge (see Figure~\ref{fig.sedov1}).
 
 Figure~\ref{fig.sedov2} shows the radial profiles for the simulation
 run with the PPM hydro-solver (blue dashed line) and the \zeus\

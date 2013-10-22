@@ -1,16 +1,6 @@
 \subsection{N-body Dynamics}
 \label{sec.ov.nbody}
 
-% The code needs to be able to model collisionless matter.  One way
-% would be to model the dark matter (or other collisionless
-% particle-like objects, such as stars) as a second fluid in addition to
-% the baryonic fluid and solve the collisionless Boltzmann equation,
-% which follows the evolution of the fluid density in six-dimensional
-% phase space.  However, this is computationally prohibitive owing to
-% the large dimensionality of the problem, making this approach
-% unappealing for the cosmological AMR code.
-%GB: removed the above (good discussion but not really appropriate in this paper I think, or maybe at the beginning)
-
 \enzo\ uses a particle-mesh N-body method to calculate the dynamics of
 collisionless systems \citep{Hockney88}.  This method follows
 trajectories of a representative sample of individual particles that
@@ -39,11 +29,12 @@ Particles are stored in the most highly refined grid patch at the
 point in space where they exist, and particles that move out of a
 subgrid patch are sent to the grid patch covering the adjacent volume
 with the finest spatial resolution, which may be of the same spatial
-resolution, coarser, or finer than the grid patch from which the particles
-moved.  This takes place in a communication process at the
+resolution, coarser, or finer than the grid patch from which the
+particles moved.  This takes place in a communication process at the
 end of each timestep on a level.
 
-To avoid unphysical point-mass effects, \enzo\ provides a parameter that
-governs the maximum level at which particles will be regarded as point masses.
-At higher levels, contributions from particles to the gravitating mass field
-will be smoothed over a spherical region centered at each particle's position.
+To avoid unphysical point-mass effects, \enzo\ provides a parameter
+that governs the maximum level at which particles will be regarded as
+point masses.  At higher levels, contributions from particles to the
+gravitating mass field will be smoothed over a spherical region
+centered at each particle's position.
