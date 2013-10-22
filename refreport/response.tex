@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{natbib}
+\usepackage{hyperref, breakurl, color}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+
+
+\newcommand{\code}[1]{\textsf{#1}}
+\newcommand{\enzo}{\code{Enzo}}
+
+\def\apj{ApJ}
+\def\apjl{ApJL}
+\def\apjs{ApJS}
+\def\mnras{MNRAS}
+\def\aj{Ast.J.}
+\def\nat{Nature}
+\def\na{New.A.}
+\newcommand{\aap}{A\&A}
+
+\begin{document}
+
+\begin{center} 
+\bfseries{
+\begin{large}
+Response to referee report for manuscript  ApJ/ApJS92163
+\end{large}
+}
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This is the response to the referee's report for ApJ/ApJS manuscript
+\#92163, ``Enzo: An Adaptive Mesh Refinement Code for Astrophysics,''
+by the Enzo collaboration (Bryan et al.).  We thank the referee for
+their feedback, and address each comment separately below.
+
+\section{Test problems}
+
+\red{(Add response regarding test problems here)}
+
+\section{Paper length and breakdown}
+
+Finally, we would like to address the referee's feedback regarding the
+paper's length and current organization.  The referee's comment is:
+
+\begin{verbatim} 
+Given the paper's length as it currently stands, it seems appropriate
+to split the paper into two. One paper should document the basic
+algorithms (e.g. AMR, hydro, MHD and gravity implementations) along
+with an appropriate range of tests based on standard tests from the
+literature. The second paper should document the microphysics options
+(chemistry, radiation, thermal conductivity, etc.).
+\end{verbatim}
+
+We respectfully disagree with the referee regarding this point --
+splitting the paper in two does not make sense, will not shorten the
+overall page count, and will not improve the clarity of presentation. One of the strengths
+of the \enzo\ code is the breadth of physics packages that are
+available in the publicly-available version -- unlike, for example,
+Gadget and Gadget-2 \citep{2001NewA....6...79S, 2005MNRAS.364.1105S},
+where the only physics packages that are publicly available are dark
+matter and adiabatic hydrodynamics.  Given this, it is logical that
+the totality of the code's capabilities be documented in a single
+place, for reference by future generations of computational scientists.
+
+Regarding the paper's length, we argue that it is not excessively long
+given the topics it covers, and thus does not need to be split into
+multiple parts.  At present, the \enzo\ method paper is \red{60 pages
+in ApJ format (BWO: we will need to update this before submission)}.
+For comparison:
+
+\begin{itemize}
+\item The paper for the open-source FLASH code
+\citep{2000ApJS..131..273F} is 62 pages long -- almost identical in
+length to the \enzo\ method paper.  At the time of the FLASH method paper's
+publication, it covered the full feature set of the FLASH code, which
+is comparable to the breadth of topcs covered in the \enzo\ method
+paper.
+
+\item The AREPO method paper \citep{2010MNRAS.401..791S} is 60 pages
+long, covers a narrower range of topics, and the code is
+closed-source.
+
+\item The paper for the open-source Athena code
+\citep{2008ApJS..178..137S} is 41 pages long, but only documents the
+hydrodynamics and MHD algorithms.  At the time of the code's release,
+this paper documented the entire feature set of the publicly-available
+code.
+
+\item The paper for the open-source ZEUS-MP 2 code
+\citep{2006ApJS..165..188H} is 41 pages long, but again covers a
+substantially narrower range of physics modules.  The entirety of the
+publicly-available code is documented in this paper.
+\end{itemize}
+
+The only \textit{comparable} open-source code that we are aware of
+whose method paper is broken up into multiple segments is the series
+of three ZEUS-2D papers \citep{1992ApJS...80..753S,
+1992ApJS...80..791S, 1992ApJS...80..819S}.  We argue, however, that
+this is not a useful comparison, as the three papers were published in
+the same issue of the Astrophysical Journal in 1992, and were
+published back-to-pack as consecutive articles in the same volume.  In
+a time when the primary mode of consumption of articles was via paper
+journals, this is effectively a single paper (with a length of
+approximately 85 pages, no less).
+
+We further note that splitting the paper up into two separate pieces
+provides structural challenges, and will serve to increase the total
+page count.  Structurally, Section 2 (the ``overview'' section) would
+need to be split into two pieces, and the component that discusses the
+microphysics will be somewhat confusing on its own, as these modules
+act as sink and source terms for the fluid equations that would in
+principle be described in a separate paper.  It's not clear where
+Section 10 (``Analysis''), Section 12 (``Parallel strategy and
+performance''), and Section 13 (``Code development methodology'')
+would logically go -- some of these sections apply to all physics
+packages in the code (e.g., Section 12), and others to none in
+particular (e.g., Section 13).  Similarly, Section 11.1 (``Verifying
+and validating the Enzo code'') describes the \enzo\ test suite, which
+is used for all aspects of code testing (including both the
+fluid/gravity/AMR algorithms \textit{and} the microphysics), and also
+for code comparisons that test many different aspects of the code,
+often in combination.  In order for these sections to make sense, and
+to address test problems that are split between two papers, several of
+these sections would need to be either duplicated or require an
+extensive amount of cross-referencing between papers Furthermore,
+separate introductions, discussions, and conclusions will by necessity
+be mutually referential and, in some sense, duplicates of each other.
+Together, this will not serve to either decrease page count or
+increase clarity for the reader.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\bibliographystyle{apj}
+\bibliography{response}
+
+\end{document}

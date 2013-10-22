@@ -1,0 +1,90 @@
+From: apj@msubmit.net
+Subject: Referee's report on ApJ/ApJS92163
+Date: September 16, 2013 11:36:18 AM EDT
+To: gbryan@astro.columbia.edu
+Cc: apjss@psu.edu
+Reply-To: apjss@psu.edu, apjjournal@gmail.com
+
+September 16, 2013 
+
+Prof. Greg Bryan
+Columbia University
+Department of Astronomy
+550 West 120 Street
+New York, NY 10027
+
+
+Title: Enzo: An Adaptive Mesh Refinement Code for Astrophysics
+
+Dear Prof. Bryan,
+
+We have received the referee's report on your above submission to The
+Astrophysical Journal, and it is appended below. As you will see, the
+referee thinks highly of your work. The referee recommends splitting
+the paper into two, with a separate revised paper describing testing
+of the algorithms, and a first paper discussing the physics in the
+code. In my opinion you should seriously consider this option, and I
+would recommend going along with this advise.
+
+When you resubmit the manuscript, please include a cover letter in
+which you outline in detail the specific changes you have made in
+response to each of the referee's comments.
+
+Click the link below to upload your revised manuscript;  [REDACTED BY BWO]
+
+Alternatively, you may also log into your account at the EJ Press web
+site, http://apj.msubmit.net. Please use your user's login name:
+gbryan. You can then ask for a new password via the Unknown/Forgotten
+Password link if you have forgotten your password.
+
+Reviewers typically find it helpful if the changes in the text of the
+manuscript are easily distinguishable from the rest of the text. One
+convenient way to do this is to have them print in bold letters. The
+highlighting can be removed after the review.
+
+The Astrophysical Journal has adopted a new policy that manuscript
+files become inactive, and are considered to have been withdrawn, six
+months after the most recent referee's report goes to the authors,
+provided a revised version has not been received by that time.
+
+If you have any questions, feel free to contact me.
+
+Sincerely,
+Steinn Sigurdsson
+ApJ Scientific Editor
+Pennsylvania State University
+apjss@psu.edu
+
+---------------------------------------------------------------------- 
+Referee Report
+Reviewer's Comments:
+
+The paper describes the algorithms implemented in the publicly
+available Enzo code for computational astrophysics. The paper is
+clearly intended to be the standard reference for the code, and, as
+such documents a very wide range of algorithms. However, the paper is
+let down due to the lack of tests presented for many of the algorithms
+presented in the paper. In particular, the only test presented for the
+MHD algorithm is the Orszag-Tang vortex test, which 'does not seem to
+be extremely discriminating for MHD algorithms' (Stone et al.,
+2008). In addition, results from some tests, such as the
+photo-evaporation test, do not seem to be properly compared to prior
+results in the literature (e.g. Jiang et al. 2012). Finally, no tests
+appear to be presented for some tests entirely, e.g. the Chemistry
+algorithms presented in Section 6.1. These problems serve to undercut
+the usefulness of the paper as a standard reference for the Enzo
+code. Given the papers length as it currently stands, it seems
+appropriate to split the paper into two. One paper should document the
+basic algorithms (e.g. AMR, hydro, MHD and gravity implementations)
+along with an appropriate range of tests based on standard tests from
+the literature. The second paper should document the microphysics
+options (chemistry, radiation, thermal conductivity, etc.)
+
+
+
+
+
+
+
+
+
