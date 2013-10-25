@@ -1,0 +1,64 @@
+# Brio & Wu shock tube.  Also Cargo & Gallice.
+
+ProblemType            = 500
+
+CourantSafetyNumber    = 0.5
+MHD_CT_Method       = 0  //0 = none, 1 = Balsara, 2 = Poisson, 3=RJ (use 1)
+MHD_SendFace           = 1  //This should be 1.  If not, bad things man...
+
+# Problem Details
+
+Gamma                  = 2.0
+
+StopCycle = 1000
+StopTime = 0.08
+
+CycleLastDataDump = -1
+CycleSkipDataDump = 1
+
+TopGridRank            = 1
+TopGridDimensions      = 800
+
+
+RightFaceBoundaryCondition = 1
+LeftFaceBoundaryCondition =  1
+
+HydroMethod       = 4	
+RiemannSolver = 6
+Theta_Limiter = 1.2
+
+
+#    various init styles:
+#       0 = sphere: 1,2,3=rectangular slice along x, y,z
+#       40,41,42=cylander along x,y,z: 
+#       5,6,7,8 = Index Tests. 5: 10*i + 100*j + 1000*k, 6: i, 7:j, 8k
+
+MHDBlastInitStyle = 1
+
+#In this setup, A is the Left state.
+MHDBlastCenter = 0.76 0.5 0.5 //Center in spatial units.
+MHDBlastRadius = 0.25 //in space units OF THE LONGEST AXIS
+
+MHDBlastDA = 1.0
+MHDBlastDB = 0.125
+
+MHDBlastVelocityA = 0 0 0
+MHDBlastVelocityB = 0 0 0
+
+MHDBlastBA  =  0.75  1.0 0
+MHDBlastBB  =  0.75 -1.0 0
+
+MHDBlastPA = 1.0
+MHDBlastPB = 0.1
+
+
+CellFlaggingMethod     = 8
+NumberOfBufferZones    = 0
+MaximumRefinementLevel    = 0
+
+StaticHierarchy           = 0    // dynamic hierarchy
+RefineBy                  = 2    // refinement factor
+
+TopGridGravityBoundary = 0       // Periodic BC
+SelfGravity            = 0       // Gravity on.
+
