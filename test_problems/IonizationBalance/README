@@ -1,0 +1,14 @@
+In order to run the IonizationBalance test, you must download and 
+install the wrapper to the Enzo chemistry and cooling library, 
+known as the Grackle, from https://grackle.readthedocs.org.  The 
+Grackle allows one to run the chemistry and cooling solver externally 
+from Enzo, which is how the IonizationBalance test was done.  This test
+does not run with the test runner.
+
+Follow the instructions on the site above to compile and install the 
+Grackle (https://grackle.readthedocs.org/en/latest/Installation.html).  
+Then, follow the instructions for "Installing the Python Wrappers" in 
+https://grackle.readthedocs.org/en/latest/Python.html .  After all this 
+has been completed, the ionization balance test can be run with:
+
+python enzo_paper_equilibrium_figure.py

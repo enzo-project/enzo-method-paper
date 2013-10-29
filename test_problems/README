@@ -25,6 +25,13 @@ the HYPRE library, or do not have SciPy installed along with yt (and
 don't wish to go through the trouble of getting all of that to work),
 remove the 'CosmoIFront' problem from the list of test problems.
 
+In order to run the IonizationBalance test, you must download and 
+install the wrapper to the Enzo chemistry and cooling library, 
+known as the Grackle, from https://grackle.readthedocs.org.  The 
+Grackle allows one to run the chemistry and cooling solver externally 
+from Enzo, which is how the IonizationBalance test was done.  This test
+does not run with the test runner.  To run it, move into the 
+IonizationBalance directory and follow the instructions there.
 
 === Runtime ===
 
@@ -64,6 +71,9 @@ ShockTube		 ~1 min.
 TestOrbit		 ~1 hour
 WavePool		 ~3 min.
 ZeldovichPancake	 ~1 min.
+IonizationBalance        ~15 min.       does not use the test runner
+                                        (follow instructions within 
+                                        Ionization balance directory.)
 
 Note: runtime includes both the running of simulation(s) and analysis 
 scripts.
