@@ -56,17 +56,34 @@ entirely, e.g. the Chemistry algorithms presented in Section 6.1.
 We have modified the test problem section as follows:
 
 \begin{itemize}
-\item \red{cooling Britton fill in here}
-\item \red{radiation John fill in here}
-\item \red{MHD Dave fill in here}
+\item We have added a section (11.2.10) showing how both \enzo\ MHD
+  algorithms perform on the standard Brio \& Wu shock tube test
+  problem, which is a standard test of MHD solvers.  Both \enzo\ MHD
+  algorithms match the reference solution to high precision.  We retain the
+  Orszag-Tang Vortex test as we feel that it is interesting to the
+  intended audience.
+
+\item We have added a test of the non-equilibrium primordial chemistry code that
+  tests the ionization balance in ionized gas as compared to an
+  analytical solution (Section 11.2.13).  As can be seen, \enzo's
+  non-equilibrium chemistry solver  reproduces the analytical solution perfectly.
+
+\item The ``Photo-evaporation of a dense clump'' test problem (Section
+  11.2.14) has been expanded to include a new figure (Fig. 18) that
+  contains much more detail about the evolution of the test problem,
+  and comparison to prior results, including the MORAY method paper
+  \citep{Wise11_Moray} and the Cosmological Radiative Transfer
+  Comparison Project paper \citep{IlievEtAl2009}.
+
 \end{itemize}
 
 We also note that many of the fundamental \enzo\ algorithms are
 extensively tested in separate method papers that focus on a single
 algorithm/physics package, and a single test problem or small number
 of test problems are included in the full \enzo\ method paper as a
-demonstration that the algorithms behave sensibly.  In the subsection
-describing these test problems, we cite the full method paper for the
+demonstration that the algorithms behave sensibly.  In the paper's
+section or subsection
+describing these algorithm, we cite the full method paper for the
 appropriate algorithm and the direct the reader to it for more
 information.  These additional algorithm method papers include ones
 for both flavors of MHD contained in \enzo\ \citep{Wang:2009a,
@@ -100,8 +117,8 @@ place, for reference by future generations of computational scientists.
 
 Regarding the paper's length, we argue that it is not excessively long
 given the topics it covers, and thus does not need to be split into
-multiple parts.  At present, the \enzo\ method paper is \red{60 pages
-in ApJ format (BWO: we will need to update this before submission)}.
+multiple parts.  At present, the \enzo\ method paper is 62 pages long
+in ApJ format.
 For comparison:
 
 \begin{itemize}
@@ -163,6 +180,27 @@ separate introductions, discussions, and conclusions will by necessity
 be mutually referential and, in some sense, duplicates of each other.
 Together, this will not serve to either decrease page count or
 increase clarity for the reader.
+
+\section{Additional changes}
+
+In addition to directly addressing concerns expressed by the referee,
+we have fixed additional typos in the paper.  These include:
+
+\begin{enumerate}
+\item  We have corrected a typo in the equation describing the Jeans
+  length refinement criterion (Equation 29).
+
+\item We have corrected a typo in Table 4, where two photoionization
+  rates were accidentally switched in the submitted version.
+
+\item We have added missing acknowledgments.
+
+\item We have updated the mercurial changeset hash to correspond to
+  the \enzo\ 2.3 release (which was done slightly after the submission
+  of the paper to ApJ).
+
+\end{enumerate}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
