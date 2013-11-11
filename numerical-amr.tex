@@ -431,7 +431,10 @@ where $N_J$ is the required number of cells per Jeans length (4 by default).
 \sum_i \sum_j \left( \frac{\partial v_i}{\partial x_j} \right)^2 -  \sum_i \left( \frac{\partial v_i}{\partial x_i} \right)^2
 > \epsilon_s \frac{c_s^2}{\Delta x^2},
 \end{equation}
-where $\epsilon_s$ is a dimensionless parameter.
+where $\epsilon_s$ is a dimensionless parameter. The current
+implementation assumes that $c_s$ is a constant and that $\Delta x$ in
+the above expression is evaluated with the cell size on the level
+being tested.
 
 \item{\em Optical depth.} This refinement criterion, typically used
 for simulations using radiation transport, flags cells for refinement
