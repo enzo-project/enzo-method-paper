@@ -13,6 +13,9 @@ execfile('sedov_outputdata.py')
 # Makes slices of density for both simulations (PPM, Zeus)
 execfile('sedov_slice.py')
 
-# plots radially-averaged density profile from both simulations, along
+# plots annulus-averaged profiles from both simulations, along
 # with the analytical result from sedov.in
-execfile('sedov_plot.py')
+execfile('sedov_density_plot.py')
+execfile('sedov_internal_energy_plot.py')
+execfile('sedov_pressure_plot.py')
+execfile('sedov_velocity_plot.py')
