@@ -1,13 +1,10 @@
-import os, cPickle, math
-import h5py as h5
-
 from yt.mods import *
 import yt.visualization.eps_writer as EPS
 from matplotlib import rc
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import fontManager, FontProperties
 font= FontProperties(size='small')
 rc('font', family='serif', serif='cmr10', size=18)
-from matplotlib.font_manager import fontManager, FontProperties
 
 from matplotlib.ticker import NullFormatter
 nullfmt = NullFormatter()
@@ -54,7 +51,7 @@ for i,f in enumerate(fields):
 ep = EPS.multiplot_yt(2,2,pc, margins=(0.2,0.2), bare_axes=True)
 ep.scale_line(1.0/6.6, '1 kpc')
 ep.title_box("15 Myr")
-ep.save_fig("code-test-shadowing.eps")
+ep.save_fig("shadowing-slices.eps")
 
 ########################################################################
 # Line cuts through the clump center at t = 1, 5, 10, 15 Myr
@@ -163,7 +160,7 @@ ni = len(outputs)
 nj = len(fields)
 
 plt.clf()
-plt.subplots_adjust(right=0.97, top=0.95, hspace=1e-3)
+plt.subplots_adjust(right=0.97, top=0.95, hspace=1e-3, wspace=0.2)
 
 index = 1
 for i,out in enumerate(outputs):
