@@ -421,15 +421,16 @@ where $N_J$ is the required number of cells per Jeans length (4 by default).
   stays refined to a specified level of resolution. 
 
 
-\item{\em Shear.} As described in \citet{Kritsuk06}, turbulence
-  calculations can be successfully modeled with AMR if the shear is
-  used as a refinement parameter; in particular, refinement occurs
-  when the finite difference version of the following inequality
+\item{\em Shear.} Originally used in \citet{Kritsuk06} and later 
+  modified into a more general form, turbulence calculations and
+  Kelvin-Helmholtz instabilities can be successfully modeled with AMR if 
+  the shear is used as a refinement parameter; in particular, refinement 
+  occurs when the finite difference version of the following inequality
   holds:
 
 \begin{equation}
-\sum_i \sum_j \left( \frac{\partial v_i}{\partial x_j} \right)^2 -  \sum_i \left( \frac{\partial v_i}{\partial x_i} \right)^2
-> \epsilon_s \frac{c_s^2}{\Delta x^2},
+\left| \sum_{i \ne j} \left( \frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i} \right) \right|
+> \epsilon_s \frac{c_s}{\Delta x},
 \end{equation}
 where $\epsilon_s$ is a dimensionless parameter.
 
