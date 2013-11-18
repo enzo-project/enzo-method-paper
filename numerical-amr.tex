@@ -160,7 +160,6 @@ computational domain, which is true for most, but not all, subgrids.
 In the first case, we allow for four types of boundary conditions (for
 simplicity, represented here as being at $x=0$, with positive $x$
 interior and negative $x$ exterior to the domain):
-
 \begin{enumerate}
   \item{\em Reflecting.} In this case, the boundary behaves like a
     mirror, with the solution on the boundary reflecting the solution
@@ -360,11 +359,9 @@ The flagging methods currently built into \enzo\ are:
   mimic a Lagrangian method in that it tries to keep a fixed mass
   resolution.  In this method, a cell is refined if the baryonic mass
   in the cell ($M_g = \rho\, (\Delta x)^d$) is larger than a specified value:
-
 \begin{equation}
 M_g > \rho_{\rm flag}\, (\Delta x_{\rm root})^d r^{\epsilon_l l},
 \end{equation}
-
 where $\rho_{\rm flag}$ is the equivalent density on the root grid
 required for refinement, $\Delta x_{\rm root}$ is the root grid cell
 spacing, $r$ is the refinement factor, $l$ is the level and
@@ -375,13 +372,11 @@ super-Lagrangian or sub-Lagrangian refinement.
 
 \item{\em Shocks.}  In this method, we identify and refine cells that
   contain shocks using the following criteria:
-
 \begin{eqnarray}
 (p_{i+1} - p_{i-1})/\min(p_{i+1}, p_{i-1}) > 0.33,  \qquad
 u_{i-1} - u_{i+1} > 0, \quad\text{and} \qquad
 e_i / E_i > 0.1.  \nonumber
 \end{eqnarray}
-
 We note that the parameters $0.33$ and $0.1$ in the equations above
 were determined empirically, and can be modified by the user to refine
 more or less aggressively, as the situation warrants.
@@ -392,11 +387,9 @@ more or less aggressively, as the situation warrants.
   is used in cosmological simulations, and thus refines on dark matter
   and stellar density.
 
-
 \item{\em Jeans length.}  Following \cite{Truelove98}, the code can be
   forced to refine the Jeans length by a fixed number of cells, or,
   more specifically, whenever the following criterion is not met:
-
 \begin{equation}
 \Delta x < \left( \frac{\gamma \pi k_B T}{N_J^2 G \rho \mu \mh} \right)^{1/2},
 \end{equation}
@@ -427,7 +420,6 @@ where $N_J$ is the required number of cells per Jeans length (4 by default).
   the shear is used as a refinement parameter; in particular, refinement 
   occurs when the finite difference version of the following inequality
   holds:
-
 \begin{equation}
 \left( \frac{\partial v_x}{\partial y} + \frac{\partial v_y}{\partial x} \right)^2 +
 \left( \frac{\partial v_z}{\partial y} + \frac{\partial v_y}{\partial z} \right)^2 +
@@ -441,11 +433,9 @@ is the local cell size at the level where refinement is occurring.
 for simulations using radiation transport, flags cells for refinement
 if they have an \ion{H}{1} optical depth lower than unity.  The
 optical depth of a cell is estimated to be:
-
 \begin{equation}
 \tau = \sigma_{\rm HI} n_{\rm HI} \Delta x 
 \end{equation}
-
 where $\sigma_{\rm HI}$ is the neutral atomic hydrogen absorption
 cross section, $n_{\rm HI}$ is the proper \ion{H}{1} number density,
 and $\Delta x$ is the cell width (which is assumed to be the same
@@ -456,11 +446,9 @@ the maximum level of refinement.
   criterion described above, the code can be forced to locally resolve
   the resistive length scale by a minimum of a fixed number of cells.
   This is done by ensuring that the resistive length scale, defined as
-
 \begin{equation}
 L_R = |B| / |\curl B|
 \end{equation}
-
 is always refined by at least N$_R$ cells locally (i.e.~we refine a
 given cell further if $L_R \leq N_R \Delta x$).  Note that \enzo\ does
 not actually solve the resistive MHD equations -- this is the
@@ -488,13 +476,11 @@ within the MHD solver.
   information can be found in the FLASH4 user guide\footnote{\url{http://flash.uchicago.edu/site/flashcode/user\_support/flash4\_ug/}},
   but we reproduce the relevant equation here for completeness. The
   multi-dimensional version of the criteria takes in to account all
-  cross-derivatives, and is expressed by
-
+  cross-derivatives, and is expressed by,
  \begin{equation}
    S = \left\{ \frac{\sum_{ij}\left( \frac{\partial^2f}{\partial x_i \partial x_j} \right)^2}{\sum_{ij}\left[ \frac{1}{2\Delta x_j}\left( \abs{\frac{\partial f}{\partial x_i}}_{x_i+\Delta x_i} + \abs{\frac{\partial f}{\partial x_i}}_{x_i-\Delta x_i} \right) + \epsilon \frac{\abs{\bar{f_{ij}}}}{\Delta x_i \Delta x_j} \right]^2} \right\}^{1/2},
    \label{eq:second-deriv_analytical}
  \end{equation}
-
   where $f$ is the user-defined field, $\abs{\bar{f_{ij}}}$ is an average of
   $f$ over cells in the $i$ and $j$ dimensions, and $\epsilon$ is
   a user-controlled value that provides a method of ignoring small
