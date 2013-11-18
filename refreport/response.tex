@@ -35,7 +35,7 @@ Response to referee report for manuscript  ApJ/ApJS92163
 This is the response to the referee's report for ApJ/ApJS manuscript
 \#92163, ``Enzo: An Adaptive Mesh Refinement Code for Astrophysics,''
 by the Enzo collaboration (Bryan et al.).  We thank the referee for
-their feedback, and address each comment separately below.
+his or her feedback, and address each comment separately below.
 
 \section{Test problems}
 
@@ -53,7 +53,7 @@ al. 2012). Finally, no tests appear to be presented for some tests
 entirely, e.g. the Chemistry algorithms presented in Section 6.1.
 \end{verbatim}
 
-We have modified the test problem section as follows:
+We have addressed this issue by modifying the test problem section as follows:
 
 \begin{itemize}
 \item We have added a section (11.2.10) showing how both \enzo\ MHD
@@ -67,6 +67,7 @@ We have modified the test problem section as follows:
   tests the ionization balance in ionized gas as compared to an
   analytical solution (Section 11.2.13).  As can be seen, \enzo's
   non-equilibrium chemistry solver  reproduces the analytical solution perfectly.
+  We also note that the chemistry solver is tested in Sections 11.2.12 and 11.2.14.
 
 \item The ``Photo-evaporation of a dense clump'' test problem (Section
   11.2.14) has been expanded to include a new figure (Fig. 18) that
@@ -89,6 +90,8 @@ information.  These additional algorithm method papers include ones
 for both flavors of MHD contained in \enzo\ \citep{Wang:2009a,
 Collins10}, the ray-tracing code \citep{Wise11_Moray}, and the
 flux-limited diffusion \citep{ReynoldsHayesPaschosNorman2009}.
+We now explicitly point this out and list these papers in Section 
+11.2, the introduction to testing section.
 
 \section{Paper length and breakdown}
 
@@ -175,7 +178,7 @@ for code comparisons that test many different aspects of the code,
 often in combination.  In order for these sections to make sense, and
 to address test problems that are split between two papers, several of
 these sections would need to be either duplicated or require an
-extensive amount of cross-referencing between papers Furthermore,
+extensive amount of cross-referencing between papers. Furthermore,
 separate introductions, discussions, and conclusions will by necessity
 be mutually referential and, in some sense, duplicates of each other.
 Together, this will not serve to either decrease page count or
